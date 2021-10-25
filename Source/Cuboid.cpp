@@ -75,14 +75,16 @@ void Cuboid::Render()
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 
+   // Right face texture coordinates/vertices.
    glNormal3f(0.0, 0.0, 1.0);
    glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0); glVertex3f(1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, X); glVertex3f(-1.0, 1.0, -1.0);
-   glTexCoord2f(X, X); glVertex3f(-1.0, -1.0, -1.0);
-   glTexCoord2f(X, 0.0); glVertex3f(1.0, -1.0, -1.0);
+   glTexCoord2f(0.0, 0.0); glVertex3f(-1.0, 1.0, 1.0);
+   glTexCoord2f(0.0, X); glVertex3f(1.0, 1.0, 1.0);
+   glTexCoord2f(X, X); glVertex3f(1.0, -1.0, 1.0);
+   glTexCoord2f(X, 0.0); glVertex3f(-1.0, -1.0, 1.0);
    glEnd();
 
+   // Left face texturecoordinates/vertices.
    glNormal3f(0.0, 0.0, -0.5);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0); glVertex3f(1.0, 1.0, -1.0);
@@ -91,6 +93,7 @@ void Cuboid::Render()
    glTexCoord2f(X, 0.0); glVertex3f(1.0, -1.0, -1.0);
    glEnd();
 
+   // Front face texture coordinates/vertices.
    glNormal3f(-0.5, 0.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0); glVertex3f(-1.0, 1.0, 1.0);
@@ -99,14 +102,16 @@ void Cuboid::Render()
    glTexCoord2f(Z, 0.0); glVertex3f(-1.0, 1.0, -1.0);
    glEnd();
 
+   // Back face texture coordinates/vertices.
    glNormal3f(0.5, 0.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0); glVertex3f(1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, Z); glVertex3f(1.0, -1.0, -1.0);
+   glTexCoord2f(0.0, Z); glVertex3f(1.0, -1.0, 1.0);
    glTexCoord2f(Z, Z); glVertex3f(1.0, -1.0, -1.0);
    glTexCoord2f(Z, 0.0); glVertex3f(1.0, 1.0, -1.0);
    glEnd();
 
+   // Top face texture coordinates/vertices.
    glNormal3f(0.0, 0.5, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0); glVertex3f(1.0, 1.0, 1.0);
@@ -115,6 +120,7 @@ void Cuboid::Render()
    glTexCoord2f(Z, 0.0); glVertex3f(-1.0, 1.0, 1.0);
    glEnd();
 
+   // Bottom face texture coordintates/vertices.
    glNormal3f(0.0, -0.5, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0); glVertex3f(1.0, -1.0, 1.0);

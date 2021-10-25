@@ -78,6 +78,7 @@ class Cuboid : public GameObject
        *    Function prototype for Cuboid object getPosX function.
        *    Precondition:  None.
        *    Postcondition: The x-translation value has been returned to the caller.  
+       *    Return value:  The x-value of the Cuboid's translation.
        */
       float getPosX();
 
@@ -85,20 +86,23 @@ class Cuboid : public GameObject
        *     Function prototype for Cuboid object getPosY function.
        *     Precondition:  None.
        *     Postcondition: The y-translation value has been returned to the caller. 
+       *     Return value:  The y-value of the Cuboid's translation. 
        */
       float getPosY();
 
       /*
        *     Function prototype for Cuboid object getPosZ function.
        *     Precondition:  None.
-       *     Postcondition: The z-translation value has been returned to the caller.  
+       *     Postcondition: The z-translation value has been returned to the caller. 
+       *     Return value:  The z-value of the Cuboid's translation. 
        */
       float getPosZ();
 
       /*
        *     Function prototype for Cuboid object getScaleX function.
        *     Precondition:  None.
-       *     Postcondition: The x-scaling value has been returned to the caller.  
+       *     Postcondition: The x-scaling value has been returned to the caller. 
+       *     Return value:  The x-value of the Cuboid's scaling. 
        */
       float getScaleX();
 
@@ -106,6 +110,7 @@ class Cuboid : public GameObject
        *     Function prototype for Cuboid object getScaleY function.
        *     Precondition:  None.
        *     Postcondition: The y-scaling value has been returned to the caller.  
+       *     Return value:  The y-value of the Cuboid's scaling. 
        */
       float getScaleY();
 
@@ -113,20 +118,23 @@ class Cuboid : public GameObject
        *     Funciton prototype for Cuboid object getScaleZ function.
        *     Precondition:  None.
        *     Postcondition: The z-scaling value has been returned to the caller.  
+       *     Return value:  The z-value of the Cuboid's scaling. 
        */
       float getScaleZ();
 
       /*
        *     Function prototype for Cuboid object getRotX function.
        *     Precondition:  None.
-       *     Postcondition: The x-ratation value has been returned to the caller. 
+       *     Postcondition: The x-rotation value has been returned to the caller.
+       *     Return value:  The Cuboid's rotation about the x-axis (degrees).  
        */
       float getRotX();
 
       /*
        *     Function prototype for Cuboid object getRotY function.
        *     Precondition:  None.
-       *     Postcondition: The y-rotation value has been returned to the caller.  
+       *     Postcondition: The y-rotation value has been returned to the caller.
+       *     Return value:  The Cuboid's rotation about the y-axis (degrees).  
        */
       float getRotY();
 
@@ -134,6 +142,7 @@ class Cuboid : public GameObject
        *     Funciton prototype for Cuboid object getRotZ function.
        *     Precondition:  None.
        *     Postcondition: The z-rotation value has been returned to the caller. 
+       *     Return value:  The Cuboid's rotation about the z-axis (dgrees).
        */
       float getRotZ();
 
