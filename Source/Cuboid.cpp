@@ -65,6 +65,7 @@ void Cuboid::Render()
    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiny);
 
    glPushMatrix();
+   glColor3f(1.0, 1.0, 1.0);
 
    // Apply any applicable translations, rotations and scaling.
    glTranslated(this->xPos, this->yPos, this->zPos);

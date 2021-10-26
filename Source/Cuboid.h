@@ -19,7 +19,6 @@
 
 #pragma once
 #include "GameObject.h"
-#include "CSCIx229.h"
 
 class Cuboid : public GameObject
 {

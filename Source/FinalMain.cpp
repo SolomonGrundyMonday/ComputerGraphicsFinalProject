@@ -1,9 +1,12 @@
 #include "CSCIx229.h"
 #include "Cuboid.h"
 #include "Camera.h"
+#include "Tree.h"
+#include <vector>
 
 Cuboid ground;
 Camera player;
+std::vector<Tree *> tree;
 
 void display()
 {
@@ -19,6 +22,8 @@ void display()
    glEnable(GL_NORMALIZE);
 
    ground.Render();
+   for (int i = 0; i < 10; i++)
+      tree.at(i)->Render();
 
    ErrCheck("display");
    glFlush();
@@ -94,6 +99,12 @@ int main(int argc, char* argv[])
    ground.Initialize("Dirt.bmp");
 
    player = Camera();
+
+   for (int i = 0; i < 10; i++)
+   {
+      tree.push_back(new Tree(i*10.0, 1.0, i*10.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0));
+      tree.at(i)->Initialize("Bark.bmp");
+   }
 
    ErrCheck("init");
    glutMainLoop();

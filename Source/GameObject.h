@@ -7,7 +7,7 @@
  *   This is the abstract superclass for all rendered GameObjects
  *   All rendered 3D objects should inherit from this class. 
  */
-
+#pragma once
 #include "CSCIx229.h"
 #include <string.h>
 #include <stdlib.h>
