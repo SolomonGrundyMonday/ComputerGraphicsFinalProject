@@ -12,7 +12,8 @@
 #define HANDLE_LEN 0.15
 #define HANDLE_HEIGHT 0.2
 #define SHAFT_LEN 1.2
-#define HEAD_LEN 0.3
+#define HEAD_LEN 0.4
+#define HEAD_WIDTH 0.3
 #define RADIUS 0.05
 
 class Shovel : public GameObject

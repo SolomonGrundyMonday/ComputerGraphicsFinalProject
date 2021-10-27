@@ -71,35 +71,35 @@ void Shovel::Render()
    for (int i = 0; i < 12; i++)
    {
       int theta = i * 30;
-      glNormal3f(RADIUS * Cos(theta), RADIUS * Sin(theta) + HANDLE_HEIGHT, HANDLE_LEN);
+      glNormal3f(HANDLE_LEN, RADIUS * Sin(theta) + HANDLE_HEIGHT, RADIUS * Cos(theta));
       glTexCoord2f(0, i % 2);
-      glVertex3f(RADIUS * Cos(theta), RADIUS * Sin(theta) + HANDLE_HEIGHT, HANDLE_LEN);
+      glVertex3f(HANDLE_LEN, RADIUS * Sin(theta) + HANDLE_HEIGHT, RADIUS * Cos(theta));
       glTexCoord2f(1, i % 2);
-      glVertex3f(RADIUS * Cos(theta), RADIUS * Sin(theta) + HANDLE_HEIGHT, -HANDLE_LEN);
+      glVertex3f(-HANDLE_LEN, RADIUS * Sin(theta) + HANDLE_HEIGHT, RADIUS * Cos(theta));
    }
    glEnd();
 
-   glNormal3f(0.0, HANDLE_HEIGHT, HANDLE_LEN);
+   glNormal3f(HANDLE_LEN, HANDLE_HEIGHT, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
-   glVertex3f(0.0, HANDLE_HEIGHT, HANDLE_LEN);
+   glVertex3f(HANDLE_LEN, HANDLE_HEIGHT, 0.0);
 
    for (int i = 0; i <= 360; i += 30)
    {
       glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(RADIUS * Cos(i), RADIUS * Sin(i) + HANDLE_HEIGHT, HANDLE_LEN);
+      glVertex3f(HANDLE_LEN, RADIUS * Sin(i) + HANDLE_HEIGHT, RADIUS * Cos(i));
    }
    glEnd();
 
-   glNormal3f(0.0, HANDLE_HEIGHT, -HANDLE_LEN);
+   glNormal3f(-HANDLE_LEN, HANDLE_HEIGHT, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
-   glVertex3f(0.0, HANDLE_HEIGHT, -HANDLE_LEN);
+   glVertex3f(-HANDLE_LEN, HANDLE_HEIGHT, 0.0);
 
    for (int i = 0; i <= 360; i += 30)
    {
       glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(RADIUS * Cos(i), RADIUS * Sin(i) + HANDLE_HEIGHT, -HANDLE_LEN);
+      glVertex3f(-HANDLE_LEN, RADIUS * Sin(i) + HANDLE_HEIGHT, RADIUS * Cos(i));
    }
    glEnd();
 
@@ -107,35 +107,35 @@ void Shovel::Render()
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
-   glVertex3f(RADIUS, -HANDLE_HEIGHT / 2 + RADIUS, HANDLE_LEN);
+   glVertex3f(HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, RADIUS);
    glTexCoord2f(0.0, 1.0);
-   glVertex3f(-RADIUS, -HANDLE_HEIGHT / 2 + RADIUS, HANDLE_LEN);
+   glVertex3f(HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, -RADIUS);
    glTexCoord2f(1.0, 0.0);
-   glVertex3f(-RADIUS, HANDLE_HEIGHT, HANDLE_LEN);
+   glVertex3f(HANDLE_LEN, HANDLE_HEIGHT, -RADIUS);
    glTexCoord2f(1.0, 1.0);
-   glVertex3f(RADIUS, HANDLE_HEIGHT, HANDLE_LEN);
+   glVertex3f(HANDLE_LEN, HANDLE_HEIGHT, RADIUS);
    glEnd();
 
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
-   glVertex3f(RADIUS, -HANDLE_HEIGHT / 2 + RADIUS, -HANDLE_LEN);
+   glVertex3f(-HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, RADIUS);
    glTexCoord2f(0.0, 1.0);
-   glVertex3f(-RADIUS, -HANDLE_HEIGHT / 2 + RADIUS, -HANDLE_LEN);
+   glVertex3f(-HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, -RADIUS);
    glTexCoord2f(1.0, 0.0);
-   glVertex3f(-RADIUS, HANDLE_HEIGHT, -HANDLE_LEN);
+   glVertex3f(-HANDLE_LEN, HANDLE_HEIGHT, -RADIUS);
    glTexCoord2f(1.0, 1.0);
-   glVertex3f(RADIUS, HANDLE_HEIGHT, -HANDLE_LEN);
+   glVertex3f(-HANDLE_LEN, HANDLE_HEIGHT, RADIUS);
    glEnd();
 
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
-   glVertex3f(RADIUS, -HANDLE_HEIGHT / 2 + RADIUS, -HANDLE_LEN);
+   glVertex3f(-HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, RADIUS);
    glTexCoord2f(0.0, 1.0);
-   glVertex3f(-RADIUS, -HANDLE_HEIGHT / 2 + RADIUS, -HANDLE_LEN);
+   glVertex3f(-HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, -RADIUS);
    glTexCoord2f(1.0, 0.0);
-   glVertex3f(-RADIUS, -HANDLE_HEIGHT / 2 + RADIUS, HANDLE_HEIGHT);
+   glVertex3f(HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, -RADIUS);
    glTexCoord2f(1.0, 1.0);
-   glVertex3f(RADIUS, -HANDLE_HEIGHT / 2 + RADIUS, HANDLE_HEIGHT);
+   glVertex3f(HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, RADIUS);
    glEnd();
 
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
@@ -158,6 +158,7 @@ void Shovel::Render()
    glNormal3f(0.0, -RADIUS - SHAFT_LEN, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
+   glVertex3f(0.0, -RADIUS - SHAFT_LEN, 0.0);
    
    for (int i = 30; i <= 360; i += 30)
    {
@@ -167,21 +168,50 @@ void Shovel::Render()
    }
    glEnd();
 
-   // More badness here.
    // Draw the Shovel head.
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
    glBindTexture(GL_TEXTURE_2D, metal);
 
-   glNormal3f(0.0, -SHAFT_LEN - HEAD_LEN, 0.0);
+   glNormal3f(0.0, -SHAFT_LEN - HEAD_LEN - RADIUS, -RADIUS);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
-   glVertex3f(0.0, -SHAFT_LEN - HEAD_LEN, 0.0);
+   glVertex3f(0.0, -SHAFT_LEN - HEAD_LEN - RADIUS, -RADIUS);
 
    for (int i = 0; i <= 180; i += 30)
    {
-      glNormal3f(RADIUS * Cos(i) + HEAD_LEN * Cos(i), -SHAFT_LEN, RADIUS * Sin(i));
+      glNormal3f(RADIUS * Cos(i) + HEAD_WIDTH * Cos(i), -SHAFT_LEN - RADIUS, RADIUS * Sin(i));
       glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(RADIUS * Cos(i) + HEAD_LEN * Cos(i), -SHAFT_LEN, RADIUS * Sin(i));
+      glVertex3f(RADIUS * Cos(i) + HEAD_WIDTH * Cos(i), -SHAFT_LEN - RADIUS, RADIUS * Sin(i));
+   }
+   glEnd();
+
+   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+
+   glBegin(GL_QUAD_STRIP);
+
+   float newRadius = RADIUS + 0.01;
+
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      glNormal3f(Cos(theta), -RADIUS, Sin(theta));
+      glTexCoord2f(0.0, i % 2);
+      glVertex3f(newRadius * Cos(theta), -SHAFT_LEN, newRadius * Sin(theta));
+      glTexCoord2f(1.0, i % 2);
+      glVertex3f(newRadius * Cos(theta), -SHAFT_LEN - RADIUS, newRadius * Sin(theta));
+   }
+   glEnd();
+
+   glNormal3f(0.0, -RADIUS - SHAFT_LEN - 0.2, -RADIUS/2);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(0.0, -RADIUS - SHAFT_LEN - 0.2, -RADIUS/2);
+
+   for (int i = 30; i <= 360; i += 30)
+   {
+      glNormal3f(Cos(i), -RADIUS - SHAFT_LEN - 0.001, Sin(i));
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(newRadius * Cos(i), -RADIUS - SHAFT_LEN, newRadius * Sin(i));
    }
    glEnd();
 
