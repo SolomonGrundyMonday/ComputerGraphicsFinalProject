@@ -36,6 +36,7 @@ Cuboid.o: Cuboid.cpp GameObject.h Cuboid.h CSCIx229.h
 Camera.o: Camera.cpp Camera.h CSCIx229.h
 Tree.o: Tree.cpp Tree.h GameObject.h CSCIx229.h
 Shovel.o: Shovel.cpp Shovel.h GameObject.h CSCIx229.h
+Axe.o: Axe.cpp Axe.h GameObject.h CSCIx229.h
 
 # Create archive
 CSCIx229.a:fatal.o errcheck.o print.o loadtexbmp.o loadobj.o projection.o
@@ -48,7 +49,7 @@ CSCIx229.a:fatal.o errcheck.o print.o loadtexbmp.o loadobj.o projection.o
 	g++ -c $(CFLG)  $<
 
 #  Link
-final:FinalMain.o   Cuboid.o   Camera.o   Tree.o   Shovel.o   CSCIx229.a
+final:FinalMain.o   Cuboid.o   Camera.o   Tree.o   Shovel.o   Axe.o   CSCIx229.a
 	g++ $(CFLG) -o $@ $^  $(LIBS)
 
 #  Clean

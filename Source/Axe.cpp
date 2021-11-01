@@ -107,6 +107,134 @@ void Axe::Render()
 
    // Draw the head.
 
+   glBindTexture(GL_TEXTURE_2D, metal);
+
+   // Top.
+   glNormal3f(RAD/2, LENGTH + 0.001, RAD/2);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-RAD, LENGTH + 0.001, -RAD);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(-RAD, LENGTH + 0.001, RAD);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(RAD, LENGTH + 0.001, RAD);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(RAD, LENGTH + 0.001, -RAD);
+   glEnd();
+
+   // Bottom.
+   glNormal3f(RAD/2, LENGTH - HEAD_HEIGHT, RAD/2);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-RAD, LENGTH - HEAD_HEIGHT, -RAD);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(-RAD, LENGTH - HEAD_HEIGHT, RAD);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(RAD, LENGTH - HEAD_HEIGHT, RAD);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(RAD, LENGTH - HEAD_HEIGHT, -RAD);
+   glEnd();
+
+   // Front side.
+   glNormal3f(0.0, (LENGTH - HEAD_HEIGHT)/2, RAD);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(RAD, LENGTH - HEAD_HEIGHT, RAD);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(-RAD, LENGTH - HEAD_HEIGHT, RAD);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(-RAD, LENGTH, RAD);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(RAD, LENGTH, RAD);
+   glEnd();
+
+   // Left side.
+   glNormal3f(RAD, (LENGTH - HEAD_HEIGHT)/2, 0.0);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(RAD, LENGTH - HEAD_HEIGHT, RAD);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(RAD, LENGTH - HEAD_HEIGHT, -RAD);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(RAD, LENGTH, -RAD);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(RAD, LENGTH, RAD);
+   glEnd();
+
+   // Right side.
+   glNormal3f(-RAD, (LENGTH - HEAD_HEIGHT)/2, 0.0);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-RAD, LENGTH, -RAD);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(-RAD, LENGTH, RAD);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(-RAD, LENGTH - HEAD_HEIGHT, RAD);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(-RAD, LENGTH - HEAD_HEIGHT, -RAD);
+   glEnd();
+
+   // Back side.
+   glNormal3f(0.0, (LENGTH - HEAD_HEIGHT)/2, RAD);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-RAD, LENGTH, -RAD);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(RAD, LENGTH, -RAD);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(RAD, LENGTH - HEAD_HEIGHT, -RAD);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(-RAD, LENGTH - HEAD_HEIGHT, -RAD);
+   glEnd();
+
+   // Front axe flat side.
+   glNormal3f((-RAD - HEAD_LENGTH)/2, (LENGTH - HEAD_HEIGHT)/2, -RAD/2);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-RAD, LENGTH, -RAD);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(RAD, LENGTH - HEAD_HEIGHT, -RAD);   
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(-RAD - HEAD_LENGTH, LENGTH - HEAD_HEIGHT, 0.0);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(-RAD - HEAD_LENGTH, LENGTH, 0.0);
+   glEnd();
+
+   // Back axe flat side.
+   glNormal3f((-RAD - HEAD_LENGTH)/2, (LENGTH - HEAD_HEIGHT)/2, RAD/2);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-RAD, LENGTH, RAD);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(RAD, LENGTH - HEAD_HEIGHT, RAD);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(-RAD - HEAD_LENGTH, LENGTH - HEAD_HEIGHT, 0.0);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(-RAD - HEAD_LENGTH, LENGTH, 0.0);
+   glEnd();
+
+   // Axe head top.
+   glNormal3f((-RAD + HEAD_LENGTH)/2, LENGTH, 0.0);
+   glBegin(GL_TRIANGLES);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-RAD, LENGTH, RAD);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(-RAD, LENGTH, -RAD);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(-RAD - HEAD_LENGTH, LENGTH, 0.0);
+   glEnd();
+
+   // Axe head bottom.
+   glNormal3f((-RAD + HEAD_LENGTH)/2, LENGTH - HEAD_HEIGHT, 0.0);
+   glBegin(GL_TRIANGLES);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-RAD, LENGTH - HEAD_HEIGHT, RAD);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(-RAD, LENGTH - HEAD_HEIGHT, -RAD);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(-RAD - HEAD_LENGTH, LENGTH - HEAD_HEIGHT, 0.0);
+   glEnd();
+
    glPopMatrix();
 }
 

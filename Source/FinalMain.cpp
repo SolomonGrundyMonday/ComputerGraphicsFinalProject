@@ -3,12 +3,14 @@
 #include "Camera.h"
 #include "Tree.h"
 #include "Shovel.h"
+#include "Axe.h"
 #include <vector>
 
 Cuboid ground;
 Camera player;
 std::vector<Tree *> tree;
 Shovel* shovel;
+Axe* axe;
 
 void display()
 {
@@ -28,6 +30,7 @@ void display()
 
    ground.Render();
    shovel->Render();
+   axe->Render();
 
    ErrCheck("display");
    glFlush();
@@ -111,7 +114,10 @@ int main(int argc, char* argv[])
    }
 
    shovel = new Shovel(-15.0, 3.0, -15.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0);
-   shovel->Initialize("wood.bmp");
+   shovel->Initialize("Wood.bmp");
+
+   axe = new Axe(-15.0, 0.5, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0);
+   axe->Initialize("Wood.bmp");
 
    ErrCheck("init");
    glutMainLoop();
