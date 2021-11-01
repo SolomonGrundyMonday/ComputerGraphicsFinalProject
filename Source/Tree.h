@@ -7,8 +7,6 @@
 
 #pragma once
 #include "GameObject.h"
-#include "CSCIx229.h"
-#include <vector>
 
 #define SHRINK_FACTOR 0.7
 #define LEAF_SIZE 0.3

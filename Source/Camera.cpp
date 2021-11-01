@@ -21,7 +21,7 @@ Camera::Camera()
    // Default values for focal length, aspect ratio, field of view.
    this->dim = 5.0;
    this->asp = 1.0;
-   this->theta = 45;
+   this->theta = 0;
 }
 
 // Function definition for MoveForward method of Camera class.

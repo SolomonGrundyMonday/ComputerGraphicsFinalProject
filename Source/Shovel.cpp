@@ -50,7 +50,7 @@ int Shovel::Initialize(const char* filename)
 // Definition of Shovel class Render function implementation.
 void Shovel::Render()
 {
-   
+   // Enable textures.
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    glBindTexture(GL_TEXTURE_2D, metal);
@@ -59,6 +59,7 @@ void Shovel::Render()
 
    glPushMatrix();
 
+   // Apply translation, rotation and scaling.
    glTranslated(this->posX, this->posY, this->posZ);
    glRotated(this->rotX, 1, 0, 0);
    glRotated(this->rotY, 0, 1, 0);
@@ -216,6 +217,7 @@ void Shovel::Render()
    glEnd();
 
    glPopMatrix();
+   glDisable(GL_TEXTURE_2D);
 }
 
 // Definition of Shovel class setPosition function.

@@ -49,11 +49,30 @@ void Cabin::Initialize(const char* filename)
 // Function definition for Cabin class Render function implementation.
 void Cabin::Render()
 {
+   // Enable textures.
+   glEnable(GL_TEXTURE_2D);
+   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+   glBindTexture(GL_TEXTURE_2D, texture);
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+   glPushMatrix();
+
+   // Apply object's translation, rotation and scaling.
+   glTranslatef(this->posX, this->posY, this->posZ);
+   glRotatef(this->rotX, 1, 0, 0);
+   glRotatef(this->rotY, 0, 1, 0);
+   glRotatef(this->rotZ, 0, 0, 1);
+   glScalef(this->scaleX, this->scaleY, this->scaleZ);
+
    // Walls.
 
    // Roof.
 
    // Trim panels.
+
+   glPopMatrix();
+   glDisable(GL_TEXTURE_2D);
 }
 
 // Function definition for Cabin class setPosition function.

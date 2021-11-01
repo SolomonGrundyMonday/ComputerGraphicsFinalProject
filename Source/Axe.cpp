@@ -51,6 +51,7 @@ int Axe::Initialize(const char* filename)
 // Function definition for Axe class Render function implementation.
 void Axe::Render()
 {
+   // Enable textures.
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    glBindTexture(GL_TEXTURE_2D, texture);
@@ -59,6 +60,7 @@ void Axe::Render()
 
    glPushMatrix();
 
+   // Apply translation, rotation and scaling.
    glTranslatef(this->posX, this->posY, this->posZ);
    glRotatef(this->rotX, 1, 0, 0);
    glRotatef(this->rotY, 0, 1, 0);
@@ -66,7 +68,6 @@ void Axe::Render()
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
 
    // Draw the handle.
-
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
@@ -106,7 +107,6 @@ void Axe::Render()
    glEnd();
 
    // Draw the head.
-
    glBindTexture(GL_TEXTURE_2D, metal);
 
    // Top.
@@ -236,6 +236,7 @@ void Axe::Render()
    glEnd();
 
    glPopMatrix();
+   glDisable(GL_TEXTURE_2D);
 }
 
 // Function definition for Axe class setPosition function.

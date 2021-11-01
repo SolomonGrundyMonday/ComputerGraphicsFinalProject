@@ -145,6 +145,8 @@ int Tree::Initialize(const char* filename)
 void Tree::Render()
 {
    glPushMatrix();
+
+   // Apply translation, rotation and scaling.
    glTranslated(this->posX, this->posY, this->posZ);
    glRotated(this->rotX, 1, 0, 0);
    glRotated(this->rotY, 0, 1, 0);

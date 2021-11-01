@@ -8,6 +8,11 @@
 
 #include "GameObject.h"
 
+#define WALL_HEIGHT 1.0
+#define STEEPLE_HEIGHT 1.0
+#define CABIN_LENGTH 1.5
+#define CABIN_WIDTH 1.0
+
 class Cabin : public GameObject
 {
    // private member variables for translation, rotation, scaling and texture.
