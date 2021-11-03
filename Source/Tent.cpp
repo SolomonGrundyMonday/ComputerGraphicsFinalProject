@@ -33,7 +33,7 @@ Tent::Tent(float x, float y, float z, float dx, float dy, float dz, float rx, fl
 }
 
 // Function definition for Tent object Initialize function implementation.
-void Tent::Initialize(const char* filename)
+int Tent::Initialize(const char* filename)
 {
    this->texture = LoadTexBMP(filename);
 }

@@ -57,7 +57,7 @@ class Cabin : public GameObject
        *   Postcondition: The texture(s) for the object have been loaded from a bmp file and applied to the texture field.
        *   Parameters:    The filename for a valid bmp file in 3 X 8 bit RGB format, with maximum size of 512 X 512 pixels. 
        */
-      void Initialize(const char* filename);
+      int Initialize(const char* filename);
 
       /*
        *    Function prototype for Cabin object implementation of Render function.

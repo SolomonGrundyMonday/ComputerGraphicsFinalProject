@@ -39,9 +39,9 @@ Cabin::Cabin(float x, float y, float z, float dx, float dy, float dz, float rx, 
 }
 
 // Function definition for Cabin class Initialize function implementation.
-void Cabin::Initialize(const char* filename)
+int Cabin::Initialize(const char* filename)
 {
-   this->texture = LoadTexBMP("WoodPaneling.bmp");
+   this->texture = LoadTexBMP("Bricks.bmp");
    this->shingles = LoadTexBmp("Shingles.bmp");
    this->trim = LoadTexBMP("WoodTrim.bmp");
 }
