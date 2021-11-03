@@ -41,9 +41,10 @@ Cabin::Cabin(float x, float y, float z, float dx, float dy, float dz, float rx, 
 // Function definition for Cabin class Initialize function implementation.
 int Cabin::Initialize(const char* filename)
 {
-   this->texture = LoadTexBMP("Bricks.bmp");
-   this->shingles = LoadTexBmp("Shingles.bmp");
-   this->trim = LoadTexBMP("WoodTrim.bmp");
+   this->texture = LoadTexBMP(filename);
+   //this->shingles = LoadTexBmp("Shingles.bmp");
+   //this->trim = LoadTexBMP("WoodTrim.bmp");
+   return 0;
 }
 
 // Function definition for Cabin class Render function implementation.
@@ -52,9 +53,11 @@ void Cabin::Render()
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
    glBindTexture(GL_TEXTURE_2D, texture);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 
    glPushMatrix();
 
@@ -65,11 +68,83 @@ void Cabin::Render()
    glRotatef(this->rotZ, 0, 0, 1);
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
 
-   // Walls.
+   // Front wall.
+   glNormal3f(0.0, 0.0, -0.5);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-1.0, -1.0, 1.0);
+   glTexCoord2f(this->scaleX, 0.0);
+   glVertex3f(1.0, -1.0, 1.0);
+   glTexCoord2f(this->scaleX, this->scaleY);
+   glVertex3f(1.0, 1.0, 1.0);
+   glTexCoord2f(0.0, this->scaleY);
+   glVertex3f(-1.0, 1.0, 1.0);
+   glEnd();
+
+   // Back Wall.
+   glNormal3f(0.0, 0.0, 1.0);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(1.0, -1.0, -1.0);
+   glTexCoord2f(this->scaleX, 0.0);
+   glVertex3f(-1.0, -1.0, -1.0);
+   glTexCoord2f(this->scaleX, this->scaleY);
+   glVertex3f(-1.0, 1.0, -1.0);
+   glTexCoord2f(0.0, this->scaleY);
+   glVertex3f(1.0, 1.0, -1.0);
+   glEnd();
+
+   // Left Wall.
+   glNormal3f(-0.5, 0.0, 0.0);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-1.0, -1.0, -1.0);
+   glTexCoord2f(this->scaleZ, 0.0);
+   glVertex3f(-1.0, -1.0, 1.0);
+   glTexCoord2f(this->scaleZ, this->scaleY);
+   glVertex3f(-1.0, 1.0, 1.0);
+   glTexCoord2f(0.0, this->scaleY);
+   glVertex3f(-1.0, 1.0, -1.0); 
+   glEnd();
+
+   // Right wall.
+   glNormal3f(0.5, 0.0, 0.0);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(1.0, -1.0, 1.0);
+   glTexCoord2f(this->scaleZ, 0.0);
+   glVertex3f(1.0, -1.0, -1.0);
+   glTexCoord2f(this->scaleZ, this->scaleY);
+   glVertex3f(1.0, 1.0, -1.0);
+   glTexCoord2f(0.0, this->scaleY);
+   glVertex3f(1.0, 1.0, 1.0);
+   glEnd();
+
+   // Attic Front Wall.
+   glNormal3f(0.0, (1.0 + STEEPLE_HEIGHT)/2.0, 1.0);
+   glBegin(GL_TRIANGLES);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-1.0, 1.0, 1.0);
+   glTexCoord2f(this->scaleX, 0.0);
+   glVertex3f(1.0, 1.0, 1.0);
+   glTexCoord2f(this->scaleX/2.0, (STEEPLE_HEIGHT * this->scaleY)/2.0);
+   glVertex3f(0.0, 1.0 + STEEPLE_HEIGHT, 1.0);
+   glEnd();
+
+   // Attic Back wall.
+   glNormal3f(0.0, (1.0 + STEEPLE_HEIGHT)/2.0, -1.0);
+   glBegin(GL_TRIANGLES);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(1.0, 1.0, -1.0);
+   glTexCoord2f(this->scaleX, 0.0);
+   glVertex3f(-1.0, 1.0, -1.0);
+   glTexCoord2f(this->scaleX/2.0, (STEEPLE_HEIGHT * this->scaleY)/2.0);
+   glVertex3f(0.0, 1.0 + STEEPLE_HEIGHT, -1.0);
+   glEnd();
 
    // Roof.
 
-   // Trim panels.
+   // Doors and windows.
 
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);

@@ -4,6 +4,7 @@
 #include "Tree.h"
 #include "Shovel.h"
 #include "Axe.h"
+#include "Cabin.h"
 #include <vector>
 
 Cuboid ground;
@@ -11,6 +12,7 @@ Camera player;
 std::vector<Tree *> tree;
 Shovel* shovel;
 Axe* axe;
+Cabin* cabin;
 
 void display()
 {
@@ -31,6 +33,7 @@ void display()
    ground.Render();
    shovel->Render();
    axe->Render();
+   cabin->Render();
 
    ErrCheck("display");
    glFlush();
@@ -118,6 +121,9 @@ int main(int argc, char* argv[])
 
    axe = new Axe(-15.0, 0.5, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0);
    axe->Initialize("Wood.bmp");
+
+   cabin = new Cabin(10.0, 2.0, 0.0, 6.0, 2.0, 9.0, 0.0, 0.0, 0.0);
+   cabin->Initialize("Bricks.bmp");
 
    ErrCheck("init");
    glutMainLoop();
