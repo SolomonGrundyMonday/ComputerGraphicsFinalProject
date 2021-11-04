@@ -38,12 +38,22 @@ Cabin::Cabin(float x, float y, float z, float dx, float dy, float dz, float rx, 
    this->rotZ = rz;
 }
 
+void Cabin::vertex(double th, double ph)
+{
+   double x = Sin(th)*Cos(ph);
+   double y = Cos(th)*Cos(ph);
+   double z = Sin(ph);
+
+   glNormal3d(x, y, z);
+   glVertex3d(x, y, z);
+}
+
 // Function definition for Cabin class Initialize function implementation.
 int Cabin::Initialize(const char* filename)
 {
    this->texture = LoadTexBMP(filename);
    //this->shingles = LoadTexBmp("Shingles.bmp");
-   //this->trim = LoadTexBMP("WoodTrim.bmp");
+   this->wood = LoadTexBMP("Wood.bmp");
    return 0;
 }
 
@@ -53,7 +63,6 @@ void Cabin::Render()
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
    glBindTexture(GL_TEXTURE_2D, texture);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -143,8 +152,204 @@ void Cabin::Render()
    glEnd();
 
    // Roof.
+   glBindTexture(GL_TEXTURE_2D, wood);
+   
+   glNormal3f((1.0 + OVERHANG)/2.0, (1.0 + STEEPLE_HEIGHT)/2.0, 0.0);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(1.0 + OVERHANG, 0.9, -1.0 - OVERHANG);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(1.0 + OVERHANG, 0.9, 1.0 + OVERHANG);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(0.0, 1.0 + STEEPLE_HEIGHT, 1.0 + OVERHANG);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(0.0, 1.0 + STEEPLE_HEIGHT, -1.0 - OVERHANG);
+   glEnd();
+
+   glNormal3f((-1.0 - OVERHANG)/2.0, (1.0 + STEEPLE_HEIGHT)/2.0, 0.0);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-1.0 - OVERHANG, 0.9, 1.0 + OVERHANG);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(-1.0 - OVERHANG, 0.9, -1.0 - OVERHANG);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(0.0, 1.0 + STEEPLE_HEIGHT, -1.0 - OVERHANG);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(0.0, 1.0 + STEEPLE_HEIGHT, 1.0 + OVERHANG);
+   glEnd();
 
    // Doors and windows.
+   //glBindTexture(GL_TEXTURE_2D, wood);
+
+   // Door front face.
+   glNormal3f(0.0, -0.75, 1.005);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-0.05, -1.0, 1.01);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(0.05, -1.0, 1.01);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(0.05, -0.5, 1.01);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(-0.05, -0.5, 1.01);
+   glEnd();
+
+   // Door top face.
+   glNormal3f(0.0, -0.5, 1.005);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-0.05, -0.5, 1.01);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(0.05, -0.5, 1.01);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(0.05, -0.5, 1.0);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(-0.05, -0.5, 1.0);
+   glEnd();
+
+   // Door left face.
+   glNormal3f(-0.05, -0.75, 1.005);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-0.05, -1.0, 1.0);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(-0.05, -1.0, 1.01);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(-0.05, -0.5, 1.01);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(-0.05, -0.5, 1.0);
+   glEnd();
+
+   // Door right face.
+   glNormal3f(0.05, -0.75, 1.005);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(0.05, -1.0, 1.01);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(0.05, -1.0, 1.0);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(0.05, -0.5, 1.0);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(0.05, -0.5, 1.01);
+   glEnd();
+
+   // Door top hinge.
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      float x = (-HINGE_RADIUS * Cos(theta)) - 0.055;
+      float z = (-HINGE_RADIUS * Sin(theta)) + 1.005;
+      glNormal3f(Cos(theta) - 0.055, -HINGE_RADIUS, Sin(theta) + 1.005);
+      glTexCoord2f(0.0, i * 1.0/6.0);
+      glVertex3f(x, -0.5 - HINGE_HEIGHT, z);
+      glTexCoord2f(6.0, i * 1.0/6.0);
+      glVertex3f(x, -0.5 - (2.0 * HINGE_HEIGHT), z);
+   }
+   glEnd();
+
+   glNormal3f(-0.055, -0.5 - HINGE_HEIGHT, 1.005);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(-0.05, -0.5 - HINGE_HEIGHT, 1.005);
+
+   for (int i = 0; i <= 360; i += 30)
+   {
+      float x = (-HINGE_RADIUS * Cos(i)) - 0.055;
+      float z = (-HINGE_RADIUS * Sin(i)) + 1.005;
+      glNormal3f(Cos(i) - 0.055, -0.5 - HINGE_HEIGHT, Sin(i) + 1.005);
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(x, -0.5 - HINGE_HEIGHT, z);
+   }
+   glEnd();
+
+   glNormal3f(-0.055, -HINGE_HEIGHT, 1.005);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(-0.05, -0.5 - (2.0 * HINGE_HEIGHT), 1.005);
+
+   for (int i = 0; i <= 360; i += 30)
+   {
+      float x = (-HINGE_RADIUS * Cos(i)) - 0.055;
+      float z = (-HINGE_RADIUS * Sin(i)) + 1.005;
+      glNormal3f(Cos(i) - 0.055, -HINGE_HEIGHT, Sin(i) + 1.005);
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(x, -0.5 - (2.0 * HINGE_HEIGHT), z);
+   }
+   glEnd();
+
+   // Door bottom hinge.
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      float x = (-HINGE_RADIUS * Cos(theta)) - 0.055;
+      float z = (-HINGE_RADIUS * Sin(theta)) + 1.005;
+      glNormal3f(Cos(theta) - 0.055, -1.0 + HINGE_HEIGHT, Sin(theta) + 1.005);
+      glTexCoord2f(0.0, i * 1.0/6.0);
+      glVertex3f(x, -1.0 + HINGE_HEIGHT, z);
+      glTexCoord2f(6.0, i * 1.0/6.0);
+      glVertex3f(x, -1.0 + (2.0 * HINGE_HEIGHT), z);
+   }
+   glEnd();
+
+   glNormal3f(-0.055, -1.0 + HINGE_HEIGHT, 1.005);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(-0.055, -1.0 + HINGE_HEIGHT, 1.005);
+
+   for (int i = 0; i <= 360; i += 30)
+   {
+      float x = (-HINGE_RADIUS * Cos(i)) - 0.055;
+      float z = (-HINGE_RADIUS * Sin(i)) + 1.005;
+      glNormal3f(Cos(i) - 0.055, -1.0 + HINGE_HEIGHT, Sin(i) + 1.005);
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(x, -1.0 + HINGE_HEIGHT, z);
+   }
+   glEnd();
+
+   glNormal3f(-0.055, -1.0 + (2.0 * HINGE_HEIGHT), 1.005);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(-0.055, -1.0 + (2.0 * HINGE_HEIGHT), 1.005);
+
+   for (int i = 0; i <= 360; i += 30)
+   {
+      float x = (-HINGE_RADIUS * Cos(i)) - 0.055;
+      float z = (-HINGE_RADIUS * Sin(i)) + 1.005;
+      glNormal3f(Cos(i) - 0.055, -1.0 + (2.0 * HINGE_HEIGHT), Sin(i) + 1.005);
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(x, -1.0 + (2.0 * HINGE_HEIGHT), z);
+   }
+   glEnd();
+
+   // Doorknob.
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      float x = (KNOB_RADIUS * Cos(theta)) + 0.04;
+      float y = (3.0 * KNOB_RADIUS * Sin(theta)) - 0.75;
+      glNormal3f(Cos(theta) + 0.04, Sin(theta) - 0.75, (1.01 + KNOB_PROTRUSION)/2.0);
+      glTexCoord2f(0.0, i%2);
+      glVertex3f(x, y, 1.01);
+      glTexCoord2f(1.0, i%2);
+      glVertex3f(x, y, 1.01 + KNOB_PROTRUSION);
+   }
+   glEnd();
+
+   //glTranslatef(0.04, -0.75, 1.01 + KNOB_PROTRUSION);
+   //glScalef(0.005, 0.03, 0.005);
+   for (int ph = -90; ph < 90; ph += 10)
+   {
+      glBegin(GL_QUAD_STRIP);
+      for (int th = 0; th <= 360; th += 20)
+      {
+         vertex(th, ph);
+         vertex(th, ph+10);
+	  }
+      glEnd();
+   }
 
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);

@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
    axe = new Axe(-15.0, 0.5, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0);
    axe->Initialize("Wood.bmp");
 
-   cabin = new Cabin(10.0, 2.0, 0.0, 6.0, 2.0, 9.0, 0.0, 0.0, 0.0);
+   cabin = new Cabin(10.0, 3.0, 0.0, 6.0, 2.0, 9.0, 0.0, 180.0, 0.0);
    cabin->Initialize("Bricks.bmp");
 
    ErrCheck("init");

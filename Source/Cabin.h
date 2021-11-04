@@ -12,6 +12,11 @@
 #define STEEPLE_HEIGHT 1.0
 #define CABIN_LENGTH 1.5
 #define CABIN_WIDTH 1.0
+#define HINGE_RADIUS 0.005
+#define HINGE_HEIGHT 0.1
+#define KNOB_RADIUS 0.001
+#define KNOB_PROTRUSION 0.01
+#define OVERHANG 0.1
 
 class Cabin : public GameObject
 {
@@ -19,7 +24,7 @@ class Cabin : public GameObject
    private:
       unsigned char texture;
       unsigned char shingles;
-      unsigned char trim;
+      unsigned char wood;
       float posX;
       float posY;
       float posZ;
@@ -29,6 +34,8 @@ class Cabin : public GameObject
       float rotX;
       float rotY;
       float rotZ;
+
+      void vertex(double th, double ph);
 
    public:
      
