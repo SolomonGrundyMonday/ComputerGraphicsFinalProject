@@ -50,8 +50,6 @@ void Cuboid::Render()
    // Vectors and scalars for lighting, texture coordinates and materials.
    float white[] = {1.0, 1.0, 1.0, 1.0};
    float Emission[] = {0.0, 0.0, 0.0, 1.0};
-   float X = this->xScale;
-   float Z = this->zScale;
 
    // Set object material parameters.
    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.0);
@@ -79,54 +77,54 @@ void Cuboid::Render()
    glNormal3f(0.0, 0.0, 1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0); glVertex3f(-1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, X); glVertex3f(1.0, 1.0, 1.0);
-   glTexCoord2f(X, X); glVertex3f(1.0, -1.0, 1.0);
-   glTexCoord2f(X, 0.0); glVertex3f(-1.0, -1.0, 1.0);
+   glTexCoord2f(0.0, this->zScale); glVertex3f(1.0, 1.0, 1.0);
+   glTexCoord2f(this->yScale, this->zScale); glVertex3f(1.0, -1.0, 1.0);
+   glTexCoord2f(this->yScale, 0.0); glVertex3f(-1.0, -1.0, 1.0);
    glEnd();
 
    // Left face texturecoordinates/vertices.
    glNormal3f(0.0, 0.0, -1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0); glVertex3f(1.0, 1.0, -1.0);
-   glTexCoord2f(0.0, X); glVertex3f(-1.0, 1.0, -1.0);
-   glTexCoord2f(X, X); glVertex3f(-1.0, -1.0, -1.0);
-   glTexCoord2f(X, 0.0); glVertex3f(1.0, -1.0, -1.0);
+   glTexCoord2f(0.0, this->zScale); glVertex3f(-1.0, 1.0, -1.0);
+   glTexCoord2f(this->yScale, this->zScale); glVertex3f(-1.0, -1.0, -1.0);
+   glTexCoord2f(this->yScale, 0.0); glVertex3f(1.0, -1.0, -1.0);
    glEnd();
 
    // Front face texture coordinates/vertices.
    glNormal3f(-1.0, 0.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0); glVertex3f(-1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, Z); glVertex3f(-1.0, -1.0, 1.0);
-   glTexCoord2f(Z, Z); glVertex3f(-1.0, -1.0, -1.0);
-   glTexCoord2f(Z, 0.0); glVertex3f(-1.0, 1.0, -1.0);
+   glTexCoord2f(0.0, this->yScale); glVertex3f(-1.0, -1.0, 1.0);
+   glTexCoord2f(this->xScale, this->yScale); glVertex3f(-1.0, -1.0, -1.0);
+   glTexCoord2f(this->xScale, 0.0); glVertex3f(-1.0, 1.0, -1.0);
    glEnd();
 
    // Back face texture coordinates/vertices.
    glNormal3f(1.0, 0.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0); glVertex3f(1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, Z); glVertex3f(1.0, -1.0, 1.0);
-   glTexCoord2f(Z, Z); glVertex3f(1.0, -1.0, -1.0);
-   glTexCoord2f(Z, 0.0); glVertex3f(1.0, 1.0, -1.0);
+   glTexCoord2f(0.0, this->yScale); glVertex3f(1.0, -1.0, 1.0);
+   glTexCoord2f(this->xScale, this->yScale); glVertex3f(1.0, -1.0, -1.0);
+   glTexCoord2f(this->xScale, 0.0); glVertex3f(1.0, 1.0, -1.0);
    glEnd();
 
    // Top face texture coordinates/vertices.
    glNormal3f(0.0, 1.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0); glVertex3f(1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, X); glVertex3f(1.0, 1.0, -1.0);
-   glTexCoord2f(Z, X); glVertex3f(-1.0, 1.0, -1.0);
-   glTexCoord2f(Z, 0.0); glVertex3f(-1.0, 1.0, 1.0);
+   glTexCoord2f(0.0, this->xScale); glVertex3f(1.0, 1.0, -1.0);
+   glTexCoord2f(this->zScale, this->xScale); glVertex3f(-1.0, 1.0, -1.0);
+   glTexCoord2f(this->zScale, 0.0); glVertex3f(-1.0, 1.0, 1.0);
    glEnd();
 
    // Bottom face texture coordintates/vertices.
    glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0); glVertex3f(1.0, -1.0, 1.0);
-   glTexCoord2f(0.0, X); glVertex3f(1.0, -1.0, -1.0);
-   glTexCoord2f(Z, X); glVertex3f(-1.0, -1.0, -1.0);
-   glTexCoord2f(Z, 0.0); glVertex3f(-1.0, -1.0, 1.0);
+   glTexCoord2f(0.0, this->xScale); glVertex3f(1.0, -1.0, -1.0);
+   glTexCoord2f(this->zScale, this->xScale); glVertex3f(-1.0, -1.0, -1.0);
+   glTexCoord2f(this->zScale, 0.0); glVertex3f(-1.0, -1.0, 1.0);
    glEnd();
 
    glDisable(GL_TEXTURE_2D);
