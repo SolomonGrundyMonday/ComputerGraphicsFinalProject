@@ -3,7 +3,7 @@ Cuboid   -   Complete
 Shovel   -   Complete
 Axe      -   Complete
 Cabin    -   Partial - object is complex, needs more involved testing.
-Tree     -
+Tree     -   Parital - object is complex, needs more involved testing.
 Tent     -
 Skybox   -   N/A
 Camera   -   N/A
