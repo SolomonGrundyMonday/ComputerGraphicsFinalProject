@@ -5,6 +5,7 @@
 #include "Shovel.h"
 #include "Axe.h"
 #include "Cabin.h"
+#include "Skybox.h"
 #include <vector>
 
 Cuboid ground;
@@ -13,6 +14,7 @@ std::vector<Tree *> tree;
 Shovel* shovel;
 Axe* axe;
 Cabin* cabin;
+Skybox* sky;
 
 void display()
 {
@@ -34,6 +36,7 @@ void display()
    shovel->Render();
    axe->Render();
    cabin->Render();
+   sky->Render();
 
    ErrCheck("display");
    glFlush();
@@ -124,6 +127,9 @@ int main(int argc, char* argv[])
 
    cabin = new Cabin(10.0, 3.0, 0.0, 6.0, 2.0, 9.0, 0.0, 180.0, 0.0);
    cabin->Initialize("Bricks.bmp");
+
+   sky = new Skybox(0.0, 0.0, 0.0, 50.0, 50.0, 50.0, 0.0, 0.0, 0.0);
+   sky->Initialize("Stars.bmp");
 
    ErrCheck("init");
    glutMainLoop();

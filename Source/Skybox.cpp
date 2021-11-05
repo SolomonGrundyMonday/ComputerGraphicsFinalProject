@@ -42,6 +42,9 @@ Skybox::Skybox(float x, float y, float z, float dx, float dy, float dz, float rx
 int Skybox::Initialize(const char* filename)
 {
    this->texture = LoadTexBMP(filename);
+   //this->moon = LoadTexBMP("Moon.bmp");
+
+   return 0;
 }
 
 // Skybox class Render function implementation definition.
@@ -49,6 +52,8 @@ void Skybox::Render()
 {
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
+   glEnable(GL_CULL_FACE);
+   glCullFace(GL_FRONT);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -64,16 +69,68 @@ void Skybox::Render()
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
 
    // Draw "roof"
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-1.0, 1.0, 1.0);
+   glTexCoord2f(this->scaleX, 0.0);
+   glVertex3f(1.0, 1.0, 1.0);
+   glTexCoord2f(this->scaleX, this->scaleZ);
+   glVertex3f(1.0, 1.0, -1.0);
+   glTexCoord2f(0.0, this->scaleZ);
+   glVertex3f(-1.0, 1.0, -1.0);
+   glEnd();
 
    // Draw "left wall"
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-1.0, -1.0, -1.0);
+   glTexCoord2f(this->scaleZ, 0.0);
+   glVertex3f(-1.0, -1.0, 1.0);
+   glTexCoord2f(this->scaleZ, this->scaleY);
+   glVertex3f(-1.0, 1.0, 1.0);
+   glTexCoord2f(0.0, this->scaleY);
+   glVertex3f(-1.0, 1.0, -1.0);
+   glEnd();
 
    // Draw "right wall"
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(1.0, -1.0, 1.0);
+   glTexCoord2f(this->scaleZ, 0.0);
+   glVertex3f(1.0, -1.0, -1.0);
+   glTexCoord2f(this->scaleZ, this->scaleY);
+   glVertex3f(1.0, 1.0, -1.0);
+   glTexCoord2f(0.0, this->scaleY);
+   glVertex3f(1.0, 1.0, 1.0);
+   glEnd();
 
    // Draw "back wall"
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(1.0, -1.0, -1.0);
+   glTexCoord2f(this->scaleX, 0.0);
+   glVertex3f(-1.0, -1.0, -1.0);
+   glTexCoord2f(this->scaleX, this->scaleY);
+   glVertex3f(-1.0, 1.0, -1.0);
+   glTexCoord2f(0.0, this->scaleY);
+   glVertex3f(1.0, 1.0, -1.0);
+   glEnd();
  
    // Draw "front wall"
+   //glBindTexture(GL_TEXTURE_2D, moon);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-1.0, -1.0, 1.0);
+   glTexCoord2f(this->scaleX, 0.0);
+   glVertex3f(1.0, -1.0, 1.0);
+   glTexCoord2f(this->scaleX, this->scaleY);
+   glVertex3f(1.0, 1.0, 1.0);
+   glTexCoord2f(0.0, this->scaleY);
+   glVertex3f(-1.0, 1.0, 1.0);
+   glEnd();
 
    glPopMatrix();
+   glDisable(GL_CULL_FACE);
    glDisable(GL_TEXTURE_2D);
 }
 

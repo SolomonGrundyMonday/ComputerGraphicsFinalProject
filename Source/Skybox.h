@@ -13,6 +13,7 @@ class Skybox : public GameObject
    // Private member variables for translation, scaling and texture.
    private:
       unsigned char texture;
+      unsigned char moon;
       float posX;
       float posY;
       float posZ;
