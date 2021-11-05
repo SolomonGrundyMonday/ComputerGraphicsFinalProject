@@ -106,6 +106,7 @@ void Shovel::Render()
 
    // Connect the handle to the shaft.
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+   glNormal3f(HANDLE_LEN, HANDLE_HEIGHT - RADIUS, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, RADIUS);
@@ -117,6 +118,7 @@ void Shovel::Render()
    glVertex3f(HANDLE_LEN, HANDLE_HEIGHT, RADIUS);
    glEnd();
 
+   glNormal3f(HANDLE_LEN, HANDLE_HEIGHT - RADIUS, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, RADIUS);
@@ -128,6 +130,7 @@ void Shovel::Render()
    glVertex3f(-HANDLE_LEN, HANDLE_HEIGHT, RADIUS);
    glEnd();
 
+   glNormal3f(0.0, -HANDLE_HEIGHT / 2 + RADIUS, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, RADIUS);
@@ -180,7 +183,7 @@ void Shovel::Render()
 
    for (int i = 0; i <= 180; i += 30)
    {
-      glNormal3f(RADIUS * Cos(i) + HEAD_WIDTH * Cos(i), -SHAFT_LEN - RADIUS, RADIUS * Sin(i));
+      glNormal3f(Cos(i) + Cos(i), -SHAFT_LEN - RADIUS, Sin(i));
       glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
       glVertex3f(RADIUS * Cos(i) + HEAD_WIDTH * Cos(i), -SHAFT_LEN - RADIUS, RADIUS * Sin(i));
    }
@@ -210,7 +213,7 @@ void Shovel::Render()
 
    for (int i = 30; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i), -RADIUS - SHAFT_LEN - 0.001, Sin(i));
+      glNormal3f(Cos(i), -RADIUS - SHAFT_LEN, Sin(i));
       glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
       glVertex3f(newRadius * Cos(i), -RADIUS - SHAFT_LEN, newRadius * Sin(i));
    }
