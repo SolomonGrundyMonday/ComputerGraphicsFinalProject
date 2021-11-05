@@ -50,6 +50,10 @@ int Skybox::Initialize(const char* filename)
 // Skybox class Render function implementation definition.
 void Skybox::Render()
 {
+   float texX = this->scaleX / 10.0;
+   float texY = this->scaleY / 10.0;
+   float texZ = this->scaleZ / 10.0;
+
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_CULL_FACE);
@@ -72,11 +76,11 @@ void Skybox::Render()
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-1.0, 1.0, 1.0);
-   glTexCoord2f(this->scaleX, 0.0);
+   glTexCoord2f(texX, 0.0);
    glVertex3f(1.0, 1.0, 1.0);
-   glTexCoord2f(this->scaleX, this->scaleZ);
+   glTexCoord2f(texX, texZ);
    glVertex3f(1.0, 1.0, -1.0);
-   glTexCoord2f(0.0, this->scaleZ);
+   glTexCoord2f(0.0, texZ);
    glVertex3f(-1.0, 1.0, -1.0);
    glEnd();
 
@@ -84,11 +88,11 @@ void Skybox::Render()
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-1.0, -1.0, -1.0);
-   glTexCoord2f(this->scaleZ, 0.0);
+   glTexCoord2f(texZ, 0.0);
    glVertex3f(-1.0, -1.0, 1.0);
-   glTexCoord2f(this->scaleZ, this->scaleY);
+   glTexCoord2f(texZ, texY);
    glVertex3f(-1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, this->scaleY);
+   glTexCoord2f(0.0, texY);
    glVertex3f(-1.0, 1.0, -1.0);
    glEnd();
 
@@ -96,11 +100,11 @@ void Skybox::Render()
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(1.0, -1.0, 1.0);
-   glTexCoord2f(this->scaleZ, 0.0);
+   glTexCoord2f(texZ, 0.0);
    glVertex3f(1.0, -1.0, -1.0);
-   glTexCoord2f(this->scaleZ, this->scaleY);
+   glTexCoord2f(texZ, texY);
    glVertex3f(1.0, 1.0, -1.0);
-   glTexCoord2f(0.0, this->scaleY);
+   glTexCoord2f(0.0, texY);
    glVertex3f(1.0, 1.0, 1.0);
    glEnd();
 
@@ -108,11 +112,11 @@ void Skybox::Render()
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(1.0, -1.0, -1.0);
-   glTexCoord2f(this->scaleX, 0.0);
+   glTexCoord2f(texX, 0.0);
    glVertex3f(-1.0, -1.0, -1.0);
-   glTexCoord2f(this->scaleX, this->scaleY);
+   glTexCoord2f(texX, texY);
    glVertex3f(-1.0, 1.0, -1.0);
-   glTexCoord2f(0.0, this->scaleY);
+   glTexCoord2f(0.0, texY);
    glVertex3f(1.0, 1.0, -1.0);
    glEnd();
  
@@ -121,11 +125,11 @@ void Skybox::Render()
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-1.0, -1.0, 1.0);
-   glTexCoord2f(this->scaleX, 0.0);
+   glTexCoord2f(texX, 0.0);
    glVertex3f(1.0, -1.0, 1.0);
-   glTexCoord2f(this->scaleX, this->scaleY);
+   glTexCoord2f(texX, texY);
    glVertex3f(1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, this->scaleY);
+   glTexCoord2f(0.0, texY);
    glVertex3f(-1.0, 1.0, 1.0);
    glEnd();
 

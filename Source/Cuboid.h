@@ -25,15 +25,15 @@ class Cuboid : public GameObject
    // private member variables for texture, position, rotation and scaling.
    private:
       unsigned char texture;
-	  float xPos;
-	  float yPos;
-	  float zPos;
-	  float xScale;
-	  float yScale;
-	  float zScale;
-	  float xRot;
-	  float yRot;
-	  float zRot;
+	  float posX;
+	  float posY;
+	  float posZ;
+	  float scaleX;
+	  float scaleY;
+	  float scaleZ;
+	  float rotX;
+	  float rotY;
+	  float rotZ;
 
    public:
       /*
