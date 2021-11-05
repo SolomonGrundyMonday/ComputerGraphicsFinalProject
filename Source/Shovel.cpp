@@ -42,7 +42,7 @@ Shovel::Shovel(float x, float y, float z, float dx, float dy, float dz, float rx
 int Shovel::Initialize(const char* filename)
 {
    texture = LoadTexBMP(filename);
-   metal = LoadTexBMP("rustymetal.bmp");
+   metal = LoadTexBMP("Assets/RustyMetal.bmp");
 
    return 0;
 }

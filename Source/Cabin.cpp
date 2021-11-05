@@ -43,8 +43,8 @@ int Cabin::Initialize(const char* filename)
 {
    this->texture = LoadTexBMP(filename);
    //this->shingles = LoadTexBmp("Shingles.bmp");
-   this->wood = LoadTexBMP("Wood.bmp");
-   this->metal = LoadTexBMP("Metal.bmp");
+   this->wood = LoadTexBMP("Assets/Wood.bmp");
+   this->metal = LoadTexBMP("Assets/Metal.bmp");
    return 0;
 }
 

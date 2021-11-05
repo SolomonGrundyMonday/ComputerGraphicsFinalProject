@@ -109,27 +109,27 @@ int main(int argc, char* argv[])
    glutKeyboardFunc(key);
 
    ground = Cuboid(0.0, 0.0, 0.0, 50.0, 1.0, 50.0, 0.0, 0.0, 0.0);
-   ground.Initialize("Dirt.bmp");
+   ground.Initialize("Assets/Dirt.bmp");
 
    player = Camera();
 
    for (int i = 0; i < 10; i++)
    {
       tree.push_back(new Tree(i*10.0, 1.0, i*10.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0));
-      tree.at(i)->Initialize("Bark.bmp");
+      tree.at(i)->Initialize("Assets/Bark.bmp");
    }
 
    shovel = new Shovel(-15.0, 3.0, -15.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0);
-   shovel->Initialize("Wood.bmp");
+   shovel->Initialize("Assets/Wood.bmp");
 
    axe = new Axe(-15.0, 0.5, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0);
-   axe->Initialize("Wood.bmp");
+   axe->Initialize("Assets/Wood.bmp");
 
    cabin = new Cabin(10.0, 3.0, 0.0, 6.0, 2.0, 9.0, 0.0, 180.0, 0.0);
-   cabin->Initialize("Bricks.bmp");
+   cabin->Initialize("Assets/Bricks.bmp");
 
    sky = new Skybox(0.0, 0.0, 0.0, 50.0, 50.0, 50.0, 0.0, 0.0, 0.0);
-   sky->Initialize("Stars.bmp");
+   sky->Initialize("Assets/Stars.bmp");
 
    ErrCheck("init");
    glutMainLoop();

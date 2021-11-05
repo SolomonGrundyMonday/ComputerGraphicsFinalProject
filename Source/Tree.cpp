@@ -41,6 +41,7 @@ Tree::Tree(float x, float y, float z, float dx, float dy, float dz, float rx, fl
    this->rotZ = rz;
 }
 
+// Function definition for recursive branchFractal function (borrowed from in-class notes).
 int Tree::branchFractal(float l0, float r0)
 {
    float l = l0 * (rand()/RAND_MAX*(1.15-0.85)+0.85);
@@ -79,6 +80,7 @@ int Tree::branchFractal(float l0, float r0)
    return ntri;
 }
 
+// Function definition for branch method (algorithm from in-class notes).
 int Tree::branch(float l, float r)
 {
    glPushMatrix();
@@ -111,6 +113,7 @@ int Tree::branch(float l, float r)
    return 24;
 }
 
+// Function definition for leaf method (algorithm borrowed from in-class notes).
 int Tree::leaf()
 {
    glColor3f(1, 1, 1);
@@ -137,7 +140,7 @@ int Tree::Initialize(const char* filename)
 {
    // Import texture here, need good bark picture to use.
    texture = LoadTexBMP(filename);
-   leafTex = LoadTexBMP("leaf.bmp");
+   leafTex = LoadTexBMP("Assets/Leaf.bmp");
    return 0;
 }
 

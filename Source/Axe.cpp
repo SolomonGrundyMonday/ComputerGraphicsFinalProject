@@ -42,7 +42,7 @@ Axe::Axe(float x, float y, float z, float dx, float dy, float dz, float rx, floa
 int Axe::Initialize(const char* filename)
 {
    this->texture = LoadTexBMP(filename);
-   this->metal = LoadTexBMP("rustymetal.bmp");
+   this->metal = LoadTexBMP("Assets/RustyMetal.bmp");
    // also load metal texture for axe head.
 
    return 0;
