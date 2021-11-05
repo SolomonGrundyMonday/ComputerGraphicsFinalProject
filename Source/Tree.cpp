@@ -46,6 +46,7 @@ int Tree::branchFractal(float l0, float r0)
 {
    float l = l0 * (rand()/RAND_MAX*(1.15-0.85)+0.85);
    float angle = rand()/RAND_MAX*(360.0/BRANCH_NUM);
+   float white[] = {1.0, 1.0, 1.0, 0.2};
 
    glPushMatrix();
    
@@ -76,6 +77,7 @@ int Tree::branchFractal(float l0, float r0)
 	  }
    }
 
+   glColor4fv(white);
    glPopMatrix();
    return ntri;
 }
@@ -83,10 +85,11 @@ int Tree::branchFractal(float l0, float r0)
 // Function definition for branch method (algorithm from in-class notes).
 int Tree::branch(float l, float r)
 {
+   float brown[] = {0.3, 0.165, 0.165, 0.2};
    glPushMatrix();
    glScaled(r, l, r);
 
-   glColor3f(1, 1, 1);
+   glColor4fv(brown);
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    glBindTexture(GL_TEXTURE_2D, texture);
@@ -94,6 +97,7 @@ int Tree::branch(float l, float r)
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
    glEnable(GL_CULL_FACE);
+   glCullFace(GL_BACK);
    glBegin(GL_QUAD_STRIP);
 
    for (int i = 0; i <= 360; i += 30)
@@ -116,8 +120,11 @@ int Tree::branch(float l, float r)
 // Function definition for leaf method (algorithm borrowed from in-class notes).
 int Tree::leaf()
 {
-   glColor3f(1, 1, 1);
+   float orange[] = {1.0, 0.5, 0.0, 0.1};
+
+   glColor4fv(orange);
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+   glBindTexture(GL_TEXTURE_2D, leafTex);
 
    glNormal3f(0, 0, 1);
    glBegin(GL_QUADS);
