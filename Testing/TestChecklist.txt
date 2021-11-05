@@ -2,7 +2,7 @@ Lighting/Normals Test:
 Cuboid   -   Complete
 Shovel   -   Complete
 Axe      -   Complete
-Cabin    -
+Cabin    -   Partial - object is complex, needs more involved testing.
 Tree     -
 Tent     -
 Skybox   -   N/A
