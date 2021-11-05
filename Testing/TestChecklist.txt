@@ -1,0 +1,29 @@
+Lighting/Normals Test:
+Cuboid   -   Complete
+Shovel   -   Complete
+Axe      -   Complete
+Cabin    -
+Tree     -
+Tent     -
+Skybox   -   N/A
+Camera   -   N/A
+
+Texture Test:
+Cuboid   -
+Shovel   -
+Axe      -
+Cabin    -
+Tree     -
+Tent     -
+Skybox   -
+Camera   -   N/A
+
+Collisions Test:
+Cuboid   -
+Shovel   -
+Axe      -
+Cabin    -
+Tree     -
+Tent     -
+Skybox   -
+Camera   -
