@@ -69,7 +69,7 @@ void Cabin::Render()
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
 
    // Front wall.
-   glNormal3f(0.0, 0.0, -0.5);
+   glNormal3f(0.0, 0.0, 1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-1.0, -1.0, 1.0);
@@ -82,7 +82,7 @@ void Cabin::Render()
    glEnd();
 
    // Back Wall.
-   glNormal3f(0.0, 0.0, 1.0);
+   glNormal3f(0.0, 0.0, -1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(1.0, -1.0, -1.0);
@@ -492,7 +492,7 @@ void Cabin::drawWindow(float x, float y, float z)
       rightTopCornerZ = z - WINDOW_WIDTH;
    }
 
-   // Front left window shutters.
+   // Window shutters.
    glNormal3f(windowLocationX, y, z);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -505,7 +505,7 @@ void Cabin::drawWindow(float x, float y, float z)
    glVertex3f(windowLocationX, leftTopCornerY, leftTopCornerZ);
    glEnd();
 
-   // Front left window bottom frame.
+   // Window bottom frame.
    glNormal3f(normalX, leftTopCornerY, z);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -518,7 +518,7 @@ void Cabin::drawWindow(float x, float y, float z)
    glVertex3f(x, leftBottomCornerY, leftBottomCornerZ);
    glEnd();
 
-   // Front left window top frame.
+   // Window top frame.
    glNormal3f(normalX, leftBottomCornerY, z);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -531,7 +531,7 @@ void Cabin::drawWindow(float x, float y, float z)
    glVertex3f(windowLocationX, rightTopCornerY, leftBottomCornerZ);
    glEnd();
 
-   // Front left window left frame.
+   // Window left frame.
    glNormal3f(normalX, y, rightBottomCornerZ);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -544,7 +544,7 @@ void Cabin::drawWindow(float x, float y, float z)
    glVertex3f(x, leftTopCornerY, rightBottomCornerZ);
    glEnd();
 
-   // Front left window right frame.
+   // Window right frame.
    glNormal3f(normalX, y, leftBottomCornerZ);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
