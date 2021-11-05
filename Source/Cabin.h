@@ -15,8 +15,11 @@
 #define HINGE_RADIUS 0.005
 #define HINGE_HEIGHT 0.1
 #define KNOB_RADIUS 0.001
-#define KNOB_PROTRUSION 0.01
+#define KNOB_PROTRUSION 0.0025
 #define OVERHANG 0.1
+#define WINDOW_HEIGHT 0.2
+#define WINDOW_WIDTH 0.05
+#define WINDOW_DEPTH 0.005
 
 class Cabin : public GameObject
 {
@@ -25,6 +28,7 @@ class Cabin : public GameObject
       unsigned char texture;
       unsigned char shingles;
       unsigned char wood;
+      unsigned char metal;
       float posX;
       float posY;
       float posZ;
@@ -35,7 +39,15 @@ class Cabin : public GameObject
       float rotY;
       float rotZ;
 
-      void vertex(double th, double ph);
+      /*
+       *   Function prototype for Cabin object drawWindow helper function.
+       *   Precondition:  A Cabin object has been instantiated, and this function is called from within
+       *                  this object's Render function.
+       *   Postcondition: A window has been drawn on the left or right side of the cabin (depending on the
+       *                  x-value passed into the function) with the center point at the specified coordinates.
+       *   Parameters:    The coordinates of the window's center point.     
+       */
+      void drawWindow(float x, float y, float z);
 
    public:
      

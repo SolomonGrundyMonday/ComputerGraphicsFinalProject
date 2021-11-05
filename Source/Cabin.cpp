@@ -38,22 +38,13 @@ Cabin::Cabin(float x, float y, float z, float dx, float dy, float dz, float rx, 
    this->rotZ = rz;
 }
 
-void Cabin::vertex(double th, double ph)
-{
-   double x = Sin(th)*Cos(ph);
-   double y = Cos(th)*Cos(ph);
-   double z = Sin(ph);
-
-   glNormal3d(x, y, z);
-   glVertex3d(x, y, z);
-}
-
 // Function definition for Cabin class Initialize function implementation.
 int Cabin::Initialize(const char* filename)
 {
    this->texture = LoadTexBMP(filename);
    //this->shingles = LoadTexBmp("Shingles.bmp");
    this->wood = LoadTexBMP("Wood.bmp");
+   this->metal = LoadTexBMP("Metal.bmp");
    return 0;
 }
 
@@ -151,9 +142,9 @@ void Cabin::Render()
    glVertex3f(0.0, 1.0 + STEEPLE_HEIGHT, -1.0);
    glEnd();
 
-   // Roof.
    glBindTexture(GL_TEXTURE_2D, wood);
    
+   // Roof right segment.
    glNormal3f((1.0 + OVERHANG)/2.0, (1.0 + STEEPLE_HEIGHT)/2.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -166,6 +157,7 @@ void Cabin::Render()
    glVertex3f(0.0, 1.0 + STEEPLE_HEIGHT, -1.0 - OVERHANG);
    glEnd();
 
+   // Roof left segment.
    glNormal3f((-1.0 - OVERHANG)/2.0, (1.0 + STEEPLE_HEIGHT)/2.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -177,9 +169,6 @@ void Cabin::Render()
    glTexCoord2f(0.0, 1.0);
    glVertex3f(0.0, 1.0 + STEEPLE_HEIGHT, 1.0 + OVERHANG);
    glEnd();
-
-   // Doors and windows.
-   //glBindTexture(GL_TEXTURE_2D, wood);
 
    // Door front face.
    glNormal3f(0.0, -0.75, 1.005);
@@ -233,7 +222,44 @@ void Cabin::Render()
    glVertex3f(0.05, -0.5, 1.01);
    glEnd();
 
+   // Attic window shutter.
+   glNormal3f(0.0, (1.0 + STEEPLE_HEIGHT)/2.0, 1.01);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(0.0, (1.0 + STEEPLE_HEIGHT)/2.0, 1.01);
+
+   for (int i = 0; i <= 360; i += 30)
+   {
+      float x = 0.05 * Cos(i);
+      float y = 3.0 * 0.05 * Sin(i) + ((1.0 + STEEPLE_HEIGHT)/2.0);
+      glNormal3f(Cos(i), Sin(i), 1.01);
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(x, y, 1.01);
+   }
+   glEnd();
+
+   // Attic window frame.
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      float x = 0.05 * Cos(theta);
+      float y = 3.0 * 0.05 * Sin(theta) + ((1.0 + STEEPLE_HEIGHT)/2.0);
+      glNormal3f(Cos(theta), Sin(theta), 1.0);
+      glTexCoord2f(0.0, i * 1.0/6.0);
+      glVertex3f(x, y, 1.0);
+      glTexCoord2f(12.0, i * 1.0/6.0);
+      glVertex3f(x, y, 1.01);
+   }
+   glEnd();
+
+   drawWindow(-1.0, -0.6, -0.55);
+   drawWindow(-1.0, -0.6, 0.55);
+   drawWindow(1.0, -0.6, -0.55);
+   drawWindow(1.0, -0.6, 0.55);
+
    // Door top hinge.
+   glBindTexture(GL_TEXTURE_2D, metal);
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
@@ -323,7 +349,7 @@ void Cabin::Render()
    }
    glEnd();
 
-   // Doorknob.
+   // Door handle.
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
@@ -338,21 +364,198 @@ void Cabin::Render()
    }
    glEnd();
 
-   //glTranslatef(0.04, -0.75, 1.01 + KNOB_PROTRUSION);
-   //glScalef(0.005, 0.03, 0.005);
-   for (int ph = -90; ph < 90; ph += 10)
-   {
-      glBegin(GL_QUAD_STRIP);
-      for (int th = 0; th <= 360; th += 20)
-      {
-         vertex(th, ph);
-         vertex(th, ph+10);
-	  }
-      glEnd();
-   }
+   // Door handle front face.
+   glNormal3f(0.0375, -0.75, 1.01 + KNOB_PROTRUSION);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(0.035, -0.75 - 3.0 * KNOB_RADIUS, 1.01 + KNOB_PROTRUSION);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(0.04, -0.75 - 3.0 * KNOB_RADIUS, 1.01 + KNOB_PROTRUSION);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(0.04, -0.75 + 3.0 * KNOB_RADIUS, 1.01 + KNOB_PROTRUSION);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(0.035, -0.75 + 3.0 * KNOB_RADIUS, 1.01 + KNOB_PROTRUSION);
+   glEnd();
+
+   // Door handle back face.
+   glNormal3f(0.0375, -0.75, 1.011 + KNOB_PROTRUSION);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(0.035, -0.75 - 3.0 * KNOB_RADIUS, 1.011 + KNOB_PROTRUSION);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(0.04, -0.75 - 3.0 * KNOB_RADIUS, 1.011 + KNOB_PROTRUSION);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(0.04, -0.75 + 3.0 * KNOB_RADIUS, 1.011 + KNOB_PROTRUSION);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(0.035, -0.75 + 3.0 * KNOB_RADIUS, 1.011 + KNOB_PROTRUSION);
+   glEnd();
+
+   // Door handle right face.
+   glNormal3f(0.04, -0.75, 1.0105 + KNOB_PROTRUSION);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(0.04, -0.75 - 3.0 * KNOB_RADIUS, 1.011 + KNOB_PROTRUSION);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(0.04, -0.75 - 3.0 * KNOB_RADIUS, 1.01 + KNOB_PROTRUSION);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(0.04, -0.75 + 3.0 * KNOB_RADIUS, 1.01 + KNOB_PROTRUSION);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(0.04, -0.75 + 3.0 * KNOB_RADIUS, 1.011 + KNOB_PROTRUSION);
+   glEnd();
+
+   // Door handle left face.
+   glNormal3f(0.035, -0.75, 1.0105 + KNOB_PROTRUSION);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(0.035, -0.75 - 3.0 * KNOB_RADIUS, 1.01 + KNOB_PROTRUSION);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(0.035, -0.75 - 3.0 * KNOB_RADIUS, 1.011 + KNOB_PROTRUSION);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(0.035, -0.75 + 3.0 * KNOB_RADIUS, 1.011 + KNOB_PROTRUSION);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(0.035, -0.75 + 3.0 * KNOB_RADIUS, 1.01 + KNOB_PROTRUSION);
+   glEnd();
+
+   // Door handle top face.
+   glNormal3f(0.0375, (-0.75 + 3.0 * KNOB_RADIUS)/2.0, 1.0105 + KNOB_PROTRUSION);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(0.035, -0.75 + 3.0 * KNOB_RADIUS, 1.011 + KNOB_PROTRUSION);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(0.04, -0.75 + 3.0 * KNOB_RADIUS, 1.011 + KNOB_PROTRUSION);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(0.04, -0.75 + 3.0 * KNOB_RADIUS, 1.01 + KNOB_PROTRUSION);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(0.035, -0.75 + 3.0 * KNOB_RADIUS, 1.01 + KNOB_PROTRUSION);
+   glEnd();
+
+   // Door handle bottom face.
+   glNormal3f(0.0375, (-0.75 - 3.0 * KNOB_RADIUS)/2.0, 1.0105 + KNOB_PROTRUSION);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(0.035, -0.75 - 3.0 * KNOB_RADIUS, 1.01 + KNOB_PROTRUSION);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(0.04, -0.75 - 3.0 * KNOB_RADIUS, 1.01 + KNOB_PROTRUSION);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(0.04, -0.75 - 3.0 * KNOB_RADIUS, 1.011 + KNOB_PROTRUSION);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(0.035, -0.75 - 3.0 * KNOB_RADIUS, 1.011 + KNOB_PROTRUSION);
+   glEnd();
 
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
+}
+
+// Function definition for drawWindow helper function.
+void Cabin::drawWindow(float x, float y, float z)
+{
+   float leftBottomCornerY;
+   float leftBottomCornerZ;
+   float rightBottomCornerY;
+   float rightBottomCornerZ;
+   float leftTopCornerY;
+   float leftTopCornerZ;
+   float rightTopCornerY;
+   float rightTopCornerZ;
+   float windowLocationX;
+   float normalX;
+
+   if (x < 0.0)
+   {
+      windowLocationX = x - (2.0 * WINDOW_DEPTH);
+      normalX = x - WINDOW_DEPTH;
+   }
+   else
+   {
+      x = 1.0;
+      windowLocationX = x + (2.0 * WINDOW_DEPTH);
+      normalX = x + WINDOW_DEPTH;
+   }
+      
+   leftBottomCornerY = y - WINDOW_HEIGHT;
+   rightBottomCornerY = y - WINDOW_HEIGHT;
+   leftTopCornerY = y + WINDOW_HEIGHT;
+   rightTopCornerY = y + WINDOW_HEIGHT;
+
+   if (z < 0.0)
+   {
+      leftBottomCornerZ = z - WINDOW_WIDTH;
+      rightBottomCornerZ = z + WINDOW_WIDTH;
+      leftTopCornerZ = z - WINDOW_WIDTH;
+      rightTopCornerZ = z + WINDOW_WIDTH;
+   }
+   else
+   {
+      leftBottomCornerZ = z + WINDOW_WIDTH;
+      rightBottomCornerZ = z - WINDOW_WIDTH;
+      leftTopCornerZ = z + WINDOW_WIDTH;
+      rightTopCornerZ = z - WINDOW_WIDTH;
+   }
+
+   // Front left window shutters.
+   glNormal3f(windowLocationX, y, z);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(windowLocationX, leftBottomCornerY, leftBottomCornerZ);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(windowLocationX, rightBottomCornerY, rightBottomCornerZ);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(windowLocationX, rightTopCornerY, rightTopCornerZ);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(windowLocationX, leftTopCornerY, leftTopCornerZ);
+   glEnd();
+
+   // Front left window bottom frame.
+   glNormal3f(normalX, leftTopCornerY, z);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(windowLocationX, leftBottomCornerY, leftBottomCornerZ);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(windowLocationX, leftBottomCornerY, rightBottomCornerZ);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(x, leftBottomCornerY, rightBottomCornerZ);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(x, leftBottomCornerY, leftBottomCornerZ);
+   glEnd();
+
+   // Front left window top frame.
+   glNormal3f(normalX, leftBottomCornerY, z);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(x, leftTopCornerY, leftBottomCornerZ);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(x, leftTopCornerY, rightBottomCornerZ);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(windowLocationX, rightTopCornerY, rightBottomCornerZ);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(windowLocationX, rightTopCornerY, leftBottomCornerZ);
+   glEnd();
+
+   // Front left window left frame.
+   glNormal3f(normalX, y, rightBottomCornerZ);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(x, leftBottomCornerY, rightBottomCornerZ);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(windowLocationX, leftBottomCornerY, rightBottomCornerZ);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(windowLocationX, leftTopCornerY, rightBottomCornerZ);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(x, leftTopCornerY, rightBottomCornerZ);
+   glEnd();
+
+   // Front left window right frame.
+   glNormal3f(normalX, y, leftBottomCornerZ);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(windowLocationX, leftTopCornerY, leftBottomCornerZ);
+   glTexCoord2f(1.0, 0.0);
+   glVertex3f(x, leftTopCornerY, leftBottomCornerZ);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(x, leftBottomCornerY, leftBottomCornerZ);
+   glTexCoord2f(0.0, 1.0);
+   glVertex3f(windowLocationX, leftBottomCornerY, leftBottomCornerZ);
+   glEnd();
 }
 
 // Function definition for Cabin class setPosition function.
