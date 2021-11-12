@@ -11,6 +11,7 @@
 #include "Axe.h"
 #include "Cabin.h"
 #include "Skybox.h"
+#include "Lantern.h"
 #include <vector>
 
 // Variables for graphical objects.
@@ -21,6 +22,7 @@ Shovel* shovel;
 Axe* axe;
 Cabin* cabin;
 Skybox* sky;
+Lantern* lantern;
 
 const int treeCount = 40;
 
@@ -67,6 +69,9 @@ void initialize_objects()
    // Instantiate Cabin.
    cabin = new Cabin(-42.0, 3.0, -39.0, 5.0, 2.0, 7.0, 0.0, 0.0, 0.0);
    cabin->Initialize("Assets/Bricks.bmp");
+
+   lantern = new Lantern(-36.0, 1.2, -30.0, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0);
+   lantern->Initialize("Assets/RustyMetal.bmp");
 }
 
 // Display function, called by GLUT to update the screen.
@@ -76,13 +81,19 @@ void display()
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glEnable(GL_DEPTH_TEST);
 
+   // Enable normals, lighting.
+   glShadeModel(GL_SMOOTH);
+   glEnable(GL_NORMALIZE);
+   glEnable(GL_LIGHTING);
+   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+   glEnable(GL_COLOR_MATERIAL);
+
    // Clear transformations and apply camera movement.
    glLoadIdentity();
    player->Turn();
    gluLookAt(player->getEyeX(), player->getEyeY(), player->getEyeZ(), player->getCenterX() + player->getEyeX(), player->getCenterY(), player->getCenterZ() + player->getEyeZ(), player->getUpX(), player->getUpY(), player->getUpZ());
-   
-   // Enable normals, lighting.
-   glEnable(GL_NORMALIZE);
+   lantern->setPosition(player->getCenterX(), lantern->getPosY(), player->getCenterZ());
+   lantern->Render();
 
    // Render Tree objects.
    for (int i = 0; i < treeCount; i++)

@@ -11,6 +11,7 @@
 
 #define LANTERN_RAD 0.5
 #define HANDLE_RAD 0.05
+#define BULB_RAD 0.15
 
 class Lantern : public GameObject
 {

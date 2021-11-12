@@ -50,6 +50,7 @@ int Lantern::Initialize(const char* filename)
 void Lantern::Render()
 {
    float lightPos[] = {this->posX, this->posY, this->posZ};
+   float textureRatio = 1.0/12.0;
 
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
@@ -67,11 +68,11 @@ void Lantern::Render()
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
 
    // Set up light source.
-   //glEnable(GL_LIGHT0);
-   //glLightfv(GL_LIGHT0, GL_AMBIENT, Ambient);
-   //glLightfv(GL_LIGHT0, GL_DIFFUSE, Diffuse);
-   //glLightfv(GL_LIGHT0, GL_SPECULAR, Specular);
-   //glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+   glEnable(GL_LIGHT0);
+   glLightfv(GL_LIGHT0, GL_AMBIENT, Ambient);
+   glLightfv(GL_LIGHT0, GL_DIFFUSE, Diffuse);
+   glLightfv(GL_LIGHT0, GL_SPECULAR, Specular);
+   glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 
    // Draw lantern base.
    glBegin(GL_QUAD_STRIP);
@@ -82,9 +83,9 @@ void Lantern::Render()
       float z = Sin(theta);
 
       glNormal3f(x, 0.0, z);
-      glTexCoord2f(0.0, i * 1.0/12.0);
+      glTexCoord2f(0.0, i * textureRatio);
       glVertex3f(LANTERN_RAD * x, -1.0, LANTERN_RAD * z);
-      glTexCoord2f(12.0, i * 1.0/12.0);
+      glTexCoord2f(12.0, i * textureRatio);
       glVertex3f(LANTERN_RAD * x, -0.6, LANTERN_RAD * z);
    }
    glEnd();
@@ -122,9 +123,9 @@ void Lantern::Render()
       float z = Sin(theta);
 
       glNormal3f(x, 0.6, z);
-      glTexCoord2f(0.0, i * 1.0/12.0);
+      glTexCoord2f(0.0, i * textureRatio);
       glVertex3f(LANTERN_RAD * x, 0.6, LANTERN_RAD * z);
-      glTexCoord2f(12.0, i * 1.0/12.0);
+      glTexCoord2f(12.0, i * textureRatio);
       glVertex3f(LANTERN_RAD * x, 1.0, LANTERN_RAD * z);
    }
    glEnd();
@@ -162,9 +163,9 @@ void Lantern::Render()
       float y = Sin(theta);
 
       glNormal3f(-0.4, HANDLE_RAD * y + 1.6, HANDLE_RAD * z);
-      glTexCoord2f(0.0, i * 1.0/12.0);
+      glTexCoord2f(0.0, i * textureRatio);
       glVertex3f(-0.4, HANDLE_RAD * y + 1.6, HANDLE_RAD * z);
-      glTexCoord2f(12.0, i * 1.0/12.0);
+      glTexCoord2f(12.0, i * textureRatio);
       glVertex3f(0.4, HANDLE_RAD * y + 1.6, HANDLE_RAD * z);
    }
    glEnd();
@@ -202,9 +203,9 @@ void Lantern::Render()
       float z = Sin(theta);
 
       glNormal3f(x, 1.3, z);
-      glTexCoord2f(0.0, i * 1.0/12.0);
+      glTexCoord2f(0.0, i * textureRatio);
       glVertex3f(0.01 * x + 0.4, 1.6, 0.01 * z);
-      glTexCoord2f(12.0, i * 1.0/12.0);
+      glTexCoord2f(12.0, i * textureRatio);
       glVertex3f(0.01 * x + 0.4, 1.0, 0.01 * z);
    }
    glEnd();
@@ -217,9 +218,9 @@ void Lantern::Render()
       float z = Sin(theta);
 
       glNormal3f(-x, 1.3, z);
-      glTexCoord2f(0.0, i * 1.0/12.0);
+      glTexCoord2f(0.0, i * textureRatio);
       glVertex3f(-0.01 * x - 0.4, 1.6, 0.01 * z);
-      glTexCoord2f(12.0, i * 1.0/12.0);
+      glTexCoord2f(12.0, i * textureRatio);
       glVertex3f(-0.01 * x - 0.4, 1.0, 0.01 * z);
    }
    glEnd();
@@ -247,12 +248,9 @@ void Lantern::Render()
    }
    glEnd();
 
-   // Draw lantern bulb.
-
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
    glDisable(GL_BLEND);
-   //glDisable(GL_LIGHT0);
 }
 
 // Function definition for Lantern class setPosition function.
