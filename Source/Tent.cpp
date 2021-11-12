@@ -36,6 +36,8 @@ Tent::Tent(float x, float y, float z, float dx, float dy, float dz, float rx, fl
 int Tent::Initialize(const char* filename)
 {
    this->texture = LoadTexBMP(filename);
+   this->spike = LoadTexBMP("Assets/RustyMetal.bmp");
+   this->canvasWrap = LoadTexBMP("Assets/CanvasRoll.bmp");
    return 0;
 }
 
@@ -134,6 +136,19 @@ void Tent::Render()
    glVertex3f(1.0, 1.0, 1.0);
    glEnd();
 
+   // Draw Tent floor.
+   glNormal3f(0.0, -1.0, 0.0);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(1.0, -1.0, 1.0);
+   glTexCoord2f(this->scaleZ, 0.0);
+   glVertex3f(-1.0, -1.0, 1.0);
+   glTexCoord2f(this->scaleZ, this->scaleX);
+   glVertex3f(-1.0, -1.0, -1.0);
+   glTexCoord2f(0.0, this->scaleX);
+   glVertex3f(1.0, -1.0, -1.0);
+   glEnd();
+
    // Draw Tent roof.
    glNormal3f(0.0, (1.5/2.0), 1.0);
    glBegin(GL_TRIANGLES);
@@ -195,6 +210,56 @@ void Tent::Render()
    }
    glEnd();
 
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      float x = Cos(theta);
+      float z = Sin(theta);
+
+      glNormal3f(x, -1.0, z);
+      glTexCoord2f(0.0, i * textureRatio);
+      glVertex3f(x * 0.1 - 0.4, -1.0, z * 0.1 + 1.0);
+      glTexCoord2f(12.0, i * textureRatio);
+      glVertex3f(x * 0.1 - 0.4, 0.2, z * 0.1 + 1.0);
+   }
+   glEnd();
+
+   // Draw Tent ties.
+   glNormal3f(1.1, 0.055, 1.1);
+   glBegin(GL_LINES);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(1.2, -0.89, 1.2);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(1.0, 1.0, 1.0);
+   glEnd();
+
+   glNormal3f(-1.1, 0.055, 1.1);
+   glBegin(GL_LINES);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-1.2, -0.89, 1.2);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(-1.0, 1.0, 1.0);
+   glEnd();
+
+   glNormal3f(-1.1, -0.89, -1.1);
+   glBegin(GL_LINES);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(-1.2, -0.89, -1.2);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(-1.0, 1.0, -1.0);
+   glEnd();
+
+   glNormal3f(1.1, -0.89, -1.1);
+   glBegin(GL_LINES);
+   glTexCoord2f(0.0, 0.0);
+   glVertex3f(1.2, -0.89, -1.2);
+   glTexCoord2f(1.0, 1.0);
+   glVertex3f(1.0, 1.0, -1.0);
+   glEnd();
+
+   // Draw rolled tent flap tops and bottoms.
+   glBindTexture(GL_TEXTURE_2D, canvasWrap);
    glNormal3f(0.4, 0.2, 1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -216,21 +281,6 @@ void Tent::Render()
       glNormal3f(Cos(i) + 0.4, -1.0, Sin(i) + 1.0);
       glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
       glVertex3f(0.1 * Cos(i) + 0.4, -1.0, 0.1 * Sin(i) + 1.0);
-   }
-   glEnd();
-   
-   glBegin(GL_QUAD_STRIP);
-   for (int i = 0; i <= 12; i++)
-   {
-      int theta = i * 30;
-      float x = Cos(theta);
-      float z = Sin(theta);
-
-      glNormal3f(x, -1.0, z);
-      glTexCoord2f(0.0, i * textureRatio);
-      glVertex3f(x * 0.1 - 0.4, -1.0, z * 0.1 + 1.0);
-      glTexCoord2f(12.0, i * textureRatio);
-      glVertex3f(x * 0.1 - 0.4, 0.2, z * 0.1 + 1.0);
    }
    glEnd();
 
@@ -259,12 +309,77 @@ void Tent::Render()
    glEnd();
 
    // Draw Tent spikes.
-   
-
-   // Draw Tent ties.
+   glBindTexture(GL_TEXTURE_2D, spike);
+   DrawSpike(1.2, 1.2);
+   DrawSpike(-1.2, 1.2);
+   DrawSpike(-1.2, -1.2);
+   DrawSpike(1.2, -1.2);
 
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
+}
+
+// Function definition for Tent object DrawSpike helper function.
+void Tent::DrawSpike(float px, float pz)
+{
+   float textureRatio = 1.0/12.0;
+
+   // Draw tent spike shaft component.
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      float x = 0.01 * Cos(theta);
+      float z = 0.01 * Sin(theta);
+
+      glNormal3f(x, -1.0, z);
+      glTexCoord2f(0.0, textureRatio);
+      glVertex3f(x + px, -1.0, z + pz);
+      glTexCoord2f(12.0, textureRatio);
+      glVertex3f(x + px, -0.9, z + pz);
+   }
+   glEnd();
+
+   // Draw tent spike head component.
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      float x = 0.02 * Cos(theta);
+      float z = 0.02 * Sin(theta);
+
+      glNormal3f(x, -0.9, z);
+      glTexCoord2f(0.0, textureRatio);
+      glVertex3f(x + px, -0.9, z + pz);
+      glTexCoord2f(12.0, textureRatio);
+      glVertex3f(x + px, -0.89, z + pz);
+   }
+   glEnd();
+
+   glNormal3f(px, -0.9, pz);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(px, -0.9, pz);
+   for (int i = 0; i <= 360; i += 30)
+   {
+      glNormal3f(Cos(i) + px, -0.9, Sin(i) + pz);
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(Cos(i) * 0.02 + px, -0.9, Sin(i) * 0.02 + pz);
+   }
+   glEnd();
+
+   glNormal3f(px, -0.89, pz);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(px, -0.89, pz);
+   for (int i = 0; i <= 360; i += 30)
+   {
+      glNormal3f(Cos(i) + px, -0.89, Sin(i) + pz);
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(Cos(i) * 0.02 + px, -0.89, Sin(i) * 0.02 + pz);
+   }
+   glEnd();
+
 }
 
 // Function definition for Tent object setPosition function.

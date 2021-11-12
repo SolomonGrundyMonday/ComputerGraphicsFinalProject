@@ -17,6 +17,8 @@ class Tent : public GameObject
    // Private member variables for translation, rotation, scaling and texture.
    private:
       unsigned char texture;
+      unsigned char spike;
+      unsigned char canvasWrap;
       float posX;
       float posY;
       float posZ;
@@ -26,6 +28,14 @@ class Tent : public GameObject
       float rotX;
       float rotY;
       float rotZ;
+
+      /*
+       *    Function prototype for Tent object DrawSpike helper function function.
+       *    Precondition:   This function draws the tent spikes.
+       *    Postcondition:  A tent spike has been drawn at the specified x, z coordinates.
+       *    Parameters:     The x, z coordinates of the spike. 
+       */
+      void DrawSpike(float x, float z);
 
    public:
 
