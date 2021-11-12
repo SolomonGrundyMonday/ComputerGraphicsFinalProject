@@ -19,7 +19,7 @@ Camera::Camera()
    this->UpPos[2] = 0.0;
 
    // Default values for focal length, aspect ratio, field of view.
-   this->dim = 5.0;
+   this->dim = 10.0;
    this->asp = 1.0;
    this->theta = 0;
 }
