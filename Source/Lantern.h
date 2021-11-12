@@ -9,10 +9,14 @@
 
 #pragma once
 
+#define LANTERN_RAD 0.5
+#define HANDLE_RAD 0.05
+
 class Lantern : public GameObject
 {
    private:
       unsigned char texture;
+      unsigned char glass;
       float posX;
       float posY;
       float posZ;
@@ -22,6 +26,10 @@ class Lantern : public GameObject
       float rotX;
       float rotY;
       float rotZ;
+      float Ambient[4] = {0.0, 0.0, 0.0, 1.0};
+      float Diffuse[4] = {1.0, 1.0, 1.0, 1.0};
+      float Specular[4] = {0.0, 0.0, 0.0, 1.0};
+      float white[4] = {1.0, 1.0, 1.0, 0.2};
 
    public:
 

@@ -42,13 +42,17 @@ Lantern::Lantern(float x, float y, float z, float dx, float dy, float dz, float 
 int Lantern::Initialize(const char* filename)
 {
    this->texture = LoadTexBMP(filename);
+   this->glass = LoadTexBMP("Assets/Metal.bmp");
+   return 0;
 }
 
 // Function definition for Lantern class Render function implementation.
 void Lantern::Render()
 {
+   float lightPos[] = {this->posX, this->posY, this->posZ};
+
    // Enable textures.
-   glEnable(GL_TEXTURES_2D);
+   glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    glBindTexture(GL_TEXTURE_2D, texture);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -62,10 +66,193 @@ void Lantern::Render()
    glRotatef(this->rotZ, 0, 0, 1);
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
 
-   // Draw object.
+   // Set up light source.
+   //glEnable(GL_LIGHT0);
+   //glLightfv(GL_LIGHT0, GL_AMBIENT, Ambient);
+   //glLightfv(GL_LIGHT0, GL_DIFFUSE, Diffuse);
+   //glLightfv(GL_LIGHT0, GL_SPECULAR, Specular);
+   //glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+
+   // Draw lantern base.
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      float x = Cos(theta);
+      float z = Sin(theta);
+
+      glNormal3f(x, 0.0, z);
+      glTexCoord2f(0.0, i * 1.0/12.0);
+      glVertex3f(LANTERN_RAD * x, -1.0, LANTERN_RAD * z);
+      glTexCoord2f(12.0, i * 1.0/12.0);
+      glVertex3f(LANTERN_RAD * x, -0.6, LANTERN_RAD * z);
+   }
+   glEnd();
+
+   glNormal3f(0.0, -1.0, 0.0);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(0.0, -1.0, 0.0);
+   for (int i = 0; i <= 360; i += 30)
+   {
+      glNormal3f(Cos(i), -1.0, Sin(i));
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(LANTERN_RAD * Cos(i), -1.0, LANTERN_RAD * Sin(i));
+   }
+   glEnd();
+
+   glNormal3f(0.0, -0.6, 0.0);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(0.0, -0.6, 0.0);
+   for (int i = 0; i <= 360; i += 30)
+   {
+      glNormal3f(Cos(i), -0.6, Sin(i));
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(LANTERN_RAD * Cos(i), -0.6, LANTERN_RAD * Sin(i));
+   }
+   glEnd();
+
+   // Draw lantern top.
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      float x = Cos(theta);
+      float z = Sin(theta);
+
+      glNormal3f(x, 0.6, z);
+      glTexCoord2f(0.0, i * 1.0/12.0);
+      glVertex3f(LANTERN_RAD * x, 0.6, LANTERN_RAD * z);
+      glTexCoord2f(12.0, i * 1.0/12.0);
+      glVertex3f(LANTERN_RAD * x, 1.0, LANTERN_RAD * z);
+   }
+   glEnd();
+
+   glNormal3f(0.0, 1.0, 0.0);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(0.0, 1.0, 0.0);
+   for (int i = 0; i <= 360; i += 30)
+   {
+      glNormal3f(Cos(i), 1.0, Sin(i));
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(LANTERN_RAD * Cos(i), 1.0, LANTERN_RAD * Sin(i));
+   }
+   glEnd();
+
+   glNormal3f(0.0, 0.6, 0.0);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(0.0, 0.6, 0.0);
+   for (int i = 0; i <= 360; i += 30)
+   {
+      glNormal3f(Cos(i), 0.6, Sin(i));
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(LANTERN_RAD * Cos(i), 0.6, LANTERN_RAD * Sin(i));
+   }
+   glEnd();
+
+   // Draw lantern handle.
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      float z = Cos(theta);
+      float y = Sin(theta);
+
+      glNormal3f(-0.4, HANDLE_RAD * y + 1.6, HANDLE_RAD * z);
+      glTexCoord2f(0.0, i * 1.0/12.0);
+      glVertex3f(-0.4, HANDLE_RAD * y + 1.6, HANDLE_RAD * z);
+      glTexCoord2f(12.0, i * 1.0/12.0);
+      glVertex3f(0.4, HANDLE_RAD * y + 1.6, HANDLE_RAD * z);
+   }
+   glEnd();
+
+   glNormal3f(-0.4, 1.6, 0.0);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(-0.4, 1.6, 0.0);
+   for (int i = 0; i <= 360; i += 30)
+   {
+      glNormal3f(-0.4, Sin(i), Cos(i));
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(-0.4, HANDLE_RAD * Sin(i) + 1.6, HANDLE_RAD * Cos(i));
+   }
+   glEnd();
+
+   glNormal3f(0.4, 1.6, 0.0);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(0.4, 1.6, 0.0);
+   for (int i = 0; i <= 360; i += 30)
+   {
+      glNormal3f(0.4, Sin(i), Cos(i));
+      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
+      glVertex3f(0.4, HANDLE_RAD * Sin(i) + 1.6, HANDLE_RAD * Cos(i));
+   }
+   glEnd();
+
+   // Draw lantern handle connectors.
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      float x = Cos(theta);
+      float z = Sin(theta);
+
+      glNormal3f(x, 1.3, z);
+      glTexCoord2f(0.0, i * 1.0/12.0);
+      glVertex3f(0.01 * x + 0.4, 1.6, 0.01 * z);
+      glTexCoord2f(12.0, i * 1.0/12.0);
+      glVertex3f(0.01 * x + 0.4, 1.0, 0.01 * z);
+   }
+   glEnd();
+
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      float x = Cos(theta);
+      float z = Sin(theta);
+
+      glNormal3f(-x, 1.3, z);
+      glTexCoord2f(0.0, i * 1.0/12.0);
+      glVertex3f(-0.01 * x - 0.4, 1.6, 0.01 * z);
+      glTexCoord2f(12.0, i * 1.0/12.0);
+      glVertex3f(-0.01 * x - 0.4, 1.0, 0.01 * z);
+   }
+   glEnd();
+
+   // Draw lantern glass casing.
+   // GL_BLEND info citation from this stack overflow thread:
+   // https://stackoverflow.com/questions/24399431/opengl-texture-with-transparency-alpha
+   glBindTexture(GL_TEXTURE_2D, glass);
+   glColor4fv(white);
+   glEnable(GL_BLEND);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      int theta = i * 30;
+      float x = Cos(theta);
+      float z = Sin(theta);
+
+      glNormal3f(x, 0.0, z);
+      glTexCoord2f(0.0, i * 1.0/12.0);
+      glVertex3f(LANTERN_RAD * x, -0.6, LANTERN_RAD * z);
+      glTexCoord2f(12.0, i * 1.0/12.0);
+      glVertex3f(LANTERN_RAD * x, 0.6, LANTERN_RAD * z);
+   }
+   glEnd();
+
+   // Draw lantern bulb.
 
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
+   glDisable(GL_BLEND);
+   //glDisable(GL_LIGHT0);
 }
 
 // Function definition for Lantern class setPosition function.
