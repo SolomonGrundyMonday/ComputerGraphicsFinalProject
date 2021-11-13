@@ -27,6 +27,7 @@ class Lantern : public GameObject
       float rotX;
       float rotY;
       float rotZ;
+      float lightDir[4];
       float Ambient[4] = {0.0, 0.0, 0.0, 1.0};
       float Diffuse[4] = {1.0, 1.0, 1.0, 1.0};
       float Specular[4] = {0.0, 0.0, 0.0, 1.0};
@@ -94,6 +95,14 @@ class Lantern : public GameObject
        *   Parameters:     The desired rotation about the x, y, z axes respectively (in degrees).  
        */
       void setRotation(float x, float y, float z);
+
+      /*
+       *   Function prototype for Lantern class setDirection setter function.
+       *   Precondition:   None.
+       *   Postcondition:  The direction that the light points in has been set.
+       *   Parameters:     The desired (x, y, z) coordinates for the light's direction.  
+       */
+      void setDirection(float x, float y, float z);
 
       /*
        *   Function prototype for Lantern class getPosX getter function.

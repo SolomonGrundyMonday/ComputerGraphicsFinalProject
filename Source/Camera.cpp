@@ -19,7 +19,7 @@ Camera::Camera()
    this->UpPos[2] = 0.0;
 
    // Default values for focal length, aspect ratio, field of view.
-   this->dim = 10.0;
+   this->dim = 5.0;
    this->asp = 1.0;
    this->theta = 0;
 }
@@ -27,8 +27,8 @@ Camera::Camera()
 // Function definition for MoveForward method of Camera class.
 void Camera::MoveForward()
 {
-   float x = this->EyePos[0] + (Sin(this->theta) * MOVE_DISTANCE);
-   float z = this->EyePos[2] + (-Cos(this->theta) * MOVE_DISTANCE);
+   double x = this->EyePos[0] + (Sin(this->theta) * MOVE_DISTANCE);
+   double z = this->EyePos[2] + (-Cos(this->theta) * MOVE_DISTANCE);
 
    this->setEyePos(x, this->EyePos[1], z);
 }
@@ -36,8 +36,8 @@ void Camera::MoveForward()
 // Function definition for MoveBackward method of Camera class.
 void Camera::MoveBackward()
 {
-   float x = this->EyePos[0] - (Sin(this->theta) * MOVE_DISTANCE);
-   float z = this->EyePos[2] - (-Cos(this->theta) * MOVE_DISTANCE);
+   double x = this->EyePos[0] - (Sin(this->theta) * MOVE_DISTANCE);
+   double z = this->EyePos[2] - (-Cos(this->theta) * MOVE_DISTANCE);
 
    this->setEyePos(x, this->EyePos[1], z);
 }

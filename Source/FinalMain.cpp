@@ -11,8 +11,8 @@
 #include "Axe.h"
 #include "Cabin.h"
 #include "Skybox.h"
-#include "Lantern.h"
 #include "Tent.h"
+#include "Lantern.h"
 #include <vector>
 
 // Variables for graphical objects.
@@ -83,13 +83,16 @@ void initialize_objects()
    cabin = new Cabin(-42.0, 3.0, -39.0, 5.0, 2.0, 7.0, 0.0, 0.0, 0.0);
    cabin->Initialize("Assets/Bricks.bmp");
 
-   lantern = new Lantern(-36.0, 1.2, -30.0, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0);
+   lantern = new Lantern(-24.0, 1.1, -24.0, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0);
    lantern->Initialize("Assets/RustyMetal.bmp");
 }
 
 // Display function, called by GLUT to update the screen.
 void display()
 {
+   float lanternX;
+   float lanternZ;
+
    // Clear the buffers, enable depth test.
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glEnable(GL_DEPTH_TEST);
@@ -106,8 +109,36 @@ void display()
    player->Turn();
    player->setCenterPos(player->getEyeX() + player->getCenterX(), player->getCenterY(), player->getEyeZ() + player->getCenterZ());
    gluLookAt(player->getEyeX(), player->getEyeY(), player->getEyeZ(), player->getCenterX(), player->getCenterY(), player->getCenterZ(), player->getUpX(), player->getUpY(), player->getUpZ());
-   lantern->setPosition(player->getEyeX(), player->getEyeY(), player->getEyeZ());
-   lantern->Render();
+   lantern->setDirection(player->getCenterX(), player->getCenterY(), player->getCenterZ());
+
+   if (player->getEyeX() < player->getCenterX())
+   {
+      lanternX = player->getEyeX() + Sin(player->getTheta());
+   }
+   else if (player->getEyeX() > player->getCenterX())
+   {
+      lanternX = player->getEyeX() + Sin(player->getTheta());
+   }
+   else
+   {
+      lanternX = player->getEyeX();
+   }
+
+   if (player->getEyeZ() < player->getCenterZ())
+   {
+      lanternZ = player->getEyeZ() - Cos(player->getTheta());
+   }
+   else if (player->getEyeZ() > player->getCenterZ())
+   {
+      lanternZ = player->getEyeZ() - Cos(player->getTheta());
+   }
+   else
+   {
+      lanternZ = player->getEyeZ();
+   }
+
+   lantern->setPosition(lanternX, player->getEyeY() - 0.4, lanternZ);
+   lantern->setRotation(0.0, -player->getTheta(), 0.0);
 
    // Render Tree objects.
    for (int i = 0; i < treeCount; i++)
@@ -122,6 +153,7 @@ void display()
    axe->Render();
    cabin->Render();
    sky->Render();
+   lantern->Render();
 
    glWindowPos2i(5, 5);
    Print("Eye position (%.1lf, %.1lf, %.1lf)", player->getEyeX(), player->getEyeY(), player->getEyeZ());
