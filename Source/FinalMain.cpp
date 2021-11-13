@@ -12,6 +12,7 @@
 #include "Cabin.h"
 #include "Skybox.h"
 #include "Lantern.h"
+#include "Tent.h"
 #include <vector>
 
 // Variables for graphical objects.
@@ -23,8 +24,10 @@ Axe* axe;
 Cabin* cabin;
 Skybox* sky;
 Lantern* lantern;
+std::vector<Tent *> tent;
 
-const int treeCount = 40;
+const int treeCount = 42;
+const int tentCount = 3;
 
 // Initialize game objects.
 void initialize_objects()
@@ -42,13 +45,23 @@ void initialize_objects()
                                      {-15.0, -3.0}, {-17.0, 7.0}, {-19.0, 16.0},
                                      {-17.0, 24.0}, {-5.0, -44.0}, {-7.0, -38.0},
                                      {-4.0, -29.0}, {-11.0, -25.0}, {-6.0, -14.0},
-                                     {-12.0, -17.0}, {-5.0, -4.0}, {-4.0, 7.0}, {-7.0, 18.0} };
+                                     {-12.0, -17.0}, {-5.0, -4.0}, {-4.0, 7.0}, 
+                                     {-7.0, 18.0}, {-3.0, 25.0}, {-8.0, 10.0} };
+
+   float tentCoord[tentCount][2] = {{15.0, 10.0}, {20.0, 15.0}, {25.0, 10.0} };
 
    // Instantiate Trees.
    for (int i = 0; i < treeCount; i++)
    {
       tree.push_back(new Tree(treeCoord[i][0], 1.0, treeCoord[i][1], 1.0, 1.0, 1.0, 0.0, 0.0, 0.0));
       tree.at(i)->Initialize("Assets/Bark.bmp");
+   }
+
+   // Instantiate Tents.
+   for (int i = 0; i < tentCount; i++)
+   {
+      tent.push_back(new Tent(tentCoord[i][0], 1.8, tentCoord[i][1], 1.0, 0.8, 1.0, 0.0, i * 90.0 + 90.0, 0.0));
+      tent.at(i)->Initialize("Assets/Canvas.bmp");
    }
 
    // Instantiate ground, camera.
@@ -91,13 +104,17 @@ void display()
    // Clear transformations and apply camera movement.
    glLoadIdentity();
    player->Turn();
-   gluLookAt(player->getEyeX(), player->getEyeY(), player->getEyeZ(), player->getCenterX() + player->getEyeX(), player->getCenterY(), player->getCenterZ() + player->getEyeZ(), player->getUpX(), player->getUpY(), player->getUpZ());
-   lantern->setPosition(player->getCenterX(), lantern->getPosY(), player->getCenterZ());
+   player->setCenterPos(player->getEyeX() + player->getCenterX(), player->getCenterY(), player->getEyeZ() + player->getCenterZ());
+   gluLookAt(player->getEyeX(), player->getEyeY(), player->getEyeZ(), player->getCenterX(), player->getCenterY(), player->getCenterZ(), player->getUpX(), player->getUpY(), player->getUpZ());
+   lantern->setPosition(player->getEyeX(), player->getEyeY(), player->getEyeZ());
    lantern->Render();
 
    // Render Tree objects.
    for (int i = 0; i < treeCount; i++)
       tree.at(i)->Render();
+
+   for (int i = 0; i < tentCount; i++)
+      tent.at(i)->Render();
 
    // Render other objects.
    ground->Render();
@@ -105,6 +122,9 @@ void display()
    axe->Render();
    cabin->Render();
    sky->Render();
+
+   glWindowPos2i(5, 5);
+   Print("Eye position (%.1lf, %.1lf, %.1lf)", player->getEyeX(), player->getEyeY(), player->getEyeZ());
 
    // Check for errors in GLUT, flush and swap buffers.
    ErrCheck("display");

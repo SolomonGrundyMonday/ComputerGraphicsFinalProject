@@ -28,6 +28,9 @@ class Tree : public GameObject
       float rotX;
       float rotY;
       float rotZ;
+      const float brown[4] = { 0.3, 0.165, 0.165, 0.2 };
+      const float orange[4] = { 1.0, 0.5, 0.0, 0.1 };
+      const float white[4] = { 1.0, 1.0, 1.0, 0.2 };
       
       /*
        *  Function declaration for private helper function branch.

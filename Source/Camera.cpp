@@ -27,8 +27,8 @@ Camera::Camera()
 // Function definition for MoveForward method of Camera class.
 void Camera::MoveForward()
 {
-   double x = this->EyePos[0] + (Sin(this->theta) * MOVE_DISTANCE);
-   double z = this->EyePos[2] + (-Cos(this->theta) * MOVE_DISTANCE);
+   float x = this->EyePos[0] + (Sin(this->theta) * MOVE_DISTANCE);
+   float z = this->EyePos[2] + (-Cos(this->theta) * MOVE_DISTANCE);
 
    this->setEyePos(x, this->EyePos[1], z);
 }
@@ -36,8 +36,8 @@ void Camera::MoveForward()
 // Function definition for MoveBackward method of Camera class.
 void Camera::MoveBackward()
 {
-   double x = this->EyePos[0] - (Sin(this->theta) * MOVE_DISTANCE);
-   double z = this->EyePos[2] - (-Cos(this->theta) * MOVE_DISTANCE);
+   float x = this->EyePos[0] - (Sin(this->theta) * MOVE_DISTANCE);
+   float z = this->EyePos[2] - (-Cos(this->theta) * MOVE_DISTANCE);
 
    this->setEyePos(x, this->EyePos[1], z);
 }

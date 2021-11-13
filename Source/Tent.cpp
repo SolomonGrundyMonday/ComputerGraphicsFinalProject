@@ -140,13 +140,13 @@ void Tent::Render()
    glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
-   glVertex3f(1.0, -1.0, 1.0);
+   glVertex3f(1.0, -0.999, 1.0);
    glTexCoord2f(this->scaleZ, 0.0);
-   glVertex3f(-1.0, -1.0, 1.0);
+   glVertex3f(-1.0, -0.999, 1.0);
    glTexCoord2f(this->scaleZ, this->scaleX);
-   glVertex3f(-1.0, -1.0, -1.0);
+   glVertex3f(-1.0, -0.999, -1.0);
    glTexCoord2f(0.0, this->scaleX);
-   glVertex3f(1.0, -1.0, -1.0);
+   glVertex3f(1.0, -0.999, -1.0);
    glEnd();
 
    // Draw Tent roof.

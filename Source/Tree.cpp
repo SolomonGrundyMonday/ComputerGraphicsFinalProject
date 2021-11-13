@@ -44,9 +44,8 @@ Tree::Tree(float x, float y, float z, float dx, float dy, float dz, float rx, fl
 // Function definition for recursive branchFractal function (borrowed from in-class notes).
 int Tree::branchFractal(float l0, float r0)
 {
+   int angle = rand()/RAND_MAX * (360 / BRANCH_NUM);
    float l = l0 * (rand()/RAND_MAX*(1.15-0.85)+0.85);
-   float angle = rand()/RAND_MAX*(360.0/BRANCH_NUM);
-   float white[] = {1.0, 1.0, 1.0, 0.2};
 
    glPushMatrix();
    
@@ -57,22 +56,21 @@ int Tree::branchFractal(float l0, float r0)
    {
       glRotatef(angle, 0, 1, 0);
 
-	  for (int i = 0; i < BRANCH_NUM; i++)
-	  {
-         glRotatef(360/BRANCH_NUM, 0, 1, 0);
-         ntri += this->leaf();
-	  }
+	  
+      glRotatef(360/BRANCH_NUM, 0, 1, 0);
+      ntri += this->leaf();
    }
    else
    {
       float r = SHRINK_FACTOR * r0;
+      float left = BRANCH_RATIO * l0;
 
 	  for (int i = 0; i < BRANCH_NUM; i++)
 	  {
          glPushMatrix();
-         glRotatef(angle + i * 360.0/BRANCH_NUM, 0, 1, 0);
+         glRotatef(angle + i * 360 / BRANCH_NUM, 0, 1, 0);
          glRotatef(30.0, 1, 0, 0);
-         ntri += this->branchFractal(BRANCH_RATIO * l0, r);
+         ntri += this->branchFractal(left, r);
          glPopMatrix();
 	  }
    }
@@ -85,7 +83,6 @@ int Tree::branchFractal(float l0, float r0)
 // Function definition for branch method (algorithm from in-class notes).
 int Tree::branch(float l, float r)
 {
-   float brown[] = {0.3, 0.165, 0.165, 0.2};
    glPushMatrix();
    glScaled(r, l, r);
 
@@ -100,13 +97,27 @@ int Tree::branch(float l, float r)
    glCullFace(GL_BACK);
    glBegin(GL_QUAD_STRIP);
 
-   for (int i = 0; i <= 360; i += 30)
+   for (int i = 0; i <= 360; i += 60)
    {
-      glNormal3f(Cos(i), 1 - SHRINK_FACTOR, Sin(i));
-      glTexCoord2d(i/120.0, 0.0);
-      glVertex3f(Cos(i), 0, Sin(i));
-      glTexCoord2d(i/120.0, l/r);
-      glVertex3f(SHRINK_FACTOR*Cos(i), 1, SHRINK_FACTOR * Sin(i));
+      float x = Cos(i);
+      float z = Sin(i);
+      float texX = i / 120.0;
+      float x1 = Cos(i + 30);
+      float z1 = Sin(i + 30);
+      float texY = l/r;
+      float texX1 = (i + 30) / 120.0;
+
+      glNormal3f(x, 1 - SHRINK_FACTOR, z);
+      glTexCoord2d(texX, 0.0);
+      glVertex3f(x, 0, z);
+      glTexCoord2d(texX, texY);
+      glVertex3f(SHRINK_FACTOR * x, 1, SHRINK_FACTOR * z);
+
+      glNormal3f(x1, 1 - SHRINK_FACTOR, z1);
+      glTexCoord2d(texX1, 0.0);
+      glVertex3f(x1, 0, z1);
+      glTexCoord2d(texX1, texY);
+      glVertex3f(SHRINK_FACTOR * x1, 1, SHRINK_FACTOR * z1);
    }
 
    glEnd();
@@ -120,7 +131,6 @@ int Tree::branch(float l, float r)
 // Function definition for leaf method (algorithm borrowed from in-class notes).
 int Tree::leaf()
 {
-   float orange[] = {1.0, 0.5, 0.0, 0.1};
 
    glColor4fv(orange);
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
