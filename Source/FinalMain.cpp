@@ -73,13 +73,14 @@ void initialize_objects()
    ground->Initialize("Assets/Dirt.bmp");
 
    // Instantiate skybox.
-   sky = new Skybox(0.0, 0.0, 0.0, 50.0, 50.0, 50.0, 0.0, 0.0, 0.0);
+   sky = new Skybox(0.0, 25.0, 0.0, 50.0, 25.0, 50.0, 0.0, 0.0, 0.0);
    sky->Initialize("Assets/Stars.bmp");
 
    // Instantiate shovel, axe.
-   shovel = new Shovel(-15.0, 2.0, -15.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0);
+   shovel = new Shovel(20.0, 2.0, 10.0, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0);
    shovel->Initialize("Assets/Wood.bmp");
-   axe = new Axe(-15.0, 1.5, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0);
+
+   axe = new Axe(-36.5, 1.2, -31.5, 0.7, 0.7, 0.7, 0.0, 0.0, 0.0);
    axe->Initialize("Assets/Wood.bmp");
 
    // Instantiate Cabin.
@@ -114,11 +115,7 @@ void display()
    gluLookAt(player->getEyeX(), player->getEyeY(), player->getEyeZ(), player->getCenterX(), player->getCenterY(), player->getCenterZ(), player->getUpX(), player->getUpY(), player->getUpZ());
    lantern->setDirection(player->getCenterX(), player->getCenterY(), player->getCenterZ());
 
-   if (player->getEyeX() < player->getCenterX())
-   {
-      lanternX = player->getEyeX() + Sin(player->getTheta());
-   }
-   else if (player->getEyeX() > player->getCenterX())
+   if (player->getEyeX() != player->getCenterX())
    {
       lanternX = player->getEyeX() + Sin(player->getTheta());
    }
@@ -127,11 +124,7 @@ void display()
       lanternX = player->getEyeX();
    }
 
-   if (player->getEyeZ() < player->getCenterZ())
-   {
-      lanternZ = player->getEyeZ() - Cos(player->getTheta());
-   }
-   else if (player->getEyeZ() > player->getCenterZ())
+   if (player->getEyeZ() != player->getCenterZ())
    {
       lanternZ = player->getEyeZ() - Cos(player->getTheta());
    }

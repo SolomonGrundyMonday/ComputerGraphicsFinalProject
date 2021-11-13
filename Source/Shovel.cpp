@@ -72,11 +72,14 @@ void Shovel::Render()
    for (int i = 0; i < 12; i++)
    {
       int theta = i * 30;
-      glNormal3f(HANDLE_LEN, RADIUS * Sin(theta) + HANDLE_HEIGHT, RADIUS * Cos(theta));
+      float y = RADIUS * Sin(theta) + HANDLE_HEIGHT;
+      float z = RADIUS * Cos(theta);
+
+      glNormal3f(HANDLE_LEN, y, z);
       glTexCoord2f(0, i % 2);
-      glVertex3f(HANDLE_LEN, RADIUS * Sin(theta) + HANDLE_HEIGHT, RADIUS * Cos(theta));
+      glVertex3f(HANDLE_LEN, y, z);
       glTexCoord2f(1, i % 2);
-      glVertex3f(-HANDLE_LEN, RADIUS * Sin(theta) + HANDLE_HEIGHT, RADIUS * Cos(theta));
+      glVertex3f(-HANDLE_LEN, y, z);
    }
    glEnd();
 
@@ -87,8 +90,12 @@ void Shovel::Render()
 
    for (int i = 0; i <= 360; i += 30)
    {
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(HANDLE_LEN, RADIUS * Sin(i) + HANDLE_HEIGHT, RADIUS * Cos(i));
+      float sine = Sin(i);
+      float cosine = Cos(i);
+
+      glNormal3f(HANDLE_LEN, sine + HANDLE_HEIGHT, cosine);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(HANDLE_LEN, RADIUS * sine + HANDLE_HEIGHT, RADIUS * cosine);
    }
    glEnd();
 
@@ -99,8 +106,12 @@ void Shovel::Render()
 
    for (int i = 0; i <= 360; i += 30)
    {
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(-HANDLE_LEN, RADIUS * Sin(i) + HANDLE_HEIGHT, RADIUS * Cos(i));
+      float sine = Sin(i);
+      float cosine = Cos(i);
+
+      glNormal3f(-HANDLE_LEN, sine + HANDLE_HEIGHT, cosine);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(-HANDLE_LEN, RADIUS * sine + HANDLE_HEIGHT, RADIUS * cosine);
    }
    glEnd();
 
@@ -151,11 +162,14 @@ void Shovel::Render()
    for (int i = 0; i <= 12; i++)
    {
       int theta = i * 30;
+      float x = RADIUS * Cos(theta);
+      float z = RADIUS * Sin(theta);
+
       glNormal3f(Cos(theta), -RADIUS, Sin(theta));
       glTexCoord2f(0.0, i * 1.0/12.0);
-	  glVertex3f(RADIUS * Cos(theta), -RADIUS - SHAFT_LEN, RADIUS * Sin(theta));
+	  glVertex3f(x, -RADIUS - SHAFT_LEN, z);
       glTexCoord2f(12.0, i * 1.0/12.0);
-      glVertex3f(RADIUS * Cos(theta), -RADIUS, RADIUS * Sin(theta));
+      glVertex3f(x, -RADIUS, z);
    }
    glEnd();
    
@@ -166,9 +180,12 @@ void Shovel::Render()
    
    for (int i = 30; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i), -RADIUS - SHAFT_LEN, Sin(i));
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(RADIUS * Cos(i), -RADIUS - SHAFT_LEN, RADIUS * Sin(i));
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glNormal3f(cosine, -RADIUS - SHAFT_LEN, sine);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(RADIUS * cosine, -RADIUS - SHAFT_LEN, RADIUS * sine);
    }
    glEnd();
 
@@ -183,9 +200,12 @@ void Shovel::Render()
 
    for (int i = 0; i <= 180; i += 30)
    {
-      glNormal3f(Cos(i) + Cos(i), -SHAFT_LEN - RADIUS, Sin(i));
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(RADIUS * Cos(i) + HEAD_WIDTH * Cos(i), -SHAFT_LEN - RADIUS, RADIUS * Sin(i));
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glNormal3f(cosine + cosine, -SHAFT_LEN - RADIUS, sine);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(RADIUS * cosine + HEAD_WIDTH * cosine, -SHAFT_LEN - RADIUS, RADIUS * sine);
    }
    glEnd();
 
@@ -198,11 +218,14 @@ void Shovel::Render()
    for (int i = 0; i <= 12; i++)
    {
       int theta = i * 30;
-      glNormal3f(Cos(theta), -RADIUS, Sin(theta));
+      float cosine = Cos(theta);
+      float sine = Sin(theta);
+
+      glNormal3f(cosine, -RADIUS, sine);
       glTexCoord2f(0.0, i % 2);
-      glVertex3f(newRadius * Cos(theta), -SHAFT_LEN, newRadius * Sin(theta));
+      glVertex3f(newRadius * cosine, -SHAFT_LEN, newRadius * sine);
       glTexCoord2f(1.0, i % 2);
-      glVertex3f(newRadius * Cos(theta), -SHAFT_LEN - RADIUS, newRadius * Sin(theta));
+      glVertex3f(newRadius * cosine, -SHAFT_LEN - RADIUS, newRadius * sine);
    }
    glEnd();
 
@@ -213,9 +236,12 @@ void Shovel::Render()
 
    for (int i = 30; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i), -RADIUS - SHAFT_LEN, Sin(i));
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(newRadius * Cos(i), -RADIUS - SHAFT_LEN, newRadius * Sin(i));
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glNormal3f(cosine, -RADIUS - SHAFT_LEN, sine);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(newRadius * cosine, -RADIUS - SHAFT_LEN, newRadius * sine);
    }
    glEnd();
 

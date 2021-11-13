@@ -43,7 +43,6 @@ int Axe::Initialize(const char* filename)
 {
    this->texture = LoadTexBMP(filename);
    this->metal = LoadTexBMP("Assets/RustyMetal.bmp");
-   // also load metal texture for axe head.
 
    return 0;
 }
@@ -56,6 +55,7 @@ void Axe::Render()
    float axeBlade = -RAD - HEAD_LENGTH;
    float bladeNormY = headTop - (HEAD_HEIGHT/2.0);
    float bladeNormX = -RAD - (HEAD_LENGTH/2.0);
+   float textureRatio = 1.0/12.0;
 
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
@@ -79,9 +79,9 @@ void Axe::Render()
    {
       int theta = i * 30;
       glNormal3f(RAD * Cos(theta), 0.0, RAD * Sin(theta));
-      glTexCoord2f(0.0, i * 1.0/12.0);
+      glTexCoord2f(0.0, i * textureRatio);
       glVertex3f(RAD * Cos(theta), 0.0, RAD * Sin(theta));
-      glTexCoord2f(12.0, i * 1.0/12.0);
+      glTexCoord2f(12.0, i * textureRatio);
       glVertex3f(RAD * Cos(theta), LENGTH, RAD * Sin(theta));
    }
    glEnd();
@@ -93,9 +93,12 @@ void Axe::Render()
 
    for (int i = 0; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i), LENGTH, Sin(i));
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(RAD * Cos(i), LENGTH, RAD * Sin(i));
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glNormal3f(cosine, LENGTH, sine);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(RAD * cosine, LENGTH, RAD * sine);
    }
    glEnd();
 
@@ -106,9 +109,12 @@ void Axe::Render()
 
    for (int i = 0; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i), 0.0, Sin(i));
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(RAD * Cos(i), 0.0, RAD * Sin(i));
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glNormal3f(cosine, 0.0, sine);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(RAD * cosine, 0.0, RAD * sine);
    }
    glEnd();
 

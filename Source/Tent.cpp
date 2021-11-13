@@ -266,9 +266,12 @@ void Tent::Render()
    glVertex3f(0.4, 0.2, 1.0);
    for (int i = 0; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i) + 0.4, 0.2, Sin(i) + 1.0);
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(0.1 * Cos(i) + 0.4, 0.2, 0.1 * Sin(i) + 1.0);
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glNormal3f(cosine + 0.4, 0.2, sine + 1.0);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(0.1 * cosine + 0.4, 0.2, 0.1 * sine + 1.0);
    }
    glEnd();
 
@@ -278,9 +281,12 @@ void Tent::Render()
    glVertex3f(0.4, -1.0, 1.0);
    for (int i = 0; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i) + 0.4, -1.0, Sin(i) + 1.0);
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(0.1 * Cos(i) + 0.4, -1.0, 0.1 * Sin(i) + 1.0);
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glNormal3f(cosine + 0.4, -1.0, sine + 1.0);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(0.1 * cosine + 0.4, -1.0, 0.1 * sine + 1.0);
    }
    glEnd();
 
@@ -290,9 +296,12 @@ void Tent::Render()
    glVertex3f(-0.4, 0.2, 1.0);
    for (int i = 0; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i) - 0.4, 0.2, Sin(i) + 1.0);
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(0.1 * Cos(i) - 0.4, 0.2, 0.1 * Sin(i) + 1.0);
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glNormal3f(cosine - 0.4, 0.2, sine + 1.0);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(0.1 * cosine - 0.4, 0.2, 0.1 * sine + 1.0);
    }
    glEnd();
 
@@ -302,9 +311,12 @@ void Tent::Render()
    glVertex3f(-0.4, -1.0, 1.0);
    for (int i = 0; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i) - 0.4, -1.0, Sin(i) + 1.0);
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(0.1 * Cos(i) - 0.4, -1.0, 0.1 * Sin(i) + 1.0);
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glNormal3f(cosine - 0.4, -1.0, sine + 1.0);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(0.1 * cosine - 0.4, -1.0, 0.1 * sine + 1.0);
    }
    glEnd();
 
@@ -362,9 +374,12 @@ void Tent::DrawSpike(float px, float pz)
    glVertex3f(px, -0.9, pz);
    for (int i = 0; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i) + px, -0.9, Sin(i) + pz);
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(Cos(i) * 0.02 + px, -0.9, Sin(i) * 0.02 + pz);
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glNormal3f(cosine + px, -0.9, sine + pz);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(cosine * 0.02 + px, -0.9, sine * 0.02 + pz);
    }
    glEnd();
 
@@ -374,9 +389,12 @@ void Tent::DrawSpike(float px, float pz)
    glVertex3f(px, -0.89, pz);
    for (int i = 0; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i) + px, -0.89, Sin(i) + pz);
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(Cos(i) * 0.02 + px, -0.89, Sin(i) * 0.02 + pz);
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glNormal3f(cosine + px, -0.89, sine + pz);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(cosine * 0.02 + px, -0.89, sine * 0.02 + pz);
    }
    glEnd();
 
