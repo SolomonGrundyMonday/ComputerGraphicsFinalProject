@@ -25,7 +25,7 @@ CLEAN=rm -f $(EXE) *.o *.a
 endif
 
 # Dependencies
-FinalMain.o: FinalMain.cpp CSCIx229.h Cuboid.h Tree.h Shovel.h Axe.h Cabin.h Skybox.o Lantern.h Tent.h
+FinalMain.o: FinalMain.cpp CSCIx229.h Cuboid.h Tree.h Shovel.h Axe.h Cabin.h Skybox.o Lantern.h Tent.h Camera.h
 fatal.o: fatal.c CSCIx229.h 
 errcheck.o: errcheck.c CSCIx229.h
 print.o: print.c CSCIx229.h
