@@ -22,7 +22,7 @@ Lantern::Lantern()
    this->rotZ = 0.0;
 
    this->lightDir[0] = 0.0;
-   this->lightDir[1] = 0.5;
+   this->lightDir[1] = 1.1;
    this->lightDir[2] = 0.0;
 }
 
@@ -57,9 +57,9 @@ int Lantern::Initialize(const char* filename)
 // Function definition for Lantern class Render function implementation.
 void Lantern::Render()
 {
-   //float lightPos[] = {this->posX, this->posY, this->posZ};
-   float spotE[] = {120.0};
-   float spotC[] = {90.0};
+   float spotE[] = {90.0};
+   float spotC[] = {15.0};
+   float spotPosition[] = {0.0, 0.0, 0.0, 1.0};
 
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
@@ -81,6 +81,8 @@ void Lantern::Render()
    glLightfv(GL_LIGHT0, GL_AMBIENT, Ambient);
    glLightfv(GL_LIGHT0, GL_DIFFUSE, Diffuse);
    glLightfv(GL_LIGHT0, GL_SPECULAR, Specular);
+   glLightfv(GL_LIGHT0, GL_POSITION, spotPosition);
+   glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lightDir);
    glLightfv(GL_LIGHT0, GL_SPOT_EXPONENT, spotE);
    glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, spotC);
 
@@ -320,6 +322,11 @@ void Lantern::setRotation(float x, float y, float z)
 // Function definition for Lantern class setDirection function.
 void Lantern::setDirection(float x, float y, float z)
 {
+   //float denom = sqrt((x * x) + (y * y) + (z * z));
+   //float normX = x / denom;
+   //float normY = y / denom;
+   //float normZ = z / denom;
+
    this->lightDir[0] = x;
    this->lightDir[1] = y;
    this->lightDir[2] = z;
@@ -377,4 +384,22 @@ float Lantern::getRotY()
 float Lantern::getRotZ()
 {
    return this->rotZ;
+}
+
+// Function definition for Lantern class getDirX function.
+float Lantern::getDirX()
+{
+   return this->lightDir[0];
+}
+
+// Function definition for Lantern class getDirY function.
+float Lantern::getDirY()
+{
+   return this->lightDir[1];
+}
+
+// Function definition for Lantern class getDirZ function.
+float Lantern::getDirZ()
+{
+   return this->lightDir[2];
 }

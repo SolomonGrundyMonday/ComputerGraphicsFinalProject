@@ -103,6 +103,12 @@ void display()
 {
    float lanternX;
    float lanternZ;
+   float Eye[3];
+   float Center[3];
+
+   Eye[0] = player->getEyeX();
+   Eye[1] = player->getEyeY();
+   Eye[2] = player->getEyeZ();
 
    // Clear the buffers, enable depth test.
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -118,29 +124,34 @@ void display()
    // Clear transformations and apply camera movement.
    glLoadIdentity();
    player->Turn();
-   player->setCenterPos(player->getEyeX() + player->getCenterX(), player->getCenterY(), player->getEyeZ() + player->getCenterZ());
-   gluLookAt(player->getEyeX(), player->getEyeY(), player->getEyeZ(), player->getCenterX(), player->getCenterY(), player->getCenterZ(), player->getUpX(), player->getUpY(), player->getUpZ());
-   lantern->setDirection(player->getCenterX(), player->getCenterY(), player->getCenterZ());
+   player->setCenterPos(Eye[0] + player->getCenterX(), player->getCenterY(), Eye[2] + player->getCenterZ());
 
-   if (player->getEyeX() != player->getCenterX())
+   Center[0] = player->getCenterX();
+   Center[1] = player->getCenterY();
+   Center[2] = player->getCenterZ();
+
+   gluLookAt(Eye[0], Eye[1], Eye[2], Center[0], Center[1], Center[2], player->getUpX(), player->getUpY(), player->getUpZ());
+
+   if (Eye[0] != Center[0])
    {
-      lanternX = player->getEyeX() + Sin(player->getTheta());
+      lanternX = Eye[0] + Sin(player->getTheta());
    }
    else
    {
-      lanternX = player->getEyeX();
+      lanternX = Eye[0];
    }
 
-   if (player->getEyeZ() != player->getCenterZ())
+   if (Eye[2] != Center[2])
    {
-      lanternZ = player->getEyeZ() - Cos(player->getTheta());
+      lanternZ = Eye[2] - Cos(player->getTheta());
    }
    else
    {
-      lanternZ = player->getEyeZ();
+      lanternZ = Eye[2];
    }
 
-   lantern->setPosition(lanternX, player->getEyeY() - 0.4, lanternZ);
+   lantern->setPosition(lanternX, Eye[1] - 0.4, lanternZ);
+   lantern->setDirection(Center[0], Eye[1] - 0.4, Center[2]);
    lantern->setRotation(0.0, -player->getTheta(), 0.0);
 
    // Render Tree objects.
@@ -158,8 +169,10 @@ void display()
    sky->Render();
    lantern->Render();
 
+   glWindowPos2i(5, 25);
+   Print("Eye: (%.1lf, %.1lf, %.1lf); Center: (%.1lf, %.1lf, %.1lf)", Eye[0], Eye[1], Eye[2], Center[0], Center[1], Center[2]);
    glWindowPos2i(5, 5);
-   Print("Eye: (%.1lf, %.1lf, %.1lf); Center: (%.1lf, %.1lf, %.1lf)", player->getEyeX(), player->getEyeY(), player->getEyeZ(), player->getCenterX(), player->getCenterY(), player->getCenterZ());
+   Print("Light Pos: (%.1lf, %.1lf, %.1lf); Light Dir: (%.1lf, %.1lf, %.1lf)", lantern->getPosX(), lantern->getPosY(), lantern->getPosZ(), lantern->getDirX(), lantern->getDirY(), lantern->getDirZ());
 
    // Check for errors in GLUT, flush and swap buffers.
    ErrCheck("display");

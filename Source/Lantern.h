@@ -27,7 +27,7 @@ class Lantern : public GameObject
       float rotX;
       float rotY;
       float rotZ;
-      float lightDir[4];
+      float lightDir[3];
       float Ambient[4] = {0.0, 0.0, 0.0, 1.0};
       float Diffuse[4] = {1.0, 1.0, 1.0, 1.0};
       float Specular[4] = {0.0, 0.0, 0.0, 1.0};
@@ -175,4 +175,28 @@ class Lantern : public GameObject
        *   Return value:    The object's rotation about the z-axis. 
        */
       float getRotZ();
+
+      /*
+       *    Function prototype for Lantern class getDirX getter function.
+       *    Precondition:   None.
+       *    Postcondition:  The object's spot light direction x component has been returned to the caller.
+       *    Return value:   The object's spot light direction x-value. 
+       */
+      float getDirX();
+
+      /*
+       *    Function prototype for lantern class getDirY getter function.
+       *    Precondition:   None.
+       *    Postcondition:  The object's spot light direction y component has been returned to the caller.
+       *    Return value:   The object's spot light direction y-value.  
+       */
+      float getDirY();
+
+      /*
+       *    Function prototype for lantern class getDirZ getter function.
+       *    Precondition:   None.
+       *    Postcondition:  The object's spot light direction z component has been returned to the caller. 
+       *    Return value:   The object's spot light direction z-value. 
+       */
+      float getDirZ();
 };
