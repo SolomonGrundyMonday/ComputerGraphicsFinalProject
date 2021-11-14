@@ -89,6 +89,14 @@ class Tree : public GameObject
       void Render();
 
       /*
+       *   Function prototype for Tree object resolveCollision function implementation.
+       *   Precondition:  An instance of a Tree object has been instantiated and the object has been rendered to the scene.
+       *   Postcondition: If a Camera object has collided with the object, the collision has been resolved, and the Camera's
+       *                  position has been updated such that the Camera is prevented from "clipping" through the Tree.0  
+       */
+      void resolveCollision(Camera* camera);
+
+      /*
        *   Function prototype for Tree object setPosition function.
        *   Precondition:  None.
        *   Postcondition: The translation of the Tree object has been changed to the specified values.

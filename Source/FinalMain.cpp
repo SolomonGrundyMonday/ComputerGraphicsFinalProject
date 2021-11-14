@@ -5,7 +5,6 @@
  */
 #include "CSCIx229.h"
 #include "Cuboid.h"
-#include "Camera.h"
 #include "Tree.h"
 #include "Shovel.h"
 #include "Axe.h"
@@ -124,6 +123,7 @@ void display()
    // Clear transformations and apply camera movement.
    glLoadIdentity();
    player->Turn();
+   sky->resolveCollision(player);
    player->setCenterPos(Eye[0] + player->getCenterX(), player->getCenterY(), Eye[2] + player->getCenterZ());
 
    Center[0] = player->getCenterX();
@@ -151,7 +151,6 @@ void display()
    }
 
    lantern->setPosition(lanternX, Eye[1] - 0.4, lanternZ);
-   lantern->setDirection(Center[0], Eye[1] - 0.4, Center[2]);
    lantern->setRotation(0.0, -player->getTheta(), 0.0);
 
    // Render Tree objects.
@@ -169,10 +168,8 @@ void display()
    sky->Render();
    lantern->Render();
 
-   glWindowPos2i(5, 25);
-   Print("Eye: (%.1lf, %.1lf, %.1lf); Center: (%.1lf, %.1lf, %.1lf)", Eye[0], Eye[1], Eye[2], Center[0], Center[1], Center[2]);
    glWindowPos2i(5, 5);
-   Print("Light Pos: (%.1lf, %.1lf, %.1lf); Light Dir: (%.1lf, %.1lf, %.1lf)", lantern->getPosX(), lantern->getPosY(), lantern->getPosZ(), lantern->getDirX(), lantern->getDirY(), lantern->getDirZ());
+   Print("Eye: (%.1lf, %.1lf, %.1lf); Center: (%.1lf, %.1lf, %.1lf)", Eye[0], Eye[1], Eye[2], Center[0], Center[1], Center[2]);
 
    // Check for errors in GLUT, flush and swap buffers.
    ErrCheck("display");

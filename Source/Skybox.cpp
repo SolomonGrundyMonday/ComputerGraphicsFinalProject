@@ -42,7 +42,6 @@ Skybox::Skybox(float x, float y, float z, float dx, float dy, float dz, float rx
 int Skybox::Initialize(const char* filename)
 {
    this->texture = LoadTexBMP(filename);
-   //this->moon = LoadTexBMP("Moon.bmp");
 
    return 0;
 }
@@ -72,70 +71,77 @@ void Skybox::Render()
    glRotatef(this->rotZ, 0, 0, 1);
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
 
-   // Draw "roof"
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0);
-   glVertex3f(-1.0, 1.0, 1.0);
-   glTexCoord2f(texX, 0.0);
-   glVertex3f(1.0, 1.0, 1.0);
-   glTexCoord2f(texX, texZ);
-   glVertex3f(1.0, 1.0, -1.0);
-   glTexCoord2f(0.0, texZ);
-   glVertex3f(-1.0, 1.0, -1.0);
-   glEnd();
+   for (int i = 0; i < 20; i += 4)
+   {
+      int vert2 = i + 1;
+      int vert3 = i + 2;
+      int vert4 = i + 3;
 
-   // Draw "left wall"
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0);
-   glVertex3f(-1.0, -1.0, -1.0);
-   glTexCoord2f(texZ, 0.0);
-   glVertex3f(-1.0, -1.0, 1.0);
-   glTexCoord2f(texZ, texY);
-   glVertex3f(-1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, texY);
-   glVertex3f(-1.0, 1.0, -1.0);
-   glEnd();
-
-   // Draw "right wall"
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0);
-   glVertex3f(1.0, -1.0, 1.0);
-   glTexCoord2f(texZ, 0.0);
-   glVertex3f(1.0, -1.0, -1.0);
-   glTexCoord2f(texZ, texY);
-   glVertex3f(1.0, 1.0, -1.0);
-   glTexCoord2f(0.0, texY);
-   glVertex3f(1.0, 1.0, 1.0);
-   glEnd();
-
-   // Draw "back wall"
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0);
-   glVertex3f(1.0, -1.0, -1.0);
-   glTexCoord2f(texX, 0.0);
-   glVertex3f(-1.0, -1.0, -1.0);
-   glTexCoord2f(texX, texY);
-   glVertex3f(-1.0, 1.0, -1.0);
-   glTexCoord2f(0.0, texY);
-   glVertex3f(1.0, 1.0, -1.0);
-   glEnd();
- 
-   // Draw "front wall"
-   //glBindTexture(GL_TEXTURE_2D, moon);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0);
-   glVertex3f(-1.0, -1.0, 1.0);
-   glTexCoord2f(texX, 0.0);
-   glVertex3f(1.0, -1.0, 1.0);
-   glTexCoord2f(texX, texY);
-   glVertex3f(1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, texY);
-   glVertex3f(-1.0, 1.0, 1.0);
-   glEnd();
+	  glBegin(GL_QUADS);
+      if (i == 0)
+      {
+         glTexCoord2f(0.0, 0.0);
+         glVertex3f(vertices[i][0], vertices[i][1], vertices[i][2]);
+         glTexCoord2f(texX, 0.0);
+         glVertex3f(vertices[vert2][0], vertices[vert2][1], vertices[vert2][2]);
+         glTexCoord2f(texX, texZ);
+         glVertex3f(vertices[vert3][0], vertices[vert3][1], vertices[vert3][2]);
+         glTexCoord2f(0.0, texZ);
+         glVertex3f(vertices[vert4][0], vertices[vert4][1], vertices[vert4][2]);
+      }
+	  else if (i == 4 || i == 8)
+	  {
+         glTexCoord2f(0.0, 0.0);
+         glVertex3f(vertices[i][0], vertices[i][1], vertices[i][2]);
+         glTexCoord2f(texZ, 0.0);
+         glVertex3f(vertices[vert2][0], vertices[vert2][1], vertices[vert2][2]);
+         glTexCoord2f(texZ, texY);
+         glVertex3f(vertices[vert3][0], vertices[vert3][1], vertices[vert3][2]);
+         glTexCoord2f(0.0, texY);
+         glVertex3f(vertices[vert4][0], vertices[vert4][1], vertices[vert4][2]);
+	  }
+	  else
+	  {
+         glTexCoord2f(0.0, 0.0);
+         glVertex3f(vertices[i][0], vertices[i][1], vertices[i][2]);
+         glTexCoord2f(texX, 0.0);
+         glVertex3f(vertices[vert2][0], vertices[vert2][1], vertices[vert2][2]);
+         glTexCoord2f(texX, texY);
+         glVertex3f(vertices[vert3][0], vertices[vert3][1], vertices[vert3][2]);
+         glTexCoord2f(0.0, texY);
+         glVertex3f(vertices[vert3][0], vertices[vert3][1], vertices[vert3][2]);
+	  }
+      glEnd();
+   }
 
    glPopMatrix();
    glDisable(GL_CULL_FACE);
    glDisable(GL_TEXTURE_2D);
+}
+
+// Skybox class resolveCollision function definition.
+void Skybox::resolveCollision(Camera* camera)
+{
+   float camX = camera->getEyeX();
+   float camZ = camera->getEyeZ();
+
+   if (camX < -this->scaleX)
+   {
+      camera->setEyePos(-this->scaleX, camera->getEyeY(), camera->getEyeZ());
+   }
+   else if (camX > this->scaleX)
+   {
+      camera->setEyePos(this->scaleX, camera->getEyeY(), camera->getEyeZ());
+   }
+
+   if (camZ < -this->scaleZ)
+   {
+      camera->setEyePos(camera->getEyeX(), camera->getEyeY(), -this->scaleZ);
+   }
+   else if (camZ > this->scaleZ)
+   {
+      camera->setEyePos(camera->getEyeX(), camera->getEyeY(), this->scaleZ);
+   }
 }
 
 // Skybox class setPosition function definition.

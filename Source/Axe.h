@@ -68,6 +68,16 @@ class Axe : public GameObject
        *    Postcondition: The object has been rendered in the OpenGL window. 
        */
       void Render();
+
+      /*
+       *    Function prototype for Axe object implementation of resolveCollision function.
+       *    Precondition:  An Axe object has been instantiated, and the object has been rendered to the scene.
+       *    Postcondition: If a Camera object has collided with the Axe object, the collision has been resolved, and
+       *                   the Camera's position has been updated such that the Camera is prevented from "clipping" through
+       *                   the object.
+       *    Parameter:     The active Camera object.  
+       */
+      void resolveCollision(Camera* camera);
       
       /*
        *    Function prototype for Axe object setPosition setter function.

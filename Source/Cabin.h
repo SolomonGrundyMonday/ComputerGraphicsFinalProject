@@ -79,6 +79,15 @@ class Cabin : public GameObject
       int Initialize(const char* filename);
 
       /*
+       *    Function prototype for Cabin object implementation of resolveCollision function.
+       *    Precondition:  An instance of a Cabin object has been instantiated, and the object has been rendered to the scene.
+       *    Postcondition: If a Camera has collided with the object, the collision has been resolved, and the Camera's position
+       *                   has been updated such that the Camera is prevented from "clipping" through the object.
+       *    Parameter:     The active Camera object. 
+       */
+      void resolveCollision(Camera* camera);
+
+      /*
        *    Function prototype for Cabin object implementation of Render function.
        *    Precondition:  An instance of a Cabin object has been instantiated, and the textures have been loaded through
        *                   a call to Initialize.  This function must be ccalled from the display function of an OpenGL

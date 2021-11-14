@@ -558,6 +558,12 @@ void Cabin::drawWindow(float x, float y, float z)
    glEnd();
 }
 
+// Function definition for Cabin class resolveCollision function implementation.
+void Cabin::resolveCollision(Camera* camera)
+{
+   // Do stuff here.
+}
+
 // Function definition for Cabin class setPosition function.
 void Cabin::setPosition(float x, float y, float z)
 {

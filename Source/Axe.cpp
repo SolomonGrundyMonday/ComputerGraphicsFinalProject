@@ -238,6 +238,12 @@ void Axe::Render()
    glDisable(GL_TEXTURE_2D);
 }
 
+// Function definition for Axe class resolveCollision function implementation.
+void Axe::resolveCollision(Camera* camera)
+{
+   // Do stuff here.
+}
+
 // Function definition for Axe class setPosition function.
 void Axe::setPosition(float x, float y, float z)
 {

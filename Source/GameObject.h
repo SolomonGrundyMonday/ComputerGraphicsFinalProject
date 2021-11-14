@@ -9,6 +9,7 @@
  */
 #pragma once
 #include "CSCIx229.h"
+#include "Camera.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -27,4 +28,11 @@ class GameObject
        *    All subclasses of GameObject must implement this function. 
        */
       virtual void Render() = 0;
+
+      /*
+       *    Function prototype for pure virtual resolveCollision function.
+       *    All subclasses of Gameobject must implement this function. 
+       */
+      virtual void resolveCollision(Camera* camera) = 0;
+
 };

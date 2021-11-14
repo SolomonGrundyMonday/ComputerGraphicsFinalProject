@@ -59,7 +59,7 @@ void Lantern::Render()
 {
    float spotE[] = {90.0};
    float spotC[] = {15.0};
-   float spotPosition[] = {0.0, 0.0, 0.0, 1.0};
+   float spotPosition[] = {0.0, 0.5, 0.0, 1.0};
 
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
@@ -75,16 +75,6 @@ void Lantern::Render()
    glRotatef(this->rotY, 0, 1, 0);
    glRotatef(this->rotZ, 0, 0, 1);
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
-
-   // Set up light source.
-   glEnable(GL_LIGHT0);
-   glLightfv(GL_LIGHT0, GL_AMBIENT, Ambient);
-   glLightfv(GL_LIGHT0, GL_DIFFUSE, Diffuse);
-   glLightfv(GL_LIGHT0, GL_SPECULAR, Specular);
-   glLightfv(GL_LIGHT0, GL_POSITION, spotPosition);
-   glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lightDir);
-   glLightfv(GL_LIGHT0, GL_SPOT_EXPONENT, spotE);
-   glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, spotC);
 
    // Draw lantern base.
    glBegin(GL_QUAD_STRIP);
@@ -289,10 +279,26 @@ void Lantern::Render()
    }
    glEnd();
 
+   // Set up light source.
+   glLoadIdentity();
+   glEnable(GL_LIGHT0);
+   glLightfv(GL_LIGHT0, GL_AMBIENT, Ambient);
+   glLightfv(GL_LIGHT0, GL_DIFFUSE, Diffuse);
+   glLightfv(GL_LIGHT0, GL_SPECULAR, Specular);
+   glLightfv(GL_LIGHT0, GL_POSITION, spotPosition);
+   glLightfv(GL_LIGHT0, GL_SPOT_EXPONENT, spotE);
+   glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, spotC);
+
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
    glDisable(GL_BLEND);
    glEnable(GL_CULL_FACE);
+}
+
+// Function definition for Lantern class resolveCollision function implementation.
+void Lantern::resolveCollision(Camera* camera)
+{
+   // Do stuff here.
 }
 
 // Function definition for Lantern class setPosition function.
@@ -317,19 +323,6 @@ void Lantern::setRotation(float x, float y, float z)
    this->rotX = x;
    this->rotY = y;
    this->rotZ = z;
-}
-
-// Function definition for Lantern class setDirection function.
-void Lantern::setDirection(float x, float y, float z)
-{
-   //float denom = sqrt((x * x) + (y * y) + (z * z));
-   //float normX = x / denom;
-   //float normY = y / denom;
-   //float normZ = z / denom;
-
-   this->lightDir[0] = x;
-   this->lightDir[1] = y;
-   this->lightDir[2] = z;
 }
 
 // Function definition for Lantern class getPosX function.
@@ -384,22 +377,4 @@ float Lantern::getRotY()
 float Lantern::getRotZ()
 {
    return this->rotZ;
-}
-
-// Function definition for Lantern class getDirX function.
-float Lantern::getDirX()
-{
-   return this->lightDir[0];
-}
-
-// Function definition for Lantern class getDirY function.
-float Lantern::getDirY()
-{
-   return this->lightDir[1];
-}
-
-// Function definition for Lantern class getDirZ function.
-float Lantern::getDirZ()
-{
-   return this->lightDir[2];
 }

@@ -23,6 +23,11 @@ class Skybox : public GameObject
       float rotX;
       float rotY;
       float rotZ;
+      const float vertices[20][3] = { {-1.0, 1.0, 1.0}, {1.0, 1.0, 1.0}, {1.0, 1.0, -1.0}, {-1.0, 1.0, -1.0},
+                                      {-1.0, -1.0, -1.0}, {-1.0, -1.0, 1.0}, {-1.0, 1.0, 1.0}, {-1.0, 1.0, -1.0},
+                                      {1.0, -1.0, 1.0}, {1.0, -1.0, -1.0}, {1.0, 1.0, -1.0}, {1.0, 1.0, 1.0},
+                                      {1.0, -1.0, -1.0}, {-1.0, -1.0, -1.0}, {-1.0, 1.0, -1.0}, {1.0, 1.0, -1.0},
+                                      {-1.0, -1.0, 1.0}, {1.0, -1.0, 1.0}, {1.0, 1.0, 1.0}, {-1.0, 1.0, 1.0} };
 
    public:
 
@@ -59,6 +64,15 @@ class Skybox : public GameObject
        *   Postcondition:  The object has been rendered in the OpenGL window. 
        */
       void Render();
+
+      /*
+       *   Function prototype for Skybox object resolveCollision function implementation.
+       *   Precondition:   An instance of a skybox object has been instantiated, and the object has been rendered to the scene.
+       *   Postcondition:  If a Camera object has collided with the skybox, the collision has been resolved, and the Camera's
+       *                   position has been updated such that the camera is prevented from "clipping" through the skybox.  
+       *   Parameter:      The active Camera object.  
+       */
+      void resolveCollision(Camera* camera);
 
       /*
        *   Function prototype for Skybox object setPosition setter function.

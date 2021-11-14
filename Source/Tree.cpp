@@ -180,6 +180,11 @@ void Tree::Render()
    glPopMatrix();
 }
 
+void Tree::resolveCollision(Camera* camera)
+{
+   // Do stuff here.
+}
+
 // Function definition for Tree class setPosition setter function.
 void Tree::setPosition(float x, float y, float z)
 {

@@ -69,6 +69,15 @@ class Shovel : public GameObject
       void Render();
 
       /*
+       *    Function prototype for the Shovel object resolveCollision function implementation.
+       *    Precondition:  An instance of a Shovel object has been instantated and rendered to the scene.
+       *    Postcondition: If a Camera has collided with the object, the collision has been resolved, and the Camera's
+       *                   position has been updated such that the Camera is prevented from "clipping" through the object.
+       *    Parameter:     The active Camera object.  
+       */
+      void resolveCollision(Camera* camera);
+
+      /*
        *    Function prototype for Shovel object setPosition setter function.
        *    Precondition:  None.
        *    Postcondition: The translation of the Shovel object has been changed to the specified value.

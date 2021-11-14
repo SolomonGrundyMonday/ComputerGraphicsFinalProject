@@ -25,22 +25,22 @@ CLEAN=rm -f $(EXE) *.o *.a
 endif
 
 # Dependencies
-FinalMain.o: FinalMain.cpp CSCIx229.h Cuboid.h Tree.h Shovel.h Axe.h Cabin.h Skybox.o Lantern.h Tent.h Camera.h
+FinalMain.o: FinalMain.cpp CSCIx229.h Cuboid.h Tree.h Shovel.h Axe.h Cabin.h Skybox.o Lantern.h Tent.h GameObject.h Camera.h
 fatal.o: fatal.c CSCIx229.h 
 errcheck.o: errcheck.c CSCIx229.h
 print.o: print.c CSCIx229.h
 loadtexbmp.o: loadtexbmp.c CSCIx229.h
 loadobj.o: loadobj.c CSCIx229.h
 projection.o: projection.c CSCIx229.h
-Cuboid.o: Cuboid.cpp GameObject.h Cuboid.h CSCIx229.h
+Cuboid.o: Cuboid.cpp Cuboid.h GameObject.h Camera.h CSCIx229.h
 Camera.o: Camera.cpp Camera.h CSCIx229.h
-Tree.o: Tree.cpp Tree.h GameObject.h CSCIx229.h
-Shovel.o: Shovel.cpp Shovel.h GameObject.h CSCIx229.h
-Axe.o: Axe.cpp Axe.h GameObject.h CSCIx229.h
-Cabin.o: Cabin.cpp Cabin.h GameObject.h CSCIx229.h
-Skybox.o: Skybox.cpp Skybox.h GameObject.h CSCIx229.h
-Lantern.o: Lantern.cpp Lantern.h GameObject.h CSCIx229.h
-Tent.o: Tent.cpp Tent.h GameObject.h CSCIx229.h
+Tree.o: Tree.cpp Tree.h GameObject.h Camera.h CSCIx229.h
+Shovel.o: Shovel.cpp Shovel.h GameObject.h Camera.h CSCIx229.h
+Axe.o: Axe.cpp Axe.h GameObject.h Camera.h CSCIx229.h
+Cabin.o: Cabin.cpp Cabin.h GameObject.h Camera.h CSCIx229.h
+Skybox.o: Skybox.cpp Skybox.h GameObject.h Camera.h CSCIx229.h
+Lantern.o: Lantern.cpp Lantern.h GameObject.h Camera.h CSCIx229.h
+Tent.o: Tent.cpp Tent.h GameObject.h Camera.h CSCIx229.h
 
 # Create archive
 CSCIx229.a:fatal.o errcheck.o print.o loadtexbmp.o loadobj.o projection.o

@@ -249,6 +249,12 @@ void Shovel::Render()
    glDisable(GL_TEXTURE_2D);
 }
 
+// Definition of Shovel class resolveCollision function implementaiton.
+void Shovel::resolveCollision(Camera* camera)
+{
+   // Do stuff here.
+}
+
 // Definition of Shovel class setPosition function.
 void Shovel::setPosition(float x, float y, float z)
 {

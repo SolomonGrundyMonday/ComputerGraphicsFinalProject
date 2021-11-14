@@ -49,6 +49,7 @@ void Tent::Render()
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
    glBindTexture(GL_TEXTURE_2D, texture);
 
    glPushMatrix();
@@ -193,6 +194,8 @@ void Tent::Render()
    glTexCoord2f(0.0, this->scaleY);
    glVertex3f(0.0, 1.5, 1.0);
    glEnd();
+
+   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
 
    // Draw Tent flaps.
    glBegin(GL_QUAD_STRIP);
@@ -398,6 +401,12 @@ void Tent::DrawSpike(float px, float pz)
    }
    glEnd();
 
+}
+
+// Function definition for Tent object resovleCollision function implementation.
+void Tent::resolveCollision(Camera* camera)
+{
+   // Do stuff here.
 }
 
 // Function definition for Tent object setPosition function.

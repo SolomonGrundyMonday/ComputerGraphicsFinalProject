@@ -131,6 +131,12 @@ void Cuboid::Render()
    glPopMatrix();
 }
 
+// Function definition for Cuboid class resolveCollision function implementation.
+void Cuboid::resolveCollision(Camera* camera)
+{
+   // Do stuff here.
+}
+
 // Function definition for getPosX getter function of Cuboid : GameObject class.
 float Cuboid::getPosX()
 {

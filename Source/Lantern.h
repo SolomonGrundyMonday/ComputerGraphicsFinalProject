@@ -73,6 +73,15 @@ class Lantern : public GameObject
       void Render();
 
       /*
+       *   Function prototype for Lantern class resolveCollision function implementation.
+       *   Precondition:   An instance of a Lantern object has been instantiated and rendered to the scene.
+       *   Postcondition:  If a Camera has collided with the object, the collision has been resolved, and the Camera's
+       *                   position has been updated to prevent the Camera from "clipping" through the object.
+       *   Parameter:      The active Camera object. 
+       */
+      void resolveCollision(Camera* camera);
+
+      /*
        *   Function prototype for Lantern class setPosition setter function.
        *   Precondition:   None.
        *   Postcondition:  The translation of the object has been set to the specified values.
@@ -95,14 +104,6 @@ class Lantern : public GameObject
        *   Parameters:     The desired rotation about the x, y, z axes respectively (in degrees).  
        */
       void setRotation(float x, float y, float z);
-
-      /*
-       *   Function prototype for Lantern class setDirection setter function.
-       *   Precondition:   None.
-       *   Postcondition:  The direction that the light points in has been set.
-       *   Parameters:     The desired (x, y, z) coordinates for the light's direction.  
-       */
-      void setDirection(float x, float y, float z);
 
       /*
        *   Function prototype for Lantern class getPosX getter function.
@@ -175,28 +176,4 @@ class Lantern : public GameObject
        *   Return value:    The object's rotation about the z-axis. 
        */
       float getRotZ();
-
-      /*
-       *    Function prototype for Lantern class getDirX getter function.
-       *    Precondition:   None.
-       *    Postcondition:  The object's spot light direction x component has been returned to the caller.
-       *    Return value:   The object's spot light direction x-value. 
-       */
-      float getDirX();
-
-      /*
-       *    Function prototype for lantern class getDirY getter function.
-       *    Precondition:   None.
-       *    Postcondition:  The object's spot light direction y component has been returned to the caller.
-       *    Return value:   The object's spot light direction y-value.  
-       */
-      float getDirY();
-
-      /*
-       *    Function prototype for lantern class getDirZ getter function.
-       *    Precondition:   None.
-       *    Postcondition:  The object's spot light direction z component has been returned to the caller. 
-       *    Return value:   The object's spot light direction z-value. 
-       */
-      float getDirZ();
 };

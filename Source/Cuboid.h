@@ -74,6 +74,15 @@ class Cuboid : public GameObject
       void Render();
 
       /*
+       *    Function prototype for Cuboid object resolveCollision function implementation.
+       *    Precondition:  An instance of a Cuboid object has been instantiated and rendered to the scene.
+       *    Postcondition: If a Camera has collided with the object, the collision has been resolved, and the Camera's
+       *                   position has been updated such that the Camera is prevented from "clipping" through the object. 
+       *    Parameter:     The active Camera object.
+       */
+      void resolveCollision(Camera* camera);
+
+      /*
        *    Function prototype for Cuboid object getPosX function.
        *    Precondition:  None.
        *    Postcondition: The x-translation value has been returned to the caller.  
