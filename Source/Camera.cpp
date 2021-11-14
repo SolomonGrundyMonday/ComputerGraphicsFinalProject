@@ -4,9 +4,9 @@
 Camera::Camera()
 {
    // Default starting coordinates are (-25, 1.5, -25).
-   this->EyePos[0] = -25.0;
+   this->EyePos[0] = -20.0;
    this->EyePos[1] = 1.5;
-   this->EyePos[2] = -25.0;
+   this->EyePos[2] = -19.0;
 
    // Default look at point coordinates are (0, 0.5, 0).
    this->CenterPos[0] = 0.0;

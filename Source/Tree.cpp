@@ -134,21 +134,24 @@ int Tree::leaf()
 
    glColor4fv(orange);
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+   glEnable(GL_TEXTURE_2D);
+   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
    glBindTexture(GL_TEXTURE_2D, leafTex);
 
    glNormal3f(0, 0, 1);
    glBegin(GL_QUADS);
    glTexCoord2d(0.0, 0.0);
    glVertex3f(0.0, 0.0, 0.0);
-   glTexCoord2d(0.0,1.0);
-   glVertex3f(0.03, 0.03, 0.0);
+   glTexCoord2d(0.0, 1.0);
+   glVertex3f(-0.03, 0.03, 0.0);
    glTexCoord2d(1.0, 0.0);
    glVertex3f(0.0, 0.1, 0.0);
    glTexCoord2d(1.0, 1.0);
-   glVertex3f(-0.03, 0.03, 0.0);
+   glVertex3f(0.03, 0.03, 0.0);
    glEnd();
 
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+   glDisable(GL_TEXTURE_2D);
    return 2;
 }
 
@@ -173,7 +176,7 @@ void Tree::Render()
    glRotated(this->rotZ, 0, 0, 1);
    glScaled(this->scaleX, this->scaleY, this->scaleZ);
 
-   this->branchFractal(3.0, 0.2);
+   this->branchFractal(2.0, 0.2);
    glPopMatrix();
 }
 

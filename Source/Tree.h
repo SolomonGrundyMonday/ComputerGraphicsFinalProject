@@ -9,7 +9,7 @@
 #include "GameObject.h"
 
 #define SHRINK_FACTOR 0.7
-#define LEAF_SIZE 0.3
+#define LEAF_SIZE 0.4
 #define BRANCH_NUM 3
 #define BRANCH_RATIO 0.65
 
@@ -29,7 +29,7 @@ class Tree : public GameObject
       float rotY;
       float rotZ;
       const float brown[4] = { 0.3, 0.165, 0.165, 0.2 };
-      const float orange[4] = { 1.0, 0.5, 0.0, 0.1 };
+      const float orange[4] = { 1.0, 0.647, 0.0, 0.4 };
       const float white[4] = { 1.0, 1.0, 1.0, 0.2 };
       
       /*
