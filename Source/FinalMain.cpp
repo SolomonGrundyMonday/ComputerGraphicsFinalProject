@@ -44,14 +44,14 @@ void initialize_objects()
                                      {-4.0, -23.0}, {-2.0, -16.5}, {-3.0, -10.0},
                                      {-6.0, -1.5}, {-4.0, 6.5}, {-5.0, 13.0},
                                      {-3.0, 17.0}, {-6.0, 23.0}, {5.0, -24.0},
-                                     {-17.0, -33.0}, {-11.0, -32.0}, {-4.0, -31.5},
+                                     {26.0, 24.0}, {-11.0, -32.0}, {-4.0, -31.5},
                                      {6.0, -30.0}, {7.0, -13.5}, {4.0, -3.0},
                                      {3.0, 7.0}, {5.0, 14.5}, {4.0, 21.0},
-                                     {3.5, 27.5}, {5.0, 33.5}, {11.0, -33.0},
+                                     {3.5, 27.5}, {12.0, 19.5}, {11.0, -33.0},
                                      {11.5, 8.5}, {10.0, -24.0}, {12.0, -15.5},
                                      {11.0, -6.5}, {10.0, 1.0}, {15.0, -32.0},
                                      {17.0, -25.5}, {16.0, -17.0}, {15.5, -10.0},
-                                     {17.0, -2.0}, {15.0, 5.0}, {21.0, -33.5},
+                                     {17.0, -2.0}, {15.0, 5.0}, {16.5, 29.0},
                                      {22.0, -25.0}, {20.0, -19.5}, {21.5, -11.0},
                                      {22.0, -3.0}, {23.0, 5.0}, {28.0, -32.0},
                                      {29.0, -24.5}, {26.5, -17.0}, {27.5, -9.5}, 
@@ -100,8 +100,11 @@ void initialize_objects()
 // Display function, called by GLUT to update the screen.
 void display()
 {
+   // Variables to ensure that lantern object stays tethered to the player camera.
    float lanternX;
    float lanternZ;
+
+   // Variables for Eye and Center vectors to reduce function calls in display.
    float Eye[3];
    float Center[3];
 
@@ -124,6 +127,7 @@ void display()
    glLoadIdentity();
    player->Turn();
    sky->resolveCollision(player);
+   cabin->resolveCollision(player);
    player->setCenterPos(Eye[0] + player->getCenterX(), player->getCenterY(), Eye[2] + player->getCenterZ());
 
    Center[0] = player->getCenterX();
@@ -131,10 +135,10 @@ void display()
    Center[2] = player->getCenterZ();
 
    gluLookAt(Eye[0], Eye[1], Eye[2], Center[0], Center[1], Center[2], player->getUpX(), player->getUpY(), player->getUpZ());
-
+   
    if (Eye[0] != Center[0])
    {
-      lanternX = Eye[0] + Sin(player->getTheta());
+      lanternX = Eye[0] + (0.7 * Sin(player->getTheta()));
    }
    else
    {
@@ -143,14 +147,14 @@ void display()
 
    if (Eye[2] != Center[2])
    {
-      lanternZ = Eye[2] - Cos(player->getTheta());
+      lanternZ = Eye[2] - (0.7 * Cos(player->getTheta()));
    }
    else
    {
       lanternZ = Eye[2];
    }
 
-   lantern->setPosition(lanternX, Eye[1] - 0.4, lanternZ);
+   lantern->setPosition(lanternX, Eye[1] - 0.3, lanternZ);
    lantern->setRotation(0.0, -player->getTheta(), 0.0);
 
    // Render Tree objects.

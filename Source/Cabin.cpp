@@ -561,7 +561,62 @@ void Cabin::drawWindow(float x, float y, float z)
 // Function definition for Cabin class resolveCollision function implementation.
 void Cabin::resolveCollision(Camera* camera)
 {
-   // Do stuff here.
+   float camX = camera->getEyeX();
+   float camZ = camera->getEyeZ();
+   float minX = (-this->scaleX + this->getPosX()) - LANTERN_OFFSET;
+   float maxX = (this->scaleX + this->getPosX()) + LANTERN_OFFSET;
+   float minZ = (-this->scaleZ + this->getPosZ()) - LANTERN_OFFSET;
+   float maxZ = (this->scaleZ + this->getPosZ()) + LANTERN_OFFSET;
+
+   // Only need to resolve collision if the camera eye position is within x, z boundaries of object.
+   if (camX > minX && camX < maxX && camZ > minZ && camZ < maxZ)
+   {
+      // Compute the minimum and maximum x and z values.
+      float diffXMin = camX - minX;
+      float diffXMax = maxX - camX;
+      float diffZMin = camZ - minZ;
+      float diffZMax = maxZ - camZ;
+
+      // If Camera collided with the right or front edge.
+	  if (diffXMax < diffXMin && diffZMax < diffZMin)
+	  {
+         // If Camera collided with the right edge.
+         if (diffXMax < diffZMax)
+            camera->setEyePos(maxX, camera->getEyeY(), camZ);
+         // If Camera collided with the front edge.
+         else
+            camera->setEyePos(camX, camera->getEyeY(), maxZ);
+	  }
+      // If Camera collided with the right or back edge.
+	  else if (diffXMax < diffXMin && diffZMin < diffZMax)
+	  {
+         // If Camera collided with the right edge.
+         if (diffXMax < diffZMin)
+            camera->setEyePos(maxX, camera->getEyeY(), camZ);
+         // If Camera collided with the back edge.
+         else
+            camera->setEyePos(camX, camera->getEyeY(), minZ);
+	  }
+      // If Camera collided with the left or front edge. 
+	  else if (diffXMin < diffXMax && diffZMax < diffZMin)
+	  {
+         // If Camera collided with the left edge.
+         if (diffXMin < diffZMax)
+            camera->setEyePos(minX, camera->getEyeY(), camZ);
+         // If Camera collided with the front edge.
+         else
+            camera->setEyePos(camX, camera->getEyeY(), maxZ);
+	  }
+      // If Camera collided with the left or back edge.
+	  else if (diffXMin < diffXMax && diffZMin < diffZMax)
+	  {
+         // If Camera collided with the left edge.
+         if (diffXMin < diffZMin)
+            camera->setEyePos(minX, camera->getEyeY(), camZ);
+         else
+            camera->setEyePos(camX, camera->getEyeY(), minZ);
+	  }
+   }
 }
 
 // Function definition for Cabin class setPosition function.

@@ -109,7 +109,7 @@ void Skybox::Render()
          glTexCoord2f(texX, texY);
          glVertex3f(vertices[vert3][0], vertices[vert3][1], vertices[vert3][2]);
          glTexCoord2f(0.0, texY);
-         glVertex3f(vertices[vert3][0], vertices[vert3][1], vertices[vert3][2]);
+         glVertex3f(vertices[vert4][0], vertices[vert4][1], vertices[vert4][2]);
 	  }
       glEnd();
    }
@@ -122,25 +122,30 @@ void Skybox::Render()
 // Skybox class resolveCollision function definition.
 void Skybox::resolveCollision(Camera* camera)
 {
+   // Reduce function calls within display function.
    float camX = camera->getEyeX();
    float camZ = camera->getEyeZ();
 
-   if (camX < -this->scaleX)
+   // If the camera x-value is beyond the negative limit of the skybox.
+   if (camX < -this->scaleX + LANTERN_OFFSET)
    {
-      camera->setEyePos(-this->scaleX, camera->getEyeY(), camera->getEyeZ());
+      camera->setEyePos(-this->scaleX + LANTERN_OFFSET, camera->getEyeY(), camZ);
    }
-   else if (camX > this->scaleX)
+   // If the camera x-value is beyond the positive limit of the skybox.
+   else if (camX > this->scaleX - LANTERN_OFFSET)
    {
-      camera->setEyePos(this->scaleX, camera->getEyeY(), camera->getEyeZ());
+      camera->setEyePos(this->scaleX - LANTERN_OFFSET, camera->getEyeY(), camZ);
    }
 
-   if (camZ < -this->scaleZ)
+   // If the camera z-value is beyond the negative limit of the skybox.
+   if (camZ < -this->scaleZ + LANTERN_OFFSET)
    {
-      camera->setEyePos(camera->getEyeX(), camera->getEyeY(), -this->scaleZ);
+      camera->setEyePos(camX, camera->getEyeY(), -this->scaleZ + LANTERN_OFFSET);
    }
-   else if (camZ > this->scaleZ)
+   // If the camera z-value is beyond the positive limit of the skybox.
+   else if (camZ > this->scaleZ - LANTERN_OFFSET)
    {
-      camera->setEyePos(camera->getEyeX(), camera->getEyeY(), this->scaleZ);
+      camera->setEyePos(camX, camera->getEyeY(), this->scaleZ - LANTERN_OFFSET);
    }
 }
 
