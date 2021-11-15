@@ -563,10 +563,12 @@ void Cabin::resolveCollision(Camera* camera)
 {
    float camX = camera->getEyeX();
    float camZ = camera->getEyeZ();
-   float minX = (-this->scaleX + this->getPosX()) - LANTERN_OFFSET;
-   float maxX = (this->scaleX + this->getPosX()) + LANTERN_OFFSET;
-   float minZ = (-this->scaleZ + this->getPosZ()) - LANTERN_OFFSET;
-   float maxZ = (this->scaleZ + this->getPosZ()) + LANTERN_OFFSET;
+   float xOffset = (0.7 * Sin(camera->getTheta()));
+   float zOffset = (0.7 * Cos(camera->getTheta()));
+   float minX = (-this->scaleX + this->getPosX()) - (xOffset + 0.5);
+   float maxX = (this->scaleX + this->getPosX()) - (xOffset - 0.5);
+   float minZ = (-this->scaleZ + this->getPosZ()) + (zOffset - 0.5);
+   float maxZ = (this->scaleZ + this->getPosZ()) + zOffset + 0.5;
 
    // Only need to resolve collision if the camera eye position is within x, z boundaries of object.
    if (camX > minX && camX < maxX && camZ > minZ && camZ < maxZ)
