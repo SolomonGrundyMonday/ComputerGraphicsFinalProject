@@ -78,6 +78,8 @@ void Skybox::Render()
       int vert4 = i + 3;
 
 	  glBegin(GL_QUADS);
+
+      // Draw "roof" of the skybox.
       if (i == 0)
       {
          glTexCoord2f(0.0, 0.0);
@@ -89,6 +91,7 @@ void Skybox::Render()
          glTexCoord2f(0.0, texZ);
          glVertex3f(vertices[vert4][0], vertices[vert4][1], vertices[vert4][2]);
       }
+      // Draw the left and right "walls" of the skybox.
 	  else if (i == 4 || i == 8)
 	  {
          glTexCoord2f(0.0, 0.0);
@@ -100,6 +103,7 @@ void Skybox::Render()
          glTexCoord2f(0.0, texY);
          glVertex3f(vertices[vert4][0], vertices[vert4][1], vertices[vert4][2]);
 	  }
+      // Draw the front and back "walls" of the skybox.
 	  else
 	  {
          glTexCoord2f(0.0, 0.0);
@@ -125,27 +129,41 @@ void Skybox::resolveCollision(Camera* camera)
    // Reduce function calls within display function.
    float camX = camera->getEyeX();
    float camZ = camera->getEyeZ();
+   float xOffset = (0.7 * Sin(camera->getTheta()));
+   float zOffset = (0.7 * Cos(camera->getTheta()));
 
    // If the camera x-value is beyond the negative limit of the skybox.
-   if (camX < -this->scaleX + LANTERN_OFFSET)
+   if (camX + (xOffset - 0.5) < -this->scaleX)
    {
-      camera->setEyePos(-this->scaleX + LANTERN_OFFSET, camera->getEyeY(), camZ);
+      camera->setEyePos(-this->scaleX - (xOffset - 0.5), camera->getEyeY(), camZ);
    }
    // If the camera x-value is beyond the positive limit of the skybox.
-   else if (camX > this->scaleX - LANTERN_OFFSET)
+   else if (camX + (xOffset + 0.5) > this->scaleX)
    {
-      camera->setEyePos(this->scaleX - LANTERN_OFFSET, camera->getEyeY(), camZ);
+      camera->setEyePos(this->scaleX - (xOffset + 0.5), camera->getEyeY(), camZ);
    }
 
    // If the camera z-value is beyond the negative limit of the skybox.
-   if (camZ < -this->scaleZ + LANTERN_OFFSET)
+   if (camZ - (zOffset + 0.5) < -this->scaleZ)
    {
-      camera->setEyePos(camX, camera->getEyeY(), -this->scaleZ + LANTERN_OFFSET);
+      // Nested decision structure prevents camera from clipping through "holes" in the coroners of the map.
+      if (camX + (xOffset - 0.5) < -this->scaleX)
+         camera->setEyePos(-this->scaleX - (xOffset - 0.5), camera->getEyeY(), -this->scaleZ + (zOffset + 0.5));
+	  else if (camX + (xOffset + 0.5) > this->scaleX)
+         camera->setEyePos(this->scaleX - (xOffset + 0.5), camera->getEyeY(), -this->scaleZ + (zOffset + 0.5));
+      else
+         camera->setEyePos(camX, camera->getEyeY(), -this->scaleZ + (zOffset + 0.5));
    }
    // If the camera z-value is beyond the positive limit of the skybox.
-   else if (camZ > this->scaleZ - LANTERN_OFFSET)
+   else if (camZ - (zOffset - 0.5) > this->scaleZ)
    {
-      camera->setEyePos(camX, camera->getEyeY(), this->scaleZ - LANTERN_OFFSET);
+      // Nested decision structure prevents camera from clipping through "holes" in the corners of the map.
+      if (camX + (xOffset - 0.5) < -this->scaleX)
+         camera->setEyePos(-this->scaleX - (xOffset - 0.5), camera->getEyeY(), this->scaleZ + (zOffset - 0.5));
+      else if (camX + (xOffset + 0.5) > this->scaleX)
+         camera->setEyePos(this->scaleX - (xOffset + 0.5), camera->getEyeY(), this->scaleZ + (zOffset - 0.5));
+      else
+         camera->setEyePos(camX, camera->getEyeY(), this->scaleZ + (zOffset - 0.5));
    }
 }
 

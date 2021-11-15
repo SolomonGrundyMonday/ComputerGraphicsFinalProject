@@ -86,11 +86,11 @@ void initialize_objects()
    shovel = new Shovel(20.0, 1.35, 10.0, 0.25, 0.25, 0.25, 0.0, 0.0, 0.0);
    shovel->Initialize("Assets/Wood.bmp");
 
-   axe = new Axe(-23.2, 1.0, -19.625, 0.7, 0.7, 0.7, -30.0, 0.0, 0.0);
+   axe = new Axe(-23.2, 1.0, -18.625, 0.7, 0.7, 0.7, -30.0, 0.0, 0.0);
    axe->Initialize("Assets/Wood.bmp");
 
    // Instantiate Cabin.
-   cabin = new Cabin(-28.0, 3.0, -27.0, 5.0, 2.0, 7.0, 0.0, 0.0, 0.0);
+   cabin = new Cabin(-28.0, 3.0, -26.0, 5.0, 2.0, 7.0, 0.0, 0.0, 0.0);
    cabin->Initialize("Assets/Bricks.bmp");
 
    lantern = new Lantern(-24.0, 1.1, -24.0, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0);
