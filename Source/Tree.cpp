@@ -45,7 +45,7 @@ Tree::Tree(float x, float y, float z, float dx, float dy, float dz, float rx, fl
 int Tree::branchFractal(float l0, float r0)
 {
    int angle = rand()/RAND_MAX * (360 / BRANCH_NUM);
-   float l = l0 * (rand()/RAND_MAX*(1.15-0.85)+0.85);
+   float l = l0 * (rand() / RAND_MAX * (1.15 - 0.85) + 0.85);
 
    glPushMatrix();
    
@@ -183,6 +183,51 @@ void Tree::Render()
 void Tree::resolveCollision(Camera* camera)
 {
    // Do stuff here.
+   float camX = camera->getEyeX();
+   float camZ = camera->getEyeZ();
+   float xOffset = (0.7 * Sin(camera->getTheta()));
+   float zOffset = (0.7 * Cos(camera->getTheta()));
+   float minX = (this->posX - this->scaleX * 0.2) - (xOffset + 0.5);
+   float maxX = (this->posX + this->scaleX * 0.2) - (xOffset - 0.5);
+   float minZ = (this->posZ - this->scaleZ * 0.2) + (zOffset - 0.5);
+   float maxZ = (this->posZ + this->scaleZ * 0.2) + (zOffset + 0.5);
+
+   if (camX < maxX && camX > minX && camZ < maxZ && camZ > minZ)
+   {
+      float diffXMin = camX - minX;
+      float diffXMax = maxX - camX;
+      float diffZMin = camZ - minZ;
+      float diffZMax = maxZ - camZ;
+
+	  if (diffXMax < diffXMin && diffZMax < diffZMin)
+	  {
+         if(diffXMax < diffZMax)
+            camera->setEyePos(maxX, camera->getEyeY(), camZ);
+         else
+            camera->setEyePos(camX, camera->getEyeY(), maxZ);
+	  }
+	  else if (diffXMax < diffXMin && diffZMin < diffZMax)
+	  {
+         if (diffXMax < diffZMin)
+            camera->setEyePos(maxX, camera->getEyeY(), camZ);
+         else
+            camera->setEyePos(camX, camera->getEyeY(), minZ);
+	  }
+	  else if (diffXMin < diffXMax && diffZMax < diffZMin)
+	  {
+         if (diffXMin < diffZMax)
+            camera->setEyePos(minX, camera->getEyeY(), camZ);
+         else
+            camera->setEyePos(camX, camera->getEyeY(), maxZ);
+	  }
+	  else if (diffXMin < diffXMax && diffZMin < diffZMax)
+	  {
+         if (diffXMin < diffZMin)
+            camera->setEyePos(minX, camera->getEyeY(), camZ);
+         else
+            camera->setEyePos(camX, camera->getEyeY(), minZ);
+	  }
+   }
 }
 
 // Function definition for Tree class setPosition setter function.
