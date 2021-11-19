@@ -405,8 +405,8 @@ void Tent::DrawSpike(float px, float pz)
 
 bool Tent::detectCollision(Camera* camera)
 {
-   bool xCollide = camera->getEyeX() >= -this->posX - this->scaleX && camera->getEyeX() <= this->posX + this->scaleX;
-   bool zCollide = camera->getEyeZ() >= -this->posZ - this->scaleZ && camera->getEyeZ() <= this->posZ + this->scaleZ;
+   bool xCollide = camera->getEyeX() >= -this->posX - this->scaleX - 0.5 && camera->getEyeX() <= this->posX + this->scaleX + 0.5;
+   bool zCollide = camera->getEyeZ() >= -this->posZ - this->scaleZ - 0.5 && camera->getEyeZ() <= this->posZ + this->scaleZ + 0.5;
 
    return xCollide && zCollide;
 }
@@ -430,11 +430,14 @@ void Tent::resolveCollision(Camera* camera)
    float minZFront = this->scaleZ - 0.5;
    float maxZFront = this->scaleZ + 0.5;
 
+   glWindowPos2i(5, 5);
+
    // If camera collided with back wall.
    if (camZ < maxZBack && camZ > minZBack && camX > minXLeft && camX < maxXRight)
    {
       float newX, newZ;
 
+      // If player collides with wall exterior.
       if (camZ < -1.0)
       {
          newZ = minZBack + this->posZ;
@@ -445,6 +448,7 @@ void Tent::resolveCollision(Camera* camera)
          else
             newX = camera->getEyeX();
       }
+      // If player collides with wall interior.
       else
       {
          newZ = maxZBack + this->posZ;
@@ -475,64 +479,99 @@ void Tent::resolveCollision(Camera* camera)
    camera->setEyePos(newX, camera->getEyeY(), newZ);
    }
    // If camera collided with the front wall (right of door). 
-   else if (camZ < maxZFront && camZ > minZFront && camX < minXRight && camX > minXRight - 0.6)
+   else if (camZ < maxZFront + 0.1 && camZ > minZFront - 0.1 && camX < maxXRight && camX > maxXRight - 1.4)
    {
       float newX, newZ;
 
+      // If player collides with wall exterior.
       if (camZ > 1.0)
       {
-         if (camX < minXRight - 0.6 && camX > maxXLeft + 0.6)
+         if (camX < maxXRight - 1.4 && camX > minXLeft + 1.4)
             newZ = camera->getEyeZ();
          else
             newZ = maxZFront + this->posZ;
-         if (camX > minXRight)
-            newX = minXRight + this->posX;
-         else if (camX < minXRight - 0.6)
-            newX = minXRight - 0.6 + this->posX;
+
+         if (camX > 1.0)
+            newX = maxXRight + this->posX;
+         else if (camX < maxXRight - 1.4)
+            newX = maxXRight - 1.4 + this->posX;
          else
             newX = camera->getEyeX();
       }
+      // If player collides with wall interior.
       else
       {
-         newZ = minZFront + this->posZ;
-         if (camX > minXRight)
-            newX = minXRight + this->posX;
-         else if (camX < minXRight - 0.6)
-            newX = minXRight - 0.6 + this->posX;
+         if (camX < maxXRight - 1.4 && camX > minXLeft + 1.4)
+            newZ = camera->getEyeZ();
          else
-            newX = camera->getEyeX();
+            newZ = minZFront + this->posZ - 0.1;
+
+         if (camX > 1.0)
+         {
+            newX = maxXRight + this->posX;
+            newZ = camera->getEyeZ();
+         }
+         else if (camX < 1.0 && camZ < minZFront)
+         {
+            newX = minXRight + this->posX;
+            newZ = camera->getEyeZ();
+         }
+         //else if (camX > maxXRight - 1.4)
+            //newX = maxXRight - 1.4 + this->posX;
+         else
+         {
+            newX = (camX < 1.0) ? minXRight + this->posX : camera->getEyeX();
+            newZ = minZFront + this->posZ;
+         }
       }
 
       // Modify camera coordinates.
       camera->setEyePos(newX, camera->getEyeY(), newZ);
    }
    // If camera collided with the front wall (left of door).
-   else if (camZ < maxZFront && camZ > minZFront && camX < maxXLeft + 0.6 && camX > maxXLeft)
+   else if (camZ < maxZFront + 0.1 && camZ > minZFront - 0.1 && camX < minXLeft + 1.4 && camX > minXLeft)
    {
       float newX, newZ;
 
+      // If player collides with wall exterior.
       if (camZ > 1.0)
       {
-         if (camX < minXRight - 0.6 && camX > maxXLeft)
+         if (camX < maxXRight - 1.4 && camX > minXLeft + 1.4)
             newZ = camera->getEyeZ();
          else
             newZ = maxZFront + this->posZ;
-         if (camX > maxXLeft + 0.6)
-            newX = maxXLeft + 0.6 + this->posX;
+
+         if (camX > maxXLeft + 1.4)
+            newX = maxXLeft + 1.4 + this->posX;
          else if (camX < maxXLeft)
             newX = maxXLeft + this->posX;
          else
             newX = camera->getEyeX();
       }
+      // If player collides with wall interior.
       else
       {
-         newZ = minZFront + this->posZ;
-         if (camX > maxXLeft + 0.6)
-            newX = maxXLeft + 0.6 + this->posX;
-         else if (camX < maxXLeft)
-            newX = maxXLeft + this->posX;
+         if (camX < maxXRight - 1.4 && camX > minXLeft + 1.4)
+            newZ = camera->getEyeZ();
          else
-            newX = camera->getEyeX();
+            newZ = minZFront + this->posZ - 0.1;
+
+         if (camX < -1.0)
+         {
+			 Print("(CamX, CamZ) = (%.1lf, %.1lf)", camX, camZ);
+            newX = minXLeft + this->posX;
+            newZ = camera->getEyeZ();
+         }
+         else if (camX > -1.0 && camX < maxXLeft)
+         {
+            newX = maxXLeft + this->posX;
+            camera->getEyeZ();
+         }
+         else
+         {
+            newX = (camX > -1.0) ? maxXLeft + this->posX : camera->getEyeX();
+            newZ = minZFront + this->posZ;
+         }
       }
 
       // Modify camera coordinates.
@@ -543,6 +582,7 @@ void Tent::resolveCollision(Camera* camera)
    {
       float newX, newZ;
       
+      // If player collides with wall exterior.
       if(camX < -1.0)
       {
          newX = minXLeft + this->posX;
@@ -553,6 +593,7 @@ void Tent::resolveCollision(Camera* camera)
          else
             newZ = camera->getEyeZ();
       }
+      // If player collides with wall interior.
       else
       {
          newX = maxXLeft + this->posX;
@@ -572,6 +613,7 @@ void Tent::resolveCollision(Camera* camera)
    {
       float newX, newZ;
 
+      // If player collides with wall exterior.
       if (camX > 1.0)
       {
          newX = maxXRight + this->posX;
@@ -582,6 +624,7 @@ void Tent::resolveCollision(Camera* camera)
          else
             newZ = camera->getEyeZ();
       }
+      // If player collides with wall interior.
       else
       {
          newX = minXRight + this->posX;
