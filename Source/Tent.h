@@ -7,6 +7,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include <cmath>
 
 #define TENT_HEIGHT 1.0
 #define TENT_WIDTH 1.0
@@ -73,6 +74,14 @@ class Tent : public GameObject
        *    Postcondition:  The object has been rendered in the OpenGL window.  
        */
       void Render();
+
+      /*
+       *    Function prototype for Tent object detectCollision function implementation.
+       *    Precondition:   An instance of a Tent object has been instantiated, nad rendered to the scene.
+       *    Postcondition:  If a Camera object has collided with the Tent, return true, false otherwise.
+       *    Return value:   True if collision detected, false otherwise. 
+       */
+      bool detectCollision(Camera* camera); 
 
       /*
        *    Function prototype for Tent object detectCollision function implementation.

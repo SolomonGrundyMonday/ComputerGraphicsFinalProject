@@ -67,9 +67,9 @@ void Tent::Render()
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-1.0, -1.0, 1.0);
    glTexCoord2f(this->scaleX, 0.0);
-   glVertex3f(-0.4, -1.0, 1.0);
+   glVertex3f(-0.6, -1.0, 1.0);
    glTexCoord2f(this->scaleX, this->scaleY);
-   glVertex3f(-0.4, 1.0, 1.0);
+   glVertex3f(-0.6, 1.0, 1.0);
    glTexCoord2f(0.0, this->scaleY);
    glVertex3f(-1.0, 1.0, 1.0);
    glEnd();
@@ -77,25 +77,25 @@ void Tent::Render()
    glNormal3f(0.8, 0.0, 1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
-   glVertex3f(0.4, -1.0, 1.0);
+   glVertex3f(0.6, -1.0, 1.0);
    glTexCoord2f(this->scaleX, 0.0);
    glVertex3f(1.0, -1.0, 1.0);
    glTexCoord2f(this->scaleX, this->scaleY);
    glVertex3f(1.0, 1.0, 1.0);
    glTexCoord2f(0.0, this->scaleY);
-   glVertex3f(0.4, 1.0, 1.0);
+   glVertex3f(0.6, 1.0, 1.0);
    glEnd();
 
    glNormal3f(0.0, 0.6, 1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
-   glVertex3f(-0.4, 0.2, 1.0);
+   glVertex3f(-0.6, 0.2, 1.0);
    glTexCoord2f(this->scaleX, 0.0);
-   glVertex3f(0.4, 0.2, 1.0);
+   glVertex3f(0.6, 0.2, 1.0);
    glTexCoord2f(this->scaleX, this->scaleY);
-   glVertex3f(0.4, 1.0, 1.0);
+   glVertex3f(0.6, 1.0, 1.0);
    glTexCoord2f(0.0, this->scaleY);
-   glVertex3f(-0.4, 1.0, 1.0);
+   glVertex3f(-0.6, 1.0, 1.0);
    glEnd();
 
    // Draw Tent back wall.
@@ -207,9 +207,9 @@ void Tent::Render()
 
       glNormal3f(x, -1.0, z);
       glTexCoord2f(0.0, i * textureRatio);
-      glVertex3f(x * 0.1 + 0.4, -1.0, z * 0.1 + 1.0);
+      glVertex3f(x * 0.1 + 0.6, -1.0, z * 0.1 + 1.0);
       glTexCoord2f(12.0, i * textureRatio);
-      glVertex3f(x * 0.1 + 0.4, 0.2, z * 0.1 + 1.0);
+      glVertex3f(x * 0.1 + 0.6, 0.2, z * 0.1 + 1.0);
    }
    glEnd();
 
@@ -222,9 +222,9 @@ void Tent::Render()
 
       glNormal3f(x, -1.0, z);
       glTexCoord2f(0.0, i * textureRatio);
-      glVertex3f(x * 0.1 - 0.4, -1.0, z * 0.1 + 1.0);
+      glVertex3f(x * 0.1 - 0.6, -1.0, z * 0.1 + 1.0);
       glTexCoord2f(12.0, i * textureRatio);
-      glVertex3f(x * 0.1 - 0.4, 0.2, z * 0.1 + 1.0);
+      glVertex3f(x * 0.1 - 0.6, 0.2, z * 0.1 + 1.0);
    }
    glEnd();
 
@@ -263,63 +263,63 @@ void Tent::Render()
 
    // Draw rolled tent flap tops and bottoms.
    glBindTexture(GL_TEXTURE_2D, canvasWrap);
-   glNormal3f(0.4, 0.2, 1.0);
+   glNormal3f(0.6, 0.2, 1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
-   glVertex3f(0.4, 0.2, 1.0);
+   glVertex3f(0.6, 0.2, 1.0);
    for (int i = 0; i <= 360; i += 30)
    {
       float cosine = Cos(i);
       float sine = Sin(i);
 
-      glNormal3f(cosine + 0.4, 0.2, sine + 1.0);
+      glNormal3f(cosine + 0.6, 0.2, sine + 1.0);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
-      glVertex3f(0.1 * cosine + 0.4, 0.2, 0.1 * sine + 1.0);
+      glVertex3f(0.1 * cosine + 0.6, 0.2, 0.1 * sine + 1.0);
    }
    glEnd();
 
-   glNormal3f(0.4, -1.0, 1.0);
+   glNormal3f(0.6, -1.0, 1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
-   glVertex3f(0.4, -1.0, 1.0);
+   glVertex3f(0.6, -1.0, 1.0);
    for (int i = 0; i <= 360; i += 30)
    {
       float cosine = Cos(i);
       float sine = Sin(i);
 
-      glNormal3f(cosine + 0.4, -1.0, sine + 1.0);
+      glNormal3f(cosine + 0.6, -1.0, sine + 1.0);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
-      glVertex3f(0.1 * cosine + 0.4, -1.0, 0.1 * sine + 1.0);
+      glVertex3f(0.1 * cosine + 0.6, -1.0, 0.1 * sine + 1.0);
    }
    glEnd();
 
-   glNormal3f(-0.4, 0.2, 1.0);
+   glNormal3f(-0.6, 0.2, 1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
-   glVertex3f(-0.4, 0.2, 1.0);
+   glVertex3f(-0.6, 0.2, 1.0);
    for (int i = 0; i <= 360; i += 30)
    {
       float cosine = Cos(i);
       float sine = Sin(i);
 
-      glNormal3f(cosine - 0.4, 0.2, sine + 1.0);
+      glNormal3f(cosine - 0.6, 0.2, sine + 1.0);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
-      glVertex3f(0.1 * cosine - 0.4, 0.2, 0.1 * sine + 1.0);
+      glVertex3f(0.1 * cosine - 0.6, 0.2, 0.1 * sine + 1.0);
    }
    glEnd();
 
-   glNormal3f(-0.4, -1.0, 1.0);
+   glNormal3f(-0.6, -1.0, 1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
-   glVertex3f(-0.4, -1.0, 1.0);
+   glVertex3f(-0.6, -1.0, 1.0);
    for (int i = 0; i <= 360; i += 30)
    {
       float cosine = Cos(i);
       float sine = Sin(i);
 
-      glNormal3f(cosine - 0.4, -1.0, sine + 1.0);
+      glNormal3f(cosine - 0.6, -1.0, sine + 1.0);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
-      glVertex3f(0.1 * cosine - 0.4, -1.0, 0.1 * sine + 1.0);
+      glVertex3f(0.1 * cosine - 0.6, -1.0, 0.1 * sine + 1.0);
    }
    glEnd();
 
@@ -403,10 +403,199 @@ void Tent::DrawSpike(float px, float pz)
 
 }
 
+bool Tent::detectCollision(Camera* camera)
+{
+   bool xCollide = camera->getEyeX() >= -this->posX - this->scaleX && camera->getEyeX() <= this->posX + this->scaleX;
+   bool zCollide = camera->getEyeZ() >= -this->posZ - this->scaleZ && camera->getEyeZ() <= this->posZ + this->scaleZ;
+
+   return xCollide && zCollide;
+}
+
 // Function definition for Tent object resovleCollision function implementation.
 void Tent::resolveCollision(Camera* camera)
 {
-   // Do stuff here.
+   // Account for rotations.
+   float relX = camera->getEyeX() - this->posX;
+   float relZ = camera->getEyeZ() - this->posZ;
+   float camX = relX * Cos(this->rotY) - relZ * Sin(this->rotY);
+   float camZ = relZ * Cos(this->rotY) + relX * Sin(this->rotY);
+   
+   // Compute the minimum/maximum x and z values for each wall, with offsets for player lantern.
+   float minXLeft = -this->scaleX - 0.5;
+   float maxXLeft = -this->scaleX + 0.5;
+   float minXRight = this->scaleX - 0.5;
+   float maxXRight = this->scaleX + 0.5;
+   float minZBack = -this->scaleZ - 0.5;
+   float maxZBack = -this->scaleZ + 0.5;
+   float minZFront = this->scaleZ - 0.5;
+   float maxZFront = this->scaleZ + 0.5;
+
+   // If camera collided with back wall.
+   if (camZ < maxZBack && camZ > minZBack && camX > minXLeft && camX < maxXRight)
+   {
+      float newX, newZ;
+
+      if (camZ < -1.0)
+      {
+         newZ = minZBack + this->posZ;
+         if (camX > maxXRight)
+            newX = maxXRight + this->posX;
+         else if (camX < minXLeft)
+            newX = minXLeft + this->posX;
+         else
+            newX = camera->getEyeX();
+      }
+      else
+      {
+         newZ = maxZBack + this->posZ;
+         if (camX > maxXRight)
+            newX = maxXRight + this->posX;
+         else if (camX < minXLeft)
+            newX = minXLeft + this->posX;
+         else
+            if (camX < maxXLeft && camX > -1.0)
+               newX = maxXLeft + this->posX;
+            else if (camX > minXLeft && camX < -1.0)
+            {
+               newZ = camera->getEyeZ();
+               newX = minXLeft + this->posX;
+            }
+            else if (camX > minXRight && camX < 1.0)
+               newX = minXRight + this->posX;
+            else if (camX < maxXRight && camX > 1.0)
+            {
+               newZ = camera->getEyeZ();
+               newX = maxXRight + this->posX;
+            }
+            else
+               newX = camera->getEyeX();
+      }
+
+   // Modify camera coordinates.
+   camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   // If camera collided with the front wall (right of door). 
+   else if (camZ < maxZFront && camZ > minZFront && camX < minXRight && camX > minXRight - 0.6)
+   {
+      float newX, newZ;
+
+      if (camZ > 1.0)
+      {
+         if (camX < minXRight - 0.6 && camX > maxXLeft + 0.6)
+            newZ = camera->getEyeZ();
+         else
+            newZ = maxZFront + this->posZ;
+         if (camX > minXRight)
+            newX = minXRight + this->posX;
+         else if (camX < minXRight - 0.6)
+            newX = minXRight - 0.6 + this->posX;
+         else
+            newX = camera->getEyeX();
+      }
+      else
+      {
+         newZ = minZFront + this->posZ;
+         if (camX > minXRight)
+            newX = minXRight + this->posX;
+         else if (camX < minXRight - 0.6)
+            newX = minXRight - 0.6 + this->posX;
+         else
+            newX = camera->getEyeX();
+      }
+
+      // Modify camera coordinates.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   // If camera collided with the front wall (left of door).
+   else if (camZ < maxZFront && camZ > minZFront && camX < maxXLeft + 0.6 && camX > maxXLeft)
+   {
+      float newX, newZ;
+
+      if (camZ > 1.0)
+      {
+         if (camX < minXRight - 0.6 && camX > maxXLeft)
+            newZ = camera->getEyeZ();
+         else
+            newZ = maxZFront + this->posZ;
+         if (camX > maxXLeft + 0.6)
+            newX = maxXLeft + 0.6 + this->posX;
+         else if (camX < maxXLeft)
+            newX = maxXLeft + this->posX;
+         else
+            newX = camera->getEyeX();
+      }
+      else
+      {
+         newZ = minZFront + this->posZ;
+         if (camX > maxXLeft + 0.6)
+            newX = maxXLeft + 0.6 + this->posX;
+         else if (camX < maxXLeft)
+            newX = maxXLeft + this->posX;
+         else
+            newX = camera->getEyeX();
+      }
+
+      // Modify camera coordinates.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   // If player collides with the left wall.
+   else if (camX > minXLeft && camX < maxXLeft && camZ < maxZFront && camZ > minZBack)
+   {
+      float newX, newZ;
+      
+      if(camX < -1.0)
+      {
+         newX = minXLeft + this->posX;
+         if (camZ > maxZFront)
+            newZ = maxZFront + this->posZ;
+         else if (camZ < minZBack)
+            newZ = minZBack + this->posZ;
+         else
+            newZ = camera->getEyeZ();
+      }
+      else
+      {
+         newX = maxXLeft + this->posX;
+         if (camZ > minZFront)
+            newZ = minZFront + this->posZ;
+         else if (camZ < maxZBack)
+            newZ = maxZBack + this->posZ;
+         else
+            newZ = camera->getEyeZ();
+      }
+
+      // Modify camera coordinates such that camera is outside of left wall boundaries.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   // If camera collided with right wall.
+   else if (camX > minXRight && camX < maxXRight && camZ < maxZFront && camZ > minZBack)
+   {
+      float newX, newZ;
+
+      if (camX > 1.0)
+      {
+         newX = maxXRight + this->posX;
+         if (camZ > maxZFront)
+            newZ = maxZFront + this->posZ;
+         else if (camZ < minZBack)
+            newZ = minZBack + this->posZ;
+         else
+            newZ = camera->getEyeZ();
+      }
+      else
+      {
+         newX = minXRight + this->posX;
+         if (camZ > minZFront)
+            newZ = minZFront + this->posZ;
+         else if (camZ < maxZBack)
+            newZ = maxZBack + this->posZ;
+         else
+            newZ = camera->getEyeZ();
+      }
+
+      // Modify camera coordinates.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
 }
 
 // Function definition for Tent object setPosition function.
