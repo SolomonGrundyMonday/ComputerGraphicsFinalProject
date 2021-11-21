@@ -7,6 +7,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include <cmath>
 
 #define LENGTH 1.0
 #define HEAD_WID 0.05
@@ -30,12 +31,21 @@ class Axe : public GameObject
       float rotY;
       float rotZ;
 
+      /*
+       *   Function prototype for Axe object getSide helper function.
+       *   Precondition:  An Axe object has been instantiated and rendered to the scene.
+       *   Postcondition: The side that the camera object has collided with is returned to the caller.
+       *   Parameter:     The active Camera object.
+       *   Return value:  The side with which the Camera is colliding.  
+       */
+      wall getSide(Camera* camera);
+
    public:
 
       /*
        *   Function prototype for Axe object default constructor.  DO NOT USE.
        *   Precondition:  None.
-       *   Postcondition: A Tree object has been instantiated at the origint (0, 0, 0) with 1.0 scaling
+       *   Postcondition: An Axe object has been instantiated at the origint (0, 0, 0) with 1.0 scaling
        *                  on all axes and 0.0 rotation about each axis.  
        */
       Axe();
@@ -68,6 +78,15 @@ class Axe : public GameObject
        *    Postcondition: The object has been rendered in the OpenGL window. 
        */
       void Render();
+
+      /*
+       *    Function prototype for Axe object detectCollision function.
+       *    Precondition:  An Axe object has been instantiated and the object has been rendered to the scene.
+       *    Postcondition: The function returns true if the Camera object has collided with the Axe object.
+       *    Parameter:     The active Camera.
+       *    Return value:  True if the Camera has collided with this object, False otherwise. 
+       */
+      bool detectCollision(Camera* camera);
 
       /*
        *    Function prototype for Axe object implementation of resolveCollision function.

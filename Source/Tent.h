@@ -13,16 +13,6 @@
 #define TENT_WIDTH 1.0
 #define TENT_LENGTH 1.0
 
-// Enum for the walls that have hit boxes associated with them.
-enum wall {
-	FRONT_RIGHT,
-    FRONT_LEFT,
-    LEFT,
-    RIGHT,
-    BACK,
-    NONE
-};
-
 class Tent : public GameObject
 {
    // Private member variables for translation, rotation, scaling and texture.

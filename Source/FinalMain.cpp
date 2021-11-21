@@ -102,7 +102,7 @@ void initialize_objects()
    shovel = new Shovel(20.0, 1.35, 10.0, 0.25, 0.25, 0.25, 0.0, 0.0, 0.0);
    shovel->Initialize("Assets/Wood.bmp");
 
-   axe = new Axe(-23.2, 1.0, -18.625, 0.7, 0.7, 0.7, -30.0, 0.0, 0.0);
+   axe = new Axe(-23.2, 1.0, -14.625, 0.7, 0.7, 0.7, -30.0, 0.0, 0.0);
    axe->Initialize("Assets/Wood.bmp");
 
    // Instantiate Cabin.
@@ -144,6 +144,10 @@ void display()
    player->Turn();
    sky->resolveCollision(player);
    cabin->resolveCollision(player);
+   if (axe->detectCollision(player))
+   {
+      axe->resolveCollision(player);
+   }
 
    for (int i = 0; i < treeCount; i++)
       tree.at(i)->resolveCollision(player);
@@ -201,9 +205,6 @@ void display()
    cabin->Render();
    sky->Render();
    lantern->Render();
-
-   //glWindowPos2i(5, 5);
-   //Print("Eye: (%.1lf, %.1lf, %.1lf); Center: (%.1lf, %.1lf, %.1lf)", Eye[0], Eye[1], Eye[2], Center[0], Center[1], Center[2]);
 
    // Check for errors in GLUT, flush and swap buffers.
    ErrCheck("display");

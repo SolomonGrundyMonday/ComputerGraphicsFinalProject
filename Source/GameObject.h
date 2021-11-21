@@ -13,6 +13,17 @@
 #include <string.h>
 #include <stdlib.h>
 
+ // Enum for the walls that have hit boxes associated with them.
+enum wall {
+    FRONT,
+	FRONT_RIGHT,
+	FRONT_LEFT,
+	LEFT,
+	RIGHT,
+	BACK,
+	NONE
+};
+
 class GameObject
 {
 

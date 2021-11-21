@@ -238,10 +238,149 @@ void Axe::Render()
    glDisable(GL_TEXTURE_2D);
 }
 
+// Function definition for Axe class detectCollision function.
+bool Axe::detectCollision(Camera* camera)
+{
+   // Convert Camera x, y coordinates to object coordinates.
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+
+   float minX = -RAD * Cos(this->rotZ) * this->scaleX - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float maxX = RAD * Cos(this->rotZ) * this->scaleX + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float minZ = ((-RAD - HEAD_LENGTH) * Cos(this->rotX) * this->scaleZ) - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float maxZ = (RAD * Cos(this->rotX) * this->scaleZ) + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+
+   bool xCollide = camX > minX - 0.5 && camX < maxX + 0.5;
+   bool zCollide = camZ > minZ - 0.5 && camZ < maxZ + 0.5;
+
+   return xCollide && zCollide;
+}
+
 // Function definition for Axe class resolveCollision function implementation.
 void Axe::resolveCollision(Camera* camera)
 {
-   // Do stuff here.
+   // Compute Camera's relative position, then convert to object coordinates.
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+
+   // Compute the minimum and maximum x and z values for the hitbox based on the rotations about the x, y, z axes.
+   float minX = -RAD * Cos(this->rotZ) * this->scaleX - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float maxX = RAD * Cos(this->rotZ) * this->scaleX + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float minZ = ((-RAD - HEAD_LENGTH) * Cos(this->rotX) * this->scaleZ) - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float maxZ = (RAD * Cos(this->rotX) * this->scaleZ) + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+
+   // Optimization - reduce function calls to sine, cosine function.
+   float cosine = Cos(this->rotY);
+   float sine = Sin(this->rotY);
+
+   wall collision = getSide(camera);
+   
+   // If Camera collided with the front side.
+   if (collision == FRONT)
+   {
+      float newX, newZ;
+
+      newZ = minZ - 0.5;
+      newX = camX;
+
+      // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   // If Camera collided with the back side.
+   else if  (collision == BACK)
+   {
+      float newX, newZ;
+
+      newZ = maxZ + 0.5;
+      newX = camX;
+
+      // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   // If Camera collided with the left side.
+   else if (collision == LEFT)
+   {
+      float newX, newZ;
+
+      newZ = camZ;
+      newX = minX - 0.5;
+
+      // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   // If Camera collided with the right side.
+   else if (collision == RIGHT)
+   {
+      float newX, newZ;
+
+      newZ = camZ;
+      newX = maxX + 0.5;
+
+      // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+}
+
+// Function definition for Axe class getSide helper function.
+wall Axe::getSide(Camera* camera)
+{
+   // Compute relative position and convert to object coordinates.
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+
+   // Compute minimum and maximum x, z values based on the rotations and scaling ont the x, y, z axes.
+   float minX = -RAD * Cos(this->rotZ) * this->scaleX - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float maxX = RAD * Cos(this->rotZ) * this->scaleX + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float minZ = ((-RAD - HEAD_LENGTH) * Cos(this->rotX) * this->scaleZ) - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float maxZ = (RAD * Cos(this->rotX) * this->scaleZ) + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+
+   // Determine if the Camera has collided with the front, back, left, or right side of the Axe hitbox.
+   bool front = camX > minX && camX < maxX && camZ < 0.0;
+   bool back = camX > minX && camX < maxX && camZ > 0.0;
+   bool left = camZ > minZ && camZ < maxZ && camX < 0.0;
+   bool right = camZ > minZ && camZ < maxZ && camX > 0.0;
+
+   // Return the appropriate side.
+   if (front)
+      return FRONT;
+   else if (back)
+      return BACK;
+   else if (left)
+      return LEFT;
+   else if (right)
+      return RIGHT;
+   else
+      return NONE;
 }
 
 // Function definition for Axe class setPosition function.
