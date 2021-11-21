@@ -4,26 +4,26 @@ Shovel   -   Complete
 Axe      -   Complete
 Cabin    -   Partial - object is complex, needs more involved testing.
 Tree     -   Parital - object is complex, needs more involved testing.
-Tent     -
+Tent     -   Complete, need better texture image to be sure.
 Skybox   -   N/A
 Camera   -   N/A
 
 Texture Test:
-Cuboid   -
-Shovel   -
-Axe      -
-Cabin    -
-Tree     -
-Tent     -
-Skybox   -
+Cuboid   -   
+Shovel   -   Complete
+Axe      -   Complete
+Cabin    -   
+Tree     -   Complete
+Tent     -   Complete
+Skybox   -   Complete
 Camera   -   N/A
 
 Collisions Test:
 Cuboid   -
 Shovel   -
 Axe      -
-Cabin    -
-Tree     -
-Tent     -
-Skybox   -
-Camera   -
+Cabin    -   Complete
+Tree     -   Complete
+Tent     -   Complete
+Skybox   -   Complete
+Camera   -   N/A (Camera is the instigator)
