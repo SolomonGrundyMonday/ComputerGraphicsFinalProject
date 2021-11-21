@@ -13,6 +13,16 @@
 #define TENT_WIDTH 1.0
 #define TENT_LENGTH 1.0
 
+// Enum for the walls that have hit boxes associated with them.
+enum wall {
+	FRONT_RIGHT,
+    FRONT_LEFT,
+    LEFT,
+    RIGHT,
+    BACK,
+    NONE
+};
+
 class Tent : public GameObject
 {
    // Private member variables for translation, rotation, scaling and texture.
@@ -31,12 +41,20 @@ class Tent : public GameObject
       float rotZ;
 
       /*
-       *    Function prototype for Tent object DrawSpike helper function function.
+       *    Function prototype for Tent object DrawSpike helper function.
        *    Precondition:   This function draws the tent spikes.
        *    Postcondition:  A tent spike has been drawn at the specified x, z coordinates.
        *    Parameters:     The x, z coordinates of the spike. 
        */
       void DrawSpike(float x, float z);
+
+      /*
+       *    Function prototype for Tent object getWall helper function.
+       *    Precondition:   This function returns the Tent wall that is associated with a collision with a Camera object.
+       *    Postcondition:  The wall of the Tent with which the Camera object is colliding.
+       *    Parameter:      The active Camera object.  
+       */
+      wall getWall(Camera* camera);
 
    public:
 
@@ -49,7 +67,8 @@ class Tent : public GameObject
 
       /*
        *    Function prototype for Tent object constructor.
-       *    Precondition:   None.
+       *    Precondition:   The rotation about the x-axis and z-axis must be zero, and the rotation about the y-axis must be
+       *                    0 or 180, otherwise the collisions will fail.
        *    Postcondition:  A Tent object has been instantiated with the specified translation, scaling
        *                    and rotation. 
        *    Parameters:     (x, y, z) coordinates for the object's translation, (x, y, z) values for the object's
@@ -79,6 +98,7 @@ class Tent : public GameObject
        *    Function prototype for Tent object detectCollision function implementation.
        *    Precondition:   An instance of a Tent object has been instantiated, nad rendered to the scene.
        *    Postcondition:  If a Camera object has collided with the Tent, return true, false otherwise.
+       *    Parameter:      The active Camera object.
        *    Return value:   True if collision detected, false otherwise. 
        */
       bool detectCollision(Camera* camera); 
@@ -87,7 +107,8 @@ class Tent : public GameObject
        *    Function prototype for Tent object detectCollision function implementation.
        *    Precondition:   An instance of a Tent object has been instantiated and rendered to the scene.
        *    Postcondition:  If a Camera object has collided with the object, the collision has been resolved, and the Camera's
-       *                    position has been updated such that the Camera is prevented from "clipping" through the object. 
+       *                    position has been updated such that the Camera is prevented from "clipping" through the object.  
+       *    Parameter:      The active Camera object.  
        */
       void resolveCollision(Camera* camera);
 

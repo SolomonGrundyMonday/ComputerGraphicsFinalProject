@@ -15,7 +15,7 @@
 #include <vector>
 
 // Variables for graphical objects.
-Cuboid* ground;
+std::vector<Cuboid *> ground;
 Camera* player;
 std::vector<Tree *> tree;
 Shovel* shovel;
@@ -25,8 +25,9 @@ Skybox* sky;
 Lantern* lantern;
 std::vector<Tent *> tent;
 
-const int treeCount = 72;
-const int tentCount = 3;
+const int treeCount = 71;
+const int tentCount = 4;
+const int groundCount = 70;
 
 // Initialize game objects.
 void initialize_objects()
@@ -44,7 +45,7 @@ void initialize_objects()
                                      {-4.0, -23.0}, {-2.0, -16.5}, {-3.0, -10.0},
                                      {-6.0, -1.5}, {-4.0, 6.5}, {-5.0, 13.0},
                                      {-3.0, 17.0}, {-6.0, 23.0}, {5.0, -24.0},
-                                     {26.0, 24.0}, {-11.0, -32.0}, {-4.0, -31.5},
+									 {-1.0, -4.5}, {-11.0, -32.0}, {-4.0, -31.5},
                                      {6.0, -30.0}, {7.0, -13.5}, {4.0, -3.0},
                                      {3.0, 7.0}, {5.0, 14.5}, {4.0, 21.0},
                                      {3.5, 27.5}, {12.0, 19.5}, {11.0, -33.0},
@@ -55,9 +56,9 @@ void initialize_objects()
                                      {22.0, -25.0}, {20.0, -19.5}, {21.5, -11.0},
                                      {22.0, -3.0}, {23.0, 5.0}, {28.0, -32.0},
                                      {29.0, -24.5}, {26.5, -17.0}, {27.5, -9.5}, 
-                                     {28.5, -2.0}, {27.0, 5.0}, {-1.0, -4.5} };
+                                     {28.5, -2.0}, {27.0, 5.0} };
 
-   float tentCoord[tentCount][2] = {{15.0, 10.0}, {20.0, 15.0}, {25.0, 10.0} };
+   float tentCoord[tentCount][2] = { {20.0, 15.0}, {20.0, 25.0}, {25.0, 15.0}, {25.0, 25.0} };
 
    // Instantiate Trees.
    for (int i = 0; i < treeCount; i++)
@@ -69,14 +70,29 @@ void initialize_objects()
    // Instantiate Tents.
    for (int i = 0; i < tentCount; i++)
    {
-      tent.push_back(new Tent(tentCoord[i][0], 1.8, tentCoord[i][1], 1.0, 0.8, 1.0, 0.0, i * 90.0 + 90.0, 0.0));
+      tent.push_back(new Tent(tentCoord[i][0], 1.8, tentCoord[i][1], 1.0, 0.8, 1.0, 0.0, (i % 2) * 180.0, 0.0));
       tent.at(i)->Initialize("Assets/Canvas.bmp");
    }
 
    // Instantiate ground, camera.
    player = new Camera();
-   ground = new Cuboid(0.0, 0.0, 0.0, 35.0, 1.0, 35.0, 0.0, 0.0, 0.0);
-   ground->Initialize("Assets/Dirt.bmp");
+
+   for (int i = -30; i <= 30; i += 10)
+   {
+      for (int j = -30; j <= 30; j += 10)
+      {
+         float x = i * 1.0;
+         float z = j * 1.0;
+
+         ground.push_back(new Cuboid(x, 0.0, z, 5.0, 1.0, 5.0, 0.0, 0.0, 0.0));
+	  }
+   }
+
+   for (int i = 0; i < 49; i++)
+      ground.at(i)->Initialize("Assets/Dirt.bmp");
+
+   //ground = new Cuboid(0.0, 0.0, 0.0, 35.0, 1.0, 35.0, 0.0, 0.0, 0.0);
+   //ground->Initialize("Assets/Dirt.bmp");
 
    // Instantiate skybox.
    sky = new Skybox(0.0, 25.0, 0.0, 35.0, 25.0, 35.0, 0.0, 0.0, 0.0);
@@ -128,6 +144,19 @@ void display()
    player->Turn();
    sky->resolveCollision(player);
    cabin->resolveCollision(player);
+
+   for (int i = 0; i < treeCount; i++)
+      tree.at(i)->resolveCollision(player);
+
+   for (int i = 0; i < tentCount; i++)
+   {
+      if (tent.at(i)->detectCollision(player))
+      {
+         glWindowPos2i(5, 5);
+         tent.at(i)->resolveCollision(player);
+      }
+   }
+
    player->setCenterPos(Eye[0] + player->getCenterX(), player->getCenterY(), Eye[2] + player->getCenterZ());
 
    Center[0] = player->getCenterX();
@@ -165,15 +194,16 @@ void display()
       tent.at(i)->Render();
 
    // Render other objects.
-   ground->Render();
+   for (int i = 0; i < 49; i++)
+      ground.at(i)->Render();
    shovel->Render();
    axe->Render();
    cabin->Render();
    sky->Render();
    lantern->Render();
 
-   glWindowPos2i(5, 5);
-   Print("Eye: (%.1lf, %.1lf, %.1lf); Center: (%.1lf, %.1lf, %.1lf)", Eye[0], Eye[1], Eye[2], Center[0], Center[1], Center[2]);
+   //glWindowPos2i(5, 5);
+   //Print("Eye: (%.1lf, %.1lf, %.1lf); Center: (%.1lf, %.1lf, %.1lf)", Eye[0], Eye[1], Eye[2], Center[0], Center[1], Center[2]);
 
    // Check for errors in GLUT, flush and swap buffers.
    ErrCheck("display");

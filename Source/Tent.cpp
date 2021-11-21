@@ -3,14 +3,17 @@
 // Function definition for Tent object default constructor.
 Tent::Tent()
 {
+   // Set the origin for the position.
    this->posX = 0.0;
    this->posY = 0.0;
    this->posZ = 0.0;
 
+   // Give 1.0 scaling on all axes.
    this->scaleX = 1.0;
    this->scaleY = 1.0;
    this->scaleZ = 1.0;
 
+   // Give 0.0 rotation about each axis.
    this->rotX = 0.0;
    this->rotY = 0.0;
    this->rotZ = 0.0;
@@ -19,14 +22,17 @@ Tent::Tent()
 // Function definition for Tent object constructor.
 Tent::Tent(float x, float y, float z, float dx, float dy, float dz, float rx, float ry, float rz)
 {
+   // Apply the specified translation.
    this->posX = x;
    this->posY = y;
    this->posZ = z;
 
+   // Apply the specified scaling.
    this->scaleX = dx;
    this->scaleY = dy;
    this->scaleZ = dz;
 
+   // Apply the specified rotations.
    this->rotX = rx;
    this->rotY = ry;
    this->rotZ = rz;
@@ -35,9 +41,11 @@ Tent::Tent(float x, float y, float z, float dx, float dy, float dz, float rx, fl
 // Function definition for Tent object Initialize function implementation.
 int Tent::Initialize(const char* filename)
 {
+   // Load the object textures.
    this->texture = LoadTexBMP(filename);
    this->spike = LoadTexBMP("Assets/RustyMetal.bmp");
    this->canvasWrap = LoadTexBMP("Assets/CanvasRoll.bmp");
+
    return 0;
 }
 
@@ -403,240 +411,273 @@ void Tent::DrawSpike(float px, float pz)
 
 }
 
+// Function definition for Tent object detectCollision function implementation.
 bool Tent::detectCollision(Camera* camera)
 {
-   bool xCollide = camera->getEyeX() >= -this->posX - this->scaleX - 0.5 && camera->getEyeX() <= this->posX + this->scaleX + 0.5;
-   bool zCollide = camera->getEyeZ() >= -this->posZ - this->scaleZ - 0.5 && camera->getEyeZ() <= this->posZ + this->scaleZ + 0.5;
+   // Convert camera x, y coordinates to object coordinates.
+   float camX = camera->getEyeX() * Cos(this->rotY) - camera->getEyeZ() * Sin(this->rotY);
+   float camZ = camera->getEyeZ() * Cos(this->rotY) + camera->getEyeX() * Sin(this->rotY);
 
+   // Rotate position coordinates about the y-axis.
+   float PosX = this->posX * Cos(-this->rotY) + this->posZ * Sin(-this->rotY);
+   float PosZ = -this->posX * Sin(-this->rotY) + this->posZ * Cos(-this->rotY);
+
+   // Determine if camera is colliding with the object along the x or z axis, respectively.
+   bool xCollide = camX >= PosX - this->scaleX - 0.5 && camX <= PosX + this->scaleX + 0.5;
+   bool zCollide = camZ >= PosZ - this->scaleX - 0.5 && camZ <= PosZ + this->scaleX + 0.5;
+
+   // Camera is colliding with the object iff it is colliding along both x and y axis.
    return xCollide && zCollide;
+}
+
+// Definition of Tent class getWall function. 
+wall Tent::getWall(Camera* camera)
+{
+   // Rotate object origin about the y-axis by factor of this->rotY.
+   float x0 = this->posX * Cos(-this->rotY) + this->posZ * Sin(-this->rotY);
+   float z0 = -this->posX * Sin(-this->rotY) + this->posZ * Cos(-this->rotY);
+
+   // Convert Camera world coordinates to object coordinate system. 
+   float x1 = camera->getEyeX() * Cos(this->rotY) - camera->getEyeZ() * Sin(this->rotY);
+   float z1 = camera->getEyeZ() * Cos(this->rotY) + camera->getEyeX() * Sin(this->rotY);
+
+   // Determine if collision occured with the back wall, left wall, right wall, front right wall or front left wall.
+   bool back = z1 > (z0 - this->scaleZ - 0.5) && z1 < (z0 - this->scaleZ + 0.5) && x1 < (x0 + this->scaleX + 0.5) && x1 > (x0 - this->scaleX - 0.5);
+   bool frontRight = z1 > (z0 + this->scaleZ - 0.5) && z1 < (z0 + this->scaleZ + 0.5) && x1 < (x0 + this->scaleX + 0.5) && x1 > (x0 + this->scaleX - 0.6);
+   bool frontLeft = z1 > (z0 + this->scaleZ - 0.5) && z1 < (z0 + this->scaleZ + 0.5) && x1 < (x0 - this->scaleX + 0.6) && x1 > (x0 - this->scaleX - 0.5);
+   bool left = z1 > (z0 - this->scaleZ - 0.5) && z1 < (z0 + this->scaleZ + 0.5) && x1 < (x0 - this->scaleX + 0.5) && x1 > (x0 - this->scaleX - 0.5);
+   bool right = z1 > (z0 - this->scaleZ - 0.5) && z1 < (z0 + this->scaleZ + 0.5) && x1 > (x0 + this->scaleX - 0.5) && x1 < (x0 + this->scaleX + 0.5);
+
+   // Return appropriate enum value.
+   if (back)
+      return BACK;
+   else if (frontRight)
+      return FRONT_RIGHT;
+   else if (frontLeft)
+      return FRONT_LEFT;
+   else if (left)
+      return LEFT;
+   else if (right)
+      return RIGHT;
+   else
+      return NONE;
+   
 }
 
 // Function definition for Tent object resovleCollision function implementation.
 void Tent::resolveCollision(Camera* camera)
 {
-   // Account for rotations.
+   // Get the wall that the Camera is colliding with.
+   wall collision = getWall(camera);
+
+   // Compute Camera coordinates relative to the object, then convert from world coordinates to object coordinates.
    float relX = camera->getEyeX() - this->posX;
    float relZ = camera->getEyeZ() - this->posZ;
    float camX = relX * Cos(this->rotY) - relZ * Sin(this->rotY);
    float camZ = relZ * Cos(this->rotY) + relX * Sin(this->rotY);
-   
-   // Compute the minimum/maximum x and z values for each wall, with offsets for player lantern.
-   float minXLeft = -this->scaleX - 0.5;
-   float maxXLeft = -this->scaleX + 0.5;
-   float minXRight = this->scaleX - 0.5;
-   float maxXRight = this->scaleX + 0.5;
-   float minZBack = -this->scaleZ - 0.5;
-   float maxZBack = -this->scaleZ + 0.5;
-   float minZFront = this->scaleZ - 0.5;
-   float maxZFront = this->scaleZ + 0.5;
 
-   glWindowPos2i(5, 5);
+   // Optimization, reduce function calls to cosine and sine.
+   float cosine = Cos(this->rotY);
+   float sine = Sin(this->rotY);
 
    // If camera collided with back wall.
-   if (camZ < maxZBack && camZ > minZBack && camX > minXLeft && camX < maxXRight)
+   if (collision == BACK)
    {
       float newX, newZ;
 
       // If player collides with wall exterior.
       if (camZ < -1.0)
       {
-         newZ = minZBack + this->posZ;
-         if (camX > maxXRight)
-            newX = maxXRight + this->posX;
-         else if (camX < minXLeft)
-            newX = minXLeft + this->posX;
-         else
-            newX = camera->getEyeX();
+         newZ = -1.5;
+         newX = camX;
       }
       // If player collides with wall interior.
       else
       {
-         newZ = maxZBack + this->posZ;
-         if (camX > maxXRight)
-            newX = maxXRight + this->posX;
-         else if (camX < minXLeft)
-            newX = minXLeft + this->posX;
-         else
-            if (camX < maxXLeft && camX > -1.0)
-               newX = maxXLeft + this->posX;
-            else if (camX > minXLeft && camX < -1.0)
-            {
-               newZ = camera->getEyeZ();
-               newX = minXLeft + this->posX;
-            }
-            else if (camX > minXRight && camX < 1.0)
-               newX = minXRight + this->posX;
-            else if (camX < maxXRight && camX > 1.0)
-            {
-               newZ = camera->getEyeZ();
-               newX = maxXRight + this->posX;
-            }
-            else
-               newX = camera->getEyeX();
+         if (camX < 0.5 && camX > -0.5)
+         {
+            newZ = -0.5;
+            newX = camX;
+         }
+         else if (camX > 0.5)
+         {
+            newZ = (camX > 1.0) ? camZ : -0.5;
+            newX = (camX > 1.0) ? 1.5 : 0.5;
+         }
+         else 
+         {
+            newZ = (camX < -1.0) ? camZ : - 0.5;
+            newX = (camX < -1.0) ? -1.5 : -0.5;
+         }
       }
 
-   // Modify camera coordinates.
+   // Undo transformations to convert back to world coordinates (inverse transform matrix courtesy of Symbolab).
+   newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+   newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+   newX += this->posX;
+   newZ += this->posZ;
+
+   // Update Camera eye position.
    camera->setEyePos(newX, camera->getEyeY(), newZ);
    }
-   // If camera collided with the front wall (right of door). 
-   else if (camZ < maxZFront + 0.1 && camZ > minZFront - 0.1 && camX < maxXRight && camX > maxXRight - 1.4)
+   // If Camera collided with the front wall(right of door).
+   else if (collision == FRONT_RIGHT)
    {
       float newX, newZ;
 
       // If player collides with wall exterior.
       if (camZ > 1.0)
       {
-         if (camX < maxXRight - 1.4 && camX > minXLeft + 1.4)
-            newZ = camera->getEyeZ();
-         else
-            newZ = maxZFront + this->posZ;
-
-         if (camX > 1.0)
-            newX = maxXRight + this->posX;
-         else if (camX < maxXRight - 1.4)
-            newX = maxXRight - 1.4 + this->posX;
-         else
-            newX = camera->getEyeX();
+         newX = camX;
+         newZ = 1.5;
       }
       // If player collides with wall interior.
       else
       {
-         if (camX < maxXRight - 1.4 && camX > minXLeft + 1.4)
-            newZ = camera->getEyeZ();
-         else
-            newZ = minZFront + this->posZ - 0.1;
-
-         if (camX > 1.0)
+         if (camX < 0.5)
          {
-            newX = maxXRight + this->posX;
-            newZ = camera->getEyeZ();
+            newX = camX;
+            newZ = 0.5;
          }
-         else if (camX < 1.0 && camZ < minZFront)
+         else if (camX > 0.5)
          {
-            newX = minXRight + this->posX;
-            newZ = camera->getEyeZ();
+            newX = (camX > 1.0) ? 1.5 : 0.5;
+            newZ = (camX > 1.0) ? camZ : 0.5;
          }
-         //else if (camX > maxXRight - 1.4)
-            //newX = maxXRight - 1.4 + this->posX;
          else
          {
-            newX = (camX < 1.0) ? minXRight + this->posX : camera->getEyeX();
-            newZ = minZFront + this->posZ;
+            newX = (camX > 1.0) ? 1.5 : 0.5;
+            newZ = (camX > 1.0) ? camZ : 0.5;
          }
       }
 
-      // Modify camera coordinates.
+      // Undo transformations to convert back to world coordinates (inverse transform matrix courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera eye position.
       camera->setEyePos(newX, camera->getEyeY(), newZ);
    }
-   // If camera collided with the front wall (left of door).
-   else if (camZ < maxZFront + 0.1 && camZ > minZFront - 0.1 && camX < minXLeft + 1.4 && camX > minXLeft)
+   // If camera collided with the front wall(left of door).
+   else if (collision == FRONT_LEFT)
    {
       float newX, newZ;
 
       // If player collides with wall exterior.
       if (camZ > 1.0)
       {
-         if (camX < maxXRight - 1.4 && camX > minXLeft + 1.4)
-            newZ = camera->getEyeZ();
-         else
-            newZ = maxZFront + this->posZ;
-
-         if (camX > maxXLeft + 1.4)
-            newX = maxXLeft + 1.4 + this->posX;
-         else if (camX < maxXLeft)
-            newX = maxXLeft + this->posX;
-         else
-            newX = camera->getEyeX();
+         newX = camX;
+         newZ = 1.5;
       }
       // If player collides with wall interior.
       else
       {
-         if (camX < maxXRight - 1.4 && camX > minXLeft + 1.4)
-            newZ = camera->getEyeZ();
-         else
-            newZ = minZFront + this->posZ - 0.1;
-
-         if (camX < -1.0)
+         if (camX > -0.5)
          {
-			 Print("(CamX, CamZ) = (%.1lf, %.1lf)", camX, camZ);
-            newX = minXLeft + this->posX;
-            newZ = camera->getEyeZ();
+            newX = camX;
+            newZ = 0.5;
          }
-         else if (camX > -1.0 && camX < maxXLeft)
+         else if (camX < -0.5)
          {
-            newX = maxXLeft + this->posX;
-            camera->getEyeZ();
+            newX = (camX < -1.0) ? -1.5 : -0.5;
+            newZ = (camX < -1.0) ? camZ : 0.5;
          }
          else
          {
-            newX = (camX > -1.0) ? maxXLeft + this->posX : camera->getEyeX();
-            newZ = minZFront + this->posZ;
+            newX = (camX < -1.0) ? -1.5 : -0.5;
+            newZ = (camX < -1.0) ? camZ : 0.5;
          }
       }
 
-      // Modify camera coordinates.
+      // Undo transformations to convert back to world coordinates (inverse transform matrix courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera eye position.
       camera->setEyePos(newX, camera->getEyeY(), newZ);
    }
    // If player collides with the left wall.
-   else if (camX > minXLeft && camX < maxXLeft && camZ < maxZFront && camZ > minZBack)
+   else if (collision == LEFT)
    {
       float newX, newZ;
       
       // If player collides with wall exterior.
       if(camX < -1.0)
       {
-         newX = minXLeft + this->posX;
-         if (camZ > maxZFront)
-            newZ = maxZFront + this->posZ;
-         else if (camZ < minZBack)
-            newZ = minZBack + this->posZ;
-         else
-            newZ = camera->getEyeZ();
+         newX = -1.5;
+         newZ = camZ;
       }
       // If player collides with wall interior.
       else
       {
-         newX = maxXLeft + this->posX;
-         if (camZ > minZFront)
-            newZ = minZFront + this->posZ;
-         else if (camZ < maxZBack)
-            newZ = maxZBack + this->posZ;
+         if (camZ > 0.5)
+         {
+            newX = -0.5;
+            newZ = 0.5;
+         }
+         else if (camZ < -0.5)
+         {
+            newX = -0.5;
+            newZ = -0.5;
+         }
          else
-            newZ = camera->getEyeZ();
+         {
+            newX = -0.5;
+            newZ = camZ;
+         }
       }
 
-      // Modify camera coordinates such that camera is outside of left wall boundaries.
+      // Undo transformations to convert back to world coordinates (inverse transform matrix courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera eye position.
       camera->setEyePos(newX, camera->getEyeY(), newZ);
    }
    // If camera collided with right wall.
-   else if (camX > minXRight && camX < maxXRight && camZ < maxZFront && camZ > minZBack)
+   else if (collision == RIGHT)
    {
-      float newX, newZ;
+      float newX = 0, newZ = 0;
 
       // If player collides with wall exterior.
       if (camX > 1.0)
       {
-         newX = maxXRight + this->posX;
-         if (camZ > maxZFront)
-            newZ = maxZFront + this->posZ;
-         else if (camZ < minZBack)
-            newZ = minZBack + this->posZ;
-         else
-            newZ = camera->getEyeZ();
+         newX = 1.5;
+         newZ = camZ;
       }
       // If player collides with wall interior.
       else
       {
-         newX = minXRight + this->posX;
-         if (camZ > minZFront)
-            newZ = minZFront + this->posZ;
-         else if (camZ < maxZBack)
-            newZ = maxZBack + this->posZ;
+         if (camZ > 0.5)
+         {
+            newX = 0.5;
+            newZ = 0.5;
+		 }
+         else if (camZ < -0.5)
+         {
+            newX = 0.5;
+            newZ = -0.5;
+         }
          else
-            newZ = camera->getEyeZ();
+         {
+            newX = 0.5;
+            newZ = camZ;
+         }
       }
 
-      // Modify camera coordinates.
+      // Undo transformations to convert back to world coordinates (inverse transform matrix courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera eye position.
       camera->setEyePos(newX, camera->getEyeY(), newZ);
    }
 }
