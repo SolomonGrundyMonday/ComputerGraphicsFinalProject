@@ -145,8 +145,13 @@ void display()
    sky->resolveCollision(player);
    cabin->resolveCollision(player);
    if (axe->detectCollision(player))
-   {
       axe->resolveCollision(player);
+
+   if (shovel->detectCollision(player))
+   {
+      glWindowPos2i(5, 5);
+      Print("Collision detected.");
+      shovel->resolveCollision(player);
    }
 
    for (int i = 0; i < treeCount; i++)

@@ -249,10 +249,159 @@ void Shovel::Render()
    glDisable(GL_TEXTURE_2D);
 }
 
+// Function definition for Shovel class detectCollision function.
+bool Shovel::detectCollision(Camera* camera)
+{
+   // Compute relative position and convert to object coordinates.
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+
+   // Compute minimum and maximum x, z  values based ont the rotations, scaling and dimensions of the object.
+   float minX = (-HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX - ((SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float maxX = (HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX + (HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float minZ = -RADIUS * Cos(this->rotZ) * this->scaleZ - ((SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float maxZ = RADIUS * Cos(this->rotZ) * this->scaleZ + (HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+
+   // Determine if the Camera is colliding with the object's hitbox along the x and z axes, respectively.
+   bool xCollide = camX > minX - 0.5 && camX < maxX + 0.5;
+   bool zCollide = camZ > minZ - 0.5 && camZ < maxZ + 0.5;
+
+   glWindowPos2i(5, 45);
+   Print("(camX, camZ) = (%.1lf, %.1lf)", camX, camZ);
+   glWindowPos2i(5, 65);
+   Print("(minX, maxX) = (%.1lf, %.1lf)", minX, maxX);
+   glWindowPos2i(5, 85);
+   Print("(minZ, maxZ) = (%.1lf, %.1lf)", minZ, maxZ);
+
+   return xCollide && zCollide;
+}
+
+// Function definition for Shovel class getSide helper funciton.
+wall Shovel::getSide(Camera* camera)
+{
+   // Compute relative position and convert to object coordinates.
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+
+   // Compute the minimum and maximum x, z values based on the rotation, scaling and dimensions of the object.
+   float minX = (-HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX - (SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
+   float maxX = (HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX + HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
+   float minZ = -RADIUS * Cos(this->rotZ) * this->scaleZ - (SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
+   float maxZ = RADIUS * Cos(this->rotZ) * this->scaleZ + (HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+
+   // Determine if the camera has collided with the front, back, left or right side of the Shovel hitbox.
+   bool front = camX > minX - 0.5 && camX < maxX + 0.5 && camZ < minZ;
+   bool back = camX > minX - 0.5 && camX < maxX + 0.5 && camZ > maxZ;
+   bool left = camZ > minZ - 0.5 && camZ < maxZ + 0.5 && camX < minX;
+   bool right = camZ > minZ - 0.5 && camZ < maxZ + 0.5 && camX > maxX;
+
+   // Return the appropriate side.
+   if (front)
+      return FRONT;
+   else if (back)
+      return BACK;
+   else if (left)
+      return LEFT;
+   else if (right)
+      return RIGHT;
+   else
+      return NONE;
+}
+
 // Definition of Shovel class resolveCollision function implementaiton.
 void Shovel::resolveCollision(Camera* camera)
 {
-   // Do stuff here.
+   // Compute Camera's relative position then convert to object coordinates.
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+
+   // Compute the minimmum and maximum x and z values for the hitbox based on the rotations, scaling and dimensions of the object.
+   float minX = (-HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX - (SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
+   float maxX = (HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX + HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
+   float minZ = -RADIUS * Cos(this->rotZ) * this->scaleZ - (SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
+   float maxZ = RADIUS * Cos(this->rotZ) * this->scaleZ + (HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+
+   // Optimization - reduce function calls to sine, cosine functions.
+   float cosine = Cos(this->rotY);
+   float sine = Sin(this->rotY);
+
+   wall collision = getSide(camera);
+
+   // If Camera collided with the front side.
+   if (collision == FRONT)
+   {
+      float newX, newZ;
+
+      newZ = minZ - 0.5;
+      newX = camX;
+
+      // Undo transformatino and convert back to world coordinates (transform matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   // If Camera collided with the back side.
+   else if (collision == BACK)
+   {
+      float newX, newZ;
+
+      newZ = maxZ + 0.5;
+      newX = camX;
+
+      // Undo transformation and convert back to world coordinates (transform matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   // If Camera collided with the left side.
+   else if (collision == LEFT)
+   {
+      float newX, newZ;
+
+      newZ = camZ;
+      newX = minX - 0.5;
+
+      // Undo transformation and convert back to world coordinates (transform matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   // If Camera collided with the right side.
+   else if (collision == RIGHT)
+   {
+      float newX, newZ;
+
+      newZ = camZ;
+      newX = maxX + 0.5;
+
+      // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+
 }
 
 // Definition of Shovel class setPosition function.

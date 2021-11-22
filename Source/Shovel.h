@@ -32,6 +32,15 @@ class Shovel : public GameObject
       float rotY;
       float rotZ;
 
+      /*
+       *   Function prototype for Shovel object getWall helper function.
+       *   Precondition:  A Shovel object has been instantiated and rendered to the scene.
+       *   Postcondition: The function returns the wall with which the Camera object has collided.
+       *   Parameter:     The active Camera object.
+       *   Return value:  The wall with which the camera has collided.  
+       */
+      wall getSide(Camera* camera);
+
    public:
       /*
        *   Function prototype for Shovel object default constructor.  DO NOT USE.
@@ -67,6 +76,15 @@ class Shovel : public GameObject
        *    Postcondition: The object has been rendered in the OpenGL window. 
        */
       void Render();
+
+      /*
+       *    Function prototype for Shovel object detectCollision function.
+       *    Precondition:  A Shovel object has been instantiated and rendered to the scene.
+       *    Postcondition: The function returns the side with which the Camera object has collided.  
+       *    Parameter:     The active Camera object.
+       *    Return value:  The side with which the Camera object has collided.  
+       */
+      bool detectCollision(Camera* camera);
 
       /*
        *    Function prototype for the Shovel object resolveCollision function implementation.
