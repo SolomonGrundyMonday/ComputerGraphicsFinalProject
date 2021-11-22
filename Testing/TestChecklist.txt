@@ -22,7 +22,7 @@ Camera   -   N/A
 
 Collisions Test:
 Cuboid   -   None required.
-Shovel   -
+Shovel   -   Complete
 Axe      -   Complete
 Cabin    -   Complete
 Tree     -   Complete
