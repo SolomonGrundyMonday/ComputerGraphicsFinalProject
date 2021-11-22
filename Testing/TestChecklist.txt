@@ -5,6 +5,7 @@ Axe      -   Complete
 Cabin    -   Partial - object is complex, needs more involved testing.
 Tree     -   Parital - object is complex, needs more involved testing.
 Tent     -   Complete, need better texture image to be sure.
+Lantern  -   Complete
 Skybox   -   N/A
 Camera   -   N/A
 
@@ -15,6 +16,7 @@ Axe      -   Complete
 Cabin    -   Still has placeholder textures. 
 Tree     -   Complete
 Tent     -   Complete
+Lantern  -   Still has placeholder textures.
 Skybox   -   Complete
 Camera   -   N/A
 
@@ -25,5 +27,16 @@ Axe      -   Complete
 Cabin    -   Complete
 Tree     -   Complete
 Tent     -   Complete
+Lantern  -   
 Skybox   -   Complete
 Camera   -   N/A (Camera is the instigator)
+
+Integration Tests:
+Compile on Linux           -    
+Performance on VM          -   
+Final object positioning   -
+Final keybindings/controls -
+Soak test                  -
+Edge cases                 -
+Debug mode                 -
+Flashlight implementation  -
