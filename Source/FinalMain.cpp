@@ -109,7 +109,7 @@ void initialize_objects()
    cabin = new Cabin(-28.0, 3.0, -26.0, 5.0, 2.0, 7.0, 0.0, 0.0, 0.0);
    cabin->Initialize("Assets/Bricks.bmp");
 
-   lantern = new Lantern(-24.0, 1.1, -24.0, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0);
+   lantern = new Lantern(22.5, 2.0, 22.5, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0);
    lantern->Initialize("Assets/RustyMetal.bmp");
 }
 
@@ -148,10 +148,13 @@ void display()
       axe->resolveCollision(player);
 
    if (shovel->detectCollision(player))
-   {
-      glWindowPos2i(5, 5);
-      Print("Collision detected.");
       shovel->resolveCollision(player);
+
+   if (lantern->detectCollision(player))
+   {
+      glWindowPos2i(5, 25);
+      Print("Collision detected.");
+      lantern->resolveCollision(player);
    }
 
    for (int i = 0; i < treeCount; i++)
@@ -192,8 +195,8 @@ void display()
       lanternZ = Eye[2];
    }
 
-   lantern->setPosition(lanternX, Eye[1] - 0.3, lanternZ);
-   lantern->setRotation(0.0, -player->getTheta(), 0.0);
+   //lantern->setPosition(lanternX, Eye[1] - 0.3, lanternZ);
+   //lantern->setRotation(0.0, -player->getTheta(), 0.0);
 
    // Render Tree objects.
    for (int i = 0; i < treeCount; i++)

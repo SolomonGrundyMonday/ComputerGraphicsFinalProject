@@ -73,6 +73,24 @@ class Lantern : public GameObject
       void Render();
 
       /*
+       *   Function prototype for Lantern class getSide helper function.
+       *   Precondition:   A Lantern object has been instantiated and rendered to the scene.
+       *   Postcondition:  The side of the lantern hitbox that has been collided by the Camera object is returned to the caller.
+       *   Parameter:      The active Camera object.
+       *   Return value:   The side of the Lantern hitbox with which the Camera object has collided.  
+       */
+      wall getSide(Camera* camera);
+
+      /*
+       *   Function prototype for Lantern class detectCollision function.
+       *   Precondition:   A Lantern object has been instantiated and rendered to the scene.
+       *   Postcondition:  The function returns true if the Camera is colliding with the Lantern, false otherwise.
+       *   Parameter:      The active Camera object.
+       *   Return value:   True if a collision has occured, false otherwise. 
+       */
+      bool detectCollision(Camera* camera);
+
+      /*
        *   Function prototype for Lantern class resolveCollision function implementation.
        *   Precondition:   An instance of a Lantern object has been instantiated and rendered to the scene.
        *   Postcondition:  If a Camera has collided with the object, the collision has been resolved, and the Camera's

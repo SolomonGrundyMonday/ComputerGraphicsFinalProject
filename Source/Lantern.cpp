@@ -59,7 +59,7 @@ void Lantern::Render()
 {
    float spotE[] = {90.0};
    float spotC[] = {15.0};
-   float spotPosition[] = {0.0, 0.5, 0.0, 1.0};
+   float spotPosition[] = {0.0, 0.5, 0.0, 0.0};
 
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
@@ -286,8 +286,8 @@ void Lantern::Render()
    glLightfv(GL_LIGHT0, GL_DIFFUSE, Diffuse);
    glLightfv(GL_LIGHT0, GL_SPECULAR, Specular);
    glLightfv(GL_LIGHT0, GL_POSITION, spotPosition);
-   glLightfv(GL_LIGHT0, GL_SPOT_EXPONENT, spotE);
-   glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, spotC);
+   //glLightfv(GL_LIGHT0, GL_SPOT_EXPONENT, spotE);
+   //glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, spotC);
 
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
@@ -295,10 +295,147 @@ void Lantern::Render()
    glEnable(GL_CULL_FACE);
 }
 
+// Function definition for Lantern class detectCollision function.
+bool Lantern::detectCollision(Camera* camera)
+{
+   // Compute relative Camera x, z coordinates and convert to object coordinates.
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+
+   // Compute x, z minimum and maximum values for object hitbox.
+   float minX = -LANTERN_RAD * this->scaleX;
+   float maxX = LANTERN_RAD * this->scaleX;
+   float minZ = -LANTERN_RAD * this->scaleZ;
+   float maxZ = LANTERN_RAD * this->scaleZ;
+
+   // Determine if Camera is colliding with the object along both x and z axes, respectively.
+   bool xCollide = camX > minX - 0.5 && camX < maxX + 0.5;
+   bool zCollide = camZ > minZ - 0.5 && camZ < maxZ + 0.5;
+
+   return xCollide && zCollide;
+}
+
 // Function definition for Lantern class resolveCollision function implementation.
 void Lantern::resolveCollision(Camera* camera)
 {
-   // Do stuff here.
+   // Compute relative Camera x, z coordinates and convert to object coordinates.
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+
+   // Compute x, z minimmum and maximum values for object hitbox.
+   float minX = -LANTERN_RAD * this->scaleX;
+   float maxX = LANTERN_RAD * this->scaleX;
+   float minZ = -LANTERN_RAD * this->scaleZ;
+   float maxZ = LANTERN_RAD * this->scaleZ;
+
+   // Optimization - reduce number of function calls to sine/cosine.
+   float sine = Sin(this->rotY);
+   float cosine = Cos(this->rotY);
+
+   wall collision = getSide(camera);
+
+   if (collision == FRONT)
+   {
+      float newX, newZ;
+
+      newZ = minZ - 0.5;
+      newX = camX;
+
+      // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   else if (collision == BACK)
+   {
+      float newX, newZ;
+
+      newZ = maxZ + 0.5;
+      newX = camX;
+
+      // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   else if (collision == LEFT)
+   {
+      float newX, newZ;
+
+      newZ = camZ;
+      newX = minX - 0.5;
+
+      // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   else if (collision == RIGHT)
+   {
+      float newX, newZ;
+
+      newZ = camZ;
+      newX = minX + 0.5;
+
+      // Undo transformation and convert back to world coordinates (transformatino matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+}
+
+// Funciton definition for Lantern class getSide helper function.
+wall Lantern::getSide(Camera* camera)
+{
+   // Compute relative position and convert to object coordinates.
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+
+   // Compute x, z maximum and minimum values for object hitbox.
+   float minX = -LANTERN_RAD * this->scaleX;
+   float maxX = LANTERN_RAD * this->scaleX;
+   float minZ = -LANTERN_RAD * this->scaleZ;
+   float maxZ = LANTERN_RAD * this->scaleZ;
+
+   // Determine which wall the Camera has collided with.
+   bool front = camX > minX && camX < maxX && camZ < 0.0;
+   bool back = camX > minX && camX < maxX && camZ > 0.0;
+   bool left = camZ > minZ && camZ < maxZ && camX < 0.0;
+   bool right = camZ > minZ && camZ < maxZ && camX > 0.0;
+
+   // Return the appropriate wall.
+   if (front)
+      return FRONT;
+   else if (back)
+      return BACK;
+   else if (left)
+      return LEFT;
+   else if (right)
+      return RIGHT;
+   else
+      return NONE;
 }
 
 // Function definition for Lantern class setPosition function.
