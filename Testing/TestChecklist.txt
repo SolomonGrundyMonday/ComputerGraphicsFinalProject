@@ -9,19 +9,19 @@ Skybox   -   N/A
 Camera   -   N/A
 
 Texture Test:
-Cuboid   -   
+Cuboid   -   Complete
 Shovel   -   Complete
 Axe      -   Complete
-Cabin    -   
+Cabin    -   Still has placeholder textures. 
 Tree     -   Complete
 Tent     -   Complete
 Skybox   -   Complete
 Camera   -   N/A
 
 Collisions Test:
-Cuboid   -
+Cuboid   -   None required.
 Shovel   -
-Axe      -
+Axe      -   Complete
 Cabin    -   Complete
 Tree     -   Complete
 Tent     -   Complete
