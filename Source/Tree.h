@@ -31,6 +31,7 @@ class Tree : public GameObject
       const float brown[4] = { 0.3, 0.165, 0.165, 0.2 };
       const float orange[4] = { 1.0, 0.647, 0.0, 0.4 };
       const float white[4] = { 1.0, 1.0, 1.0, 0.2 };
+	  const float Emission[4] = { 0.0, 0.0, 0.0, 1.0 };
       
       /*
        *  Function declaration for private helper function branch.

@@ -12,14 +12,17 @@
 // Function definition for Tree class default constructor.
 Tree::Tree()
 {
+   // Specify Tree translation at the origin.
    this->posX = 0.0;
    this->posY = 0.0;
    this->posZ = 0.0;
 
+   // Specify default scaling of 1.0 to each axis.
    this->scaleX = 1.0;
    this->scaleY = 1.0;
    this->scaleZ = 1.0;
 
+   // Specify default 0.0 rotation about each axis.
    this->rotX = 0.0;
    this->rotY = 0.0;
    this->rotZ = 0.0;
@@ -28,30 +31,36 @@ Tree::Tree()
 // Function definition for Tree class Constructor.
 Tree::Tree(float x, float y, float z, float dx, float dy, float dz, float rx, float ry, float rz)
 {
+   // Specify Tree translation at desired x, y, z coordinates.
    this->posX = x;
    this->posY = y;
    this->posZ = z;
 
+   // Specify desired x, y, z scaling.
    this->scaleX = dx;
    this->scaleY = dy;
    this->scaleZ = dz;
 
+   // Specify desired rotation about x, y, z axes, respectively.
    this->rotX = rx;
    this->rotY = ry;
    this->rotZ = rz;
 }
 
-// Function definition for recursive branchFractal function (borrowed from in-class notes).
+// Function definition for recursive branchFractal function (algorithm borrowed from in-class notes).
 int Tree::branchFractal(float l0, float r0)
 {
+   // Compute random branching angle, branch length.
    int angle = rand()/RAND_MAX * (360 / BRANCH_NUM);
    float l = l0 * (rand() / RAND_MAX * (1.15 - 0.85) + 0.85);
 
    glPushMatrix();
    
+   // Call branch based on random branch length.
    int ntri = this->branch(l, r0);
    glTranslatef(0, l, 0);
 
+   // Base case: if branch length less than threshold, draw leaf.
    if (l < LEAF_SIZE)
    {
       glRotatef(angle, 0, 1, 0);
@@ -60,11 +69,14 @@ int Tree::branchFractal(float l0, float r0)
       glRotatef(360/BRANCH_NUM, 0, 1, 0);
       ntri += this->leaf();
    }
+   // Recursive case.
    else
    {
+      // Shrink radius by branching factor, and length by branching factor.
       float r = SHRINK_FACTOR * r0;
       float left = BRANCH_RATIO * l0;
 
+      // Make recursive calls to branchFractal for number of branches iterations.
 	  for (int i = 0; i < BRANCH_NUM; i++)
 	  {
          glPushMatrix();
@@ -80,25 +92,34 @@ int Tree::branchFractal(float l0, float r0)
    return ntri;
 }
 
-// Function definition for branch method (algorithm from in-class notes).
+// Function definition for branch method (algorithm borrowed from in-class notes).
 int Tree::branch(float l, float r)
 {
+   // Apply transformations.
    glPushMatrix();
    glScaled(r, l, r);
 
+   // Set Material/color properties.
    glColor4fv(brown);
+   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.0);
+   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, brown);
+   glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, Emission);
+
+   // Enable textures, and apply bark texture to branches.
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    glBindTexture(GL_TEXTURE_2D, texture);
-   
-
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+
+   // Enable back face culling.
    glEnable(GL_CULL_FACE);
    glCullFace(GL_BACK);
    glBegin(GL_QUAD_STRIP);
 
+   // Code for branch generation borrowed from lecture, made a slight change by unrolling loop for optimization purposes.
    for (int i = 0; i <= 360; i += 60)
    {
+      // Reduce number of floating-point calculations per loop iteration.
       float x = Cos(i);
       float z = Sin(i);
       float texX = i / 120.0;
@@ -107,6 +128,7 @@ int Tree::branch(float l, float r)
       float texY = l/r;
       float texX1 = (i + 30) / 120.0;
 
+      // Draw four vertices per iteration (loop unrolling).
       glNormal3f(x, 1 - SHRINK_FACTOR, z);
       glTexCoord2d(texX, 0.0);
       glVertex3f(x, 0, z);
@@ -120,6 +142,7 @@ int Tree::branch(float l, float r)
       glVertex3f(SHRINK_FACTOR * x1, 1, SHRINK_FACTOR * z1);
    }
 
+   // Dicable textures, face culling.
    glEnd();
    glDisable(GL_CULL_FACE);
    glDisable(GL_TEXTURE_2D);
@@ -131,13 +154,14 @@ int Tree::branch(float l, float r)
 // Function definition for leaf method (algorithm borrowed from in-class notes).
 int Tree::leaf()
 {
-
+   // Set texture, color for leaves, enable two-sided light model.
    glColor4fv(orange);
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
    glBindTexture(GL_TEXTURE_2D, leafTex);
 
+   // Draw leaf.
    glNormal3f(0, 0, 1);
    glBegin(GL_QUADS);
    glTexCoord2d(0.0, 0.0);
@@ -150,6 +174,7 @@ int Tree::leaf()
    glVertex3f(0.03, 0.03, 0.0);
    glEnd();
 
+   // Disable textures, two-sided light model.
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
    glDisable(GL_TEXTURE_2D);
    return 2;
@@ -176,13 +201,14 @@ void Tree::Render()
    glRotated(this->rotZ, 0, 0, 1);
    glScaled(this->scaleX, this->scaleY, this->scaleZ);
 
+   // Place recursive call to branchFractal with length 2.0 and radius 0.2.
    this->branchFractal(2.0, 0.2);
    glPopMatrix();
 }
 
 void Tree::resolveCollision(Camera* camera)
 {
-   // Do stuff here.
+   // Reduce number of function calls, floating point computations per call to resolveCollision (optimization).
    float camX = camera->getEyeX();
    float camZ = camera->getEyeZ();
    float xOffset = (0.7 * Sin(camera->getTheta()));
@@ -192,13 +218,16 @@ void Tree::resolveCollision(Camera* camera)
    float minZ = (this->posZ - this->scaleZ * 0.2) + (zOffset - 0.5);
    float maxZ = (this->posZ + this->scaleZ * 0.2) + (zOffset + 0.5);
 
+   // If Camera collides along x-axis and z-axis, collision needs to be resolved.
    if (camX < maxX && camX > minX && camZ < maxZ && camZ > minZ)
    {
+      // Compute difference between Camera coordinates and minimum/maximum x, z values of the hitbox.
       float diffXMin = camX - minX;
       float diffXMax = maxX - camX;
       float diffZMin = camZ - minZ;
       float diffZMax = maxZ - camZ;
 
+      // If collision is on the maximum x-coordinate, or maximum z-coordinate.
 	  if (diffXMax < diffXMin && diffZMax < diffZMin)
 	  {
          if(diffXMax < diffZMax)
@@ -206,6 +235,7 @@ void Tree::resolveCollision(Camera* camera)
          else
             camera->setEyePos(camX, camera->getEyeY(), maxZ);
 	  }
+      // If collision is on the maximum x-coordinate, or minimum z-coordinate.
 	  else if (diffXMax < diffXMin && diffZMin < diffZMax)
 	  {
          if (diffXMax < diffZMin)
@@ -213,6 +243,7 @@ void Tree::resolveCollision(Camera* camera)
          else
             camera->setEyePos(camX, camera->getEyeY(), minZ);
 	  }
+      // If collision is on the minimum x-coordinate, or maximum z-coordinate.
 	  else if (diffXMin < diffXMax && diffZMax < diffZMin)
 	  {
          if (diffXMin < diffZMax)
@@ -220,6 +251,7 @@ void Tree::resolveCollision(Camera* camera)
          else
             camera->setEyePos(camX, camera->getEyeY(), maxZ);
 	  }
+      // If collision is on the minimum x-coordinate or minimum z-coordinate.
 	  else if (diffXMin < diffXMax && diffZMin < diffZMax)
 	  {
          if (diffXMin < diffZMin)
