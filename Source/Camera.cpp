@@ -4,9 +4,9 @@
 Camera::Camera()
 {
    // Default starting coordinates are (-25, 1.5, -25).
-   this->EyePos[0] = -20.0;
+   this->EyePos[0] = 20.0;
    this->EyePos[1] = 1.5;
-   this->EyePos[2] = -19.0;
+   this->EyePos[2] = 20.0;
 
    // Default look at point coordinates are (0, 0.5, 0).
    this->CenterPos[0] = 0.0;
@@ -22,6 +22,8 @@ Camera::Camera()
    this->dim = 5.0;
    this->asp = 1.0;
    this->theta = 0;
+
+   this->lightOn = false;
 }
 
 // Function definition for MoveForward method of Camera class.
@@ -49,6 +51,44 @@ void Camera::Turn()
    double z = -2 * this->dim * Cos(this->theta);
 
    this->setCenterPos(x, this->CenterPos[1], z);
+}
+
+// Function definition for shineLight method of Camera class.
+void Camera::shineLight()
+{
+   // If light is active.
+   if (this->lightOn)
+   {
+      // Set up the light properties.
+      float Ambient[] = { 0.0, 0.0, 0.0, 1.0 };
+      float Diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+      float Specular[] = { 0.0, 0.0, 0.0, 1.0 };
+      float spotPosition[] = { this->EyePos[0], this->EyePos[1], this->EyePos[2], 1.0 };
+      float exponent[] = { 90.0 };
+      float cutoff[] = { 25.0 };
+
+      // Enable a spotlight located at the Camera eye position.
+      glEnable(GL_LIGHT1);
+      glLightfv(GL_LIGHT1, GL_AMBIENT, Ambient);
+      glLightfv(GL_LIGHT1, GL_DIFFUSE, Diffuse);
+      glLightfv(GL_LIGHT1, GL_SPECULAR, Specular);
+      glLightfv(GL_LIGHT1, GL_POSITION, spotPosition);
+      glLightfv(GL_LIGHT1, GL_SPOT_EXPONENT, exponent);
+      glLightfv(GL_LIGHT1, GL_SPOT_CUTOFF, cutoff);
+   }
+   // If light is not active.
+   else
+      glDisable(GL_LIGHT1);
+}
+
+// Function definition for toggleLight method of Camera class.
+void Camera::toggleLight()
+{
+   // Toggle light between active/deactive.
+   if (lightOn)
+      this->lightOn = false;
+   else
+      this->lightOn = true;
 }
 
 // Function definition for setEyePos method of Camera class.

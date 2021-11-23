@@ -32,7 +32,7 @@ const int groundCount = 70;
 // Initialize game objects.
 void initialize_objects()
 {
-   // Coordinates for Tree objects.
+   // Coordinates for Tree objects. -- Possibly reduce area map size, increase tree density, reduce tree count.
    float treeCoord[treeCount][2] = { {-19.0, -17.0}, {-16.0, -14.0}, {-18.0, -10.0},
                                      {-15.0, -3.0}, {-16.0, 4.0}, {-19.0, 9.0},
                                      {-17.0, 15.0}, {-15.0, 22.0}, {-28.0, -16.0},
@@ -58,6 +58,7 @@ void initialize_objects()
                                      {29.0, -24.5}, {26.5, -17.0}, {27.5, -9.5}, 
                                      {28.5, -2.0}, {27.0, 5.0} };
 
+   // Coordinates for Tent objects.
    float tentCoord[tentCount][2] = { {20.0, 15.0}, {20.0, 25.0}, {25.0, 15.0}, {25.0, 25.0} };
 
    // Instantiate Trees.
@@ -77,6 +78,7 @@ void initialize_objects()
    // Instantiate ground, camera.
    player = new Camera();
 
+   // Work on solution to ground lighting...
    for (int i = -30; i <= 30; i += 10)
    {
       for (int j = -30; j <= 30; j += 10)
@@ -91,9 +93,6 @@ void initialize_objects()
    for (int i = 0; i < 49; i++)
       ground.at(i)->Initialize("Assets/Dirt.bmp");
 
-   //ground = new Cuboid(0.0, 0.0, 0.0, 35.0, 1.0, 35.0, 0.0, 0.0, 0.0);
-   //ground->Initialize("Assets/Dirt.bmp");
-
    // Instantiate skybox.
    sky = new Skybox(0.0, 25.0, 0.0, 35.0, 25.0, 35.0, 0.0, 0.0, 0.0);
    sky->Initialize("Assets/Stars.bmp");
@@ -106,9 +105,10 @@ void initialize_objects()
    axe->Initialize("Assets/Wood.bmp");
 
    // Instantiate Cabin.
-   cabin = new Cabin(-28.0, 3.0, -26.0, 5.0, 2.0, 7.0, 0.0, 0.0, 0.0);
+   cabin = new Cabin(-28.0, 2.0, -26.0, 3.0, 1.0, 5.0, 0.0, 0.0, 0.0);
    cabin->Initialize("Assets/Bricks.bmp");
 
+   // Instantiate Lantern.
    lantern = new Lantern(22.5, 2.0, 22.5, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0);
    lantern->Initialize("Assets/RustyMetal.bmp");
 }
@@ -116,10 +116,6 @@ void initialize_objects()
 // Display function, called by GLUT to update the screen.
 void display()
 {
-   // Variables to ensure that lantern object stays tethered to the player camera.
-   float lanternX;
-   float lanternZ;
-
    // Variables for Eye and Center vectors to reduce function calls in display.
    float Eye[3];
    float Center[3];
@@ -142,6 +138,8 @@ void display()
    // Clear transformations and apply camera movement.
    glLoadIdentity();
    player->Turn();
+
+   // Resolve object collisions.
    sky->resolveCollision(player);
    cabin->resolveCollision(player);
    if (axe->detectCollision(player))
@@ -151,11 +149,7 @@ void display()
       shovel->resolveCollision(player);
 
    if (lantern->detectCollision(player))
-   {
-      glWindowPos2i(5, 25);
-      Print("Collision detected.");
       lantern->resolveCollision(player);
-   }
 
    for (int i = 0; i < treeCount; i++)
       tree.at(i)->resolveCollision(player);
@@ -169,34 +163,14 @@ void display()
       }
    }
 
+   // Update Camera center vector based on player movement.
    player->setCenterPos(Eye[0] + player->getCenterX(), player->getCenterY(), Eye[2] + player->getCenterZ());
-
    Center[0] = player->getCenterX();
    Center[1] = player->getCenterY();
    Center[2] = player->getCenterZ();
-
    gluLookAt(Eye[0], Eye[1], Eye[2], Center[0], Center[1], Center[2], player->getUpX(), player->getUpY(), player->getUpZ());
-   
-   if (Eye[0] != Center[0])
-   {
-      lanternX = Eye[0] + (0.7 * Sin(player->getTheta()));
-   }
-   else
-   {
-      lanternX = Eye[0];
-   }
 
-   if (Eye[2] != Center[2])
-   {
-      lanternZ = Eye[2] - (0.7 * Cos(player->getTheta()));
-   }
-   else
-   {
-      lanternZ = Eye[2];
-   }
-
-   //lantern->setPosition(lanternX, Eye[1] - 0.3, lanternZ);
-   //lantern->setRotation(0.0, -player->getTheta(), 0.0);
+   player->shineLight();
 
    // Render Tree objects.
    for (int i = 0; i < treeCount; i++)
@@ -213,6 +187,7 @@ void display()
    cabin->Render();
    sky->Render();
    lantern->Render();
+   lantern->lightSource(player);
 
    // Check for errors in GLUT, flush and swap buffers.
    ErrCheck("display");
@@ -260,6 +235,11 @@ void key(unsigned char key, int x, int y)
    if (key == 27)
    {
       exit(0);
+   }
+   // If the player presses the 'F' key, toggle the Camera flashlight component.
+   else if (key == 'f' || key == 'F')
+   {
+      player->toggleLight();
    }
 
    glutPostRedisplay();

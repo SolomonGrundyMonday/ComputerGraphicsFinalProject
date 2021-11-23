@@ -21,11 +21,12 @@ class Camera
    // Member variables for eye position, center position, up vector, focal length and field of view.
    private:
       int theta;
-      double EyePos[VECTOR_SIZE];
-      double CenterPos[VECTOR_SIZE];
-      double UpPos[VECTOR_SIZE];
+      float EyePos[VECTOR_SIZE];
+      float CenterPos[VECTOR_SIZE];
+      float UpPos[VECTOR_SIZE];
       double dim;
       double asp;
+      bool lightOn;
 
    public:
       /*
@@ -59,6 +60,20 @@ class Camera
        *   Postcondition: The Camera object has been turned.  
        */
       void Turn();
+
+      /*
+       *   Function prototype for Camera class shineLight function.
+       *   Precondition:  A Camera object has been instantiated, and the user has activated their flashlight.
+       *   Postcondition: The spotlight associated with this camera is activated.  
+       */
+      void shineLight();
+
+      /*
+       *   Function prototype for Camera class toggleLight function.
+       *   Precondition:  A Camera object has been instantiated, and the user has pressed the flashlight key.
+       *   Postcondition: The flashlight component has been toggled on or off.  
+       */
+      void toggleLight();
 
       /*
        *   Function prototype for Camera class setEyePos setter function.
