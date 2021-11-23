@@ -64,8 +64,8 @@ void Camera::shineLight()
       float Diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
       float Specular[] = { 0.0, 0.0, 0.0, 1.0 };
       float spotPosition[] = { this->EyePos[0], this->EyePos[1], this->EyePos[2], 1.0 };
-      float exponent[] = { 90.0 };
-      float cutoff[] = { 25.0 };
+      float exponent[] = { 45.0 };
+      float cutoff[] = { 90.0 };
 
       // Enable a spotlight located at the Camera eye position.
       glEnable(GL_LIGHT1);
