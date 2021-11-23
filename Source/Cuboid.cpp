@@ -109,14 +109,26 @@ void Cuboid::Render()
    glTexCoord2f(this->scaleX, 0.0); glVertex3f(1.0, 1.0, -1.0);
    glEnd();
 
-   // Top face texture coordinates/vertices.
-   glNormal3f(0.0, 1.0, 0.0);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0); glVertex3f(1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, this->scaleX); glVertex3f(1.0, 1.0, -1.0);
-   glTexCoord2f(this->scaleZ, this->scaleX); glVertex3f(-1.0, 1.0, -1.0);
-   glTexCoord2f(this->scaleZ, 0.0); glVertex3f(-1.0, 1.0, 1.0);
-   glEnd();
+   // Top face texture coordinates/vertices (tesselated to improve lighting effects for large polygons)
+   // Idea borrowed from contents of https://www.glprogramming.com/red/chapter05.html.
+   for (int i = -this->scaleX; i < this->scaleX; i++)
+   {
+      for (int j = -this->scaleZ; j < this->scaleZ; j++)
+      {
+         float minX = i/this->scaleX;
+         float maxX = (i+1)/this->scaleX;
+         float minZ = j/this->scaleX;
+         float maxZ = (j+1)/this->scaleZ;
+
+         glNormal3f( (minX + maxX) / 2.0, 1.0, (minZ + maxZ) / 2.0);
+         glBegin(GL_QUADS);
+         glTexCoord2f(0.0, 0.0); glVertex3f(maxX, 1.0, maxZ);
+         glTexCoord2f(0.0, 1.0); glVertex3f(maxX, 1.0, minZ);
+         glTexCoord2f(1.0, 1.0); glVertex3f(minX, 1.0, minZ);
+         glTexCoord2f(1.0, 0.0); glVertex3f(minX, 1.0, maxZ);
+         glEnd();
+      }
+   }
 
    // Bottom face texture coordintates/vertices.
    glNormal3f(0.0, -1.0, 0.0);
