@@ -3,6 +3,10 @@ Jeff Colgan, CSCI-4229 Final Project
 User Controls:
 
    'F' key          -   Toggles the flashlight on and off.
+   'W' key          -   Move forward.
+   'S' key          -   Move backward.
+   'A' key          -   Strafe left.
+   'D' key          -   Strafe right.
     RIGHT ARROW key -   Turn the first-person camera to the right by 5 degrees.
     LEFT ARROW key  -   Turn the first-person cmaera to the left by five degrees.
 
@@ -16,7 +20,13 @@ Sources (Code):
    StackExchange to help me understand texture blending (specifically to make the translucent
    glass texture on my lantern object).  I didn't borrow any code from this thread, but the question
    and some of the answers helped me get the effect to look semi-decent.
-   Thread address: https://stackoverflow.com/questions/24399431/opengl-texture-with-transparency-alpha  
+   Thread address: https://stackoverflow.com/questions/24399431/opengl-texture-with-transparency-alpha
+   I also got the idea to tessalate the larger polygons in my objects to get the spotlight effect to
+   look better from the following source: https://www.glprogramming.com/red/chapter05.html.
+   Lastly, the code for generating trees was borrowed from the in-class notes about creating trees
+   using fractals.  I made a few minor modifications for optimization so that I could have a large
+   quantity of trees rendering at one time.
+     
 
 Sources (Textures):
    All textures used in this project were sourced by me, using my phone camera except for two.  The skybox
