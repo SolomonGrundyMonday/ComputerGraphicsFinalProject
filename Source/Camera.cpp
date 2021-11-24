@@ -29,8 +29,8 @@ Camera::Camera()
 // Function definition for MoveForward method of Camera class.
 void Camera::MoveForward()
 {
-   double x = this->EyePos[0] + (Sin(this->theta) * MOVE_DISTANCE);
-   double z = this->EyePos[2] + (-Cos(this->theta) * MOVE_DISTANCE);
+   float x = this->EyePos[0] + (Sin(this->theta) * MOVE_DISTANCE);
+   float z = this->EyePos[2] + (-Cos(this->theta) * MOVE_DISTANCE);
 
    this->setEyePos(x, this->EyePos[1], z);
 }
@@ -38,8 +38,26 @@ void Camera::MoveForward()
 // Function definition for MoveBackward method of Camera class.
 void Camera::MoveBackward()
 {
-   double x = this->EyePos[0] - (Sin(this->theta) * MOVE_DISTANCE);
-   double z = this->EyePos[2] - (-Cos(this->theta) * MOVE_DISTANCE);
+   float x = this->EyePos[0] - (Sin(this->theta) * MOVE_DISTANCE);
+   float z = this->EyePos[2] - (-Cos(this->theta) * MOVE_DISTANCE);
+
+   this->setEyePos(x, this->EyePos[1], z);
+}
+
+// Function definition for StrafeLeft method of Camera class.
+void Camera::StrafeLeft()
+{
+   float x = this->EyePos[0] - (Cos(this->theta) * MOVE_DISTANCE);
+   float z = this->EyePos[2] - (Sin(this->theta) * MOVE_DISTANCE);
+
+   this->setEyePos(x, this->EyePos[1], z);
+}
+
+// Function definition for StrafeRight method of Camera class.
+void Camera::StrafeRight()
+{
+   float x = this->EyePos[0] + (Cos(this->theta) * MOVE_DISTANCE);
+   float z = this->EyePos[2] + (Sin(this->theta) * MOVE_DISTANCE);
 
    this->setEyePos(x, this->EyePos[1], z);
 }
@@ -47,8 +65,8 @@ void Camera::MoveBackward()
 // Function definition for Turn method of Camera class.
 void Camera::Turn()
 {
-   double x = 2 * this->dim * Sin(this->theta);
-   double z = -2 * this->dim * Cos(this->theta);
+   float x = 2 * this->dim * Sin(this->theta);
+   float z = -2 * this->dim * Cos(this->theta);
 
    this->setCenterPos(x, this->CenterPos[1], z);
 }
@@ -62,10 +80,13 @@ void Camera::shineLight()
       // Set up the light properties.
       float Ambient[] = { 0.0, 0.0, 0.0, 1.0 };
       float Diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-      float Specular[] = { 0.0, 0.0, 0.0, 1.0 };
+      float Specular[] = { 1.0, 1.0, 1.0, 1.0 };
       float spotPosition[] = { this->EyePos[0], this->EyePos[1], this->EyePos[2], 1.0 };
-      float exponent[] = { 45.0 };
-      float cutoff[] = { 90.0 };
+      float exponent[] = { 128.0 };
+      float cutoff[] = { 35.0 };
+      float cAttenuation[] = { 1.0 };
+      float lAttenuation[] = { 0.0 };
+      float qAttenuation[] = { 0.0 };
 
       // Enable a spotlight located at the Camera eye position.
       glEnable(GL_LIGHT1);
@@ -75,6 +96,9 @@ void Camera::shineLight()
       glLightfv(GL_LIGHT1, GL_POSITION, spotPosition);
       glLightfv(GL_LIGHT1, GL_SPOT_EXPONENT, exponent);
       glLightfv(GL_LIGHT1, GL_SPOT_CUTOFF, cutoff);
+      glLightfv(GL_LIGHT1, GL_CONSTANT_ATTENUATION, cAttenuation);
+      glLightfv(GL_LIGHT1, GL_LINEAR_ATTENUATION, lAttenuation);
+      glLightfv(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, qAttenuation);
    }
    // If light is not active.
    else

@@ -86,7 +86,7 @@ void initialize_objects()
    sky->Initialize("Assets/Stars.bmp");
 
    // Instantiate shovel, axe.
-   shovel = new Shovel(20.0, 1.35, 13.0, 0.25, 0.25, 0.25, 15.0, 0.0, 0.0);
+   shovel = new Shovel(20.0, 1.35, 14.0, 0.25, 0.25, 0.25, 15.0, 0.0, 0.0);
    shovel->Initialize("Assets/Wood.bmp");
 
    axe = new Axe(-25.2, 1.0, -20.625, 0.7, 0.7, 0.7, -30.0, 0.0, 0.0);
@@ -229,6 +229,14 @@ void key(unsigned char key, int x, int y)
    else if (key == 's' || key == 'S')
    {
       player->MoveBackward();
+   }
+   else if (key == 'a' || key == 'A')
+   {
+      player->StrafeLeft();
+   }
+   else if (key == 'd' || key == 'D')
+   {
+      player->StrafeRight();
    }
 
    glutPostRedisplay();

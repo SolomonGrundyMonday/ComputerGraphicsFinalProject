@@ -54,6 +54,22 @@ class Camera
       void MoveBackward();
 
       /*
+       *   Function prototype for Camera class StrafeLeft function.
+       *   Precondition:  An instance of a Camera object has been instantiated, and the Camera object needs
+       *                  to move to the left.
+       *   Postcondition: The Camera has been moved left of its previous location.  
+       */
+      void StrafeLeft();
+
+      /*
+       *   Function prototype for Camera class StrafeRight function.
+       *   Precondition:  An instance of a Camera object has been instantiated, and the Camera object needs to
+       *                  move to the right.
+       *   Postcondition: The Camera has been moved right of its previous location.  
+       */
+      void StrafeRight();
+
+      /*
        *   Function prototype for Camera class Turn function.
        *   Precondition:  An instance of a camera object has been instantiated, and the Camera object
        *                  needs to turn.
