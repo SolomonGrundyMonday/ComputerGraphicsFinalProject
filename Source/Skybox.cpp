@@ -57,7 +57,7 @@ void Skybox::Render()
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_CULL_FACE);
    glCullFace(GL_FRONT);
-   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
    glBindTexture(GL_TEXTURE_2D, texture);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -70,6 +70,10 @@ void Skybox::Render()
    glRotatef(this->rotY, 0, 1, 0);
    glRotatef(this->rotZ, 0, 0, 1);
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
+
+   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0);
+   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, white);
+   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, black);
 
    for (int i = 0; i < 20; i += 4)
    {
