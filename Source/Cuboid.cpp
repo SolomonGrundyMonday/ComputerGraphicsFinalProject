@@ -115,12 +115,12 @@ void Cuboid::Render()
    {
       for (int j = -this->scaleZ; j < this->scaleZ; j++)
       {
-         float minX = i/this->scaleX;
-         float maxX = (i+1)/this->scaleX;
-         float minZ = j/this->scaleX;
-         float maxZ = (j+1)/this->scaleZ;
+         float minX = i / this->scaleX;
+         float maxX = (i + 1) / this->scaleX;
+         float minZ = j / this->scaleX;
+         float maxZ = (j + 1) / this->scaleZ;
 
-         glNormal3f( (minX + maxX) / 2.0, 1.0, (minZ + maxZ) / 2.0);
+         glNormal3f( (maxX - minX) / 2.0, 1.0, (maxZ - minZ) / 2.0);
          glBegin(GL_QUADS);
          glTexCoord2f(0.0, 0.0); glVertex3f(maxX, 1.0, maxZ);
          glTexCoord2f(0.0, 1.0); glVertex3f(maxX, 1.0, minZ);
