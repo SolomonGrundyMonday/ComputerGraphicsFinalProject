@@ -17,7 +17,7 @@
 #define KNOB_RADIUS 0.001
 #define KNOB_PROTRUSION 0.0025
 #define OVERHANG 0.1
-#define WINDOW_HEIGHT 0.2
+#define WINDOW_HEIGHT 0.4
 #define WINDOW_WIDTH 0.05
 #define WINDOW_DEPTH 0.005
 
@@ -28,6 +28,7 @@ class Cabin : public GameObject
       unsigned char texture;
       unsigned char shingles;
       unsigned char wood;
+      unsigned char shutters;
       unsigned char metal;
       float posX;
       float posY;
@@ -38,6 +39,8 @@ class Cabin : public GameObject
       float rotX;
       float rotY;
       float rotZ;
+      const float white[4] = { 1.0, 1.0, 1.0, 1.0 };
+      const float gold[4] = { 0.831, 0.686, 0.216, 1.0 };
 
       /*
        *   Function prototype for Cabin object drawWindow helper function.

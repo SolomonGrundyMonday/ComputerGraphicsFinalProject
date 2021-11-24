@@ -15,7 +15,7 @@
 #include <vector>
 
 // Variables for graphical objects.
-std::vector<Cuboid *> ground;
+Cuboid* ground;
 Camera* player;
 std::vector<Tree *> tree;
 Shovel* shovel;
@@ -27,7 +27,7 @@ std::vector<Tent *> tent;
 
 const int treeCount = 71;
 const int tentCount = 4;
-const int groundCount = 70;
+const int groundCount = 66;
 
 // Initialize game objects.
 void initialize_objects()
@@ -48,15 +48,14 @@ void initialize_objects()
 									 {-1.0, -4.5}, {-11.0, -32.0}, {-4.0, -31.5},
                                      {6.0, -30.0}, {7.0, -13.5}, {4.0, -3.0},
                                      {3.0, 7.0}, {5.0, 14.5}, {4.0, 21.0},
-                                     {3.5, 27.5}, {12.0, 19.5}, {11.0, -33.0},
+                                     {12.0, 19.5}, {11.0, -33.0}, {27.0, 5.0},
                                      {11.5, 8.5}, {10.0, -24.0}, {12.0, -15.5},
                                      {11.0, -6.5}, {10.0, 1.0}, {15.0, -32.0},
                                      {17.0, -25.5}, {16.0, -17.0}, {15.5, -10.0},
-                                     {17.0, -2.0}, {15.0, 5.0}, {16.5, 29.0},
+                                     {17.0, -2.0}, {15.0, 5.0}, {28.5, -2.0},
                                      {22.0, -25.0}, {20.0, -19.5}, {21.5, -11.0},
-                                     {22.0, -3.0}, {23.0, 5.0}, {28.0, -32.0},
-                                     {29.0, -24.5}, {26.5, -17.0}, {27.5, -9.5}, 
-                                     {28.5, -2.0}, {27.0, 5.0} };
+                                     {22.0, -3.0}, {23.0, 5.0}, {27.5, -9.5},
+                                     {26.5, -17.0} };
 
    // Coordinates for Tent objects.
    float tentCoord[tentCount][2] = { {20.0, 15.0}, {20.0, 25.0}, {25.0, 15.0}, {25.0, 25.0} };
@@ -79,29 +78,18 @@ void initialize_objects()
    player = new Camera();
 
    // Work on solution to ground lighting...
-   for (int i = -30; i <= 30; i += 10)
-   {
-      for (int j = -30; j <= 30; j += 10)
-      {
-         float x = i * 1.0;
-         float z = j * 1.0;
-
-         ground.push_back(new Cuboid(x, 0.0, z, 5.0, 1.0, 5.0, 0.0, 0.0, 0.0));
-	  }
-   }
-
-   for (int i = 0; i < 49; i++)
-      ground.at(i)->Initialize("Assets/Dirt.bmp");
+   ground = new Cuboid(0.0, 0.0, 0.0, 35.0, 1.0, 35.0, 0.0, 0.0, 0.0);
+   ground->Initialize("Assets/Dirt.bmp");
 
    // Instantiate skybox.
    sky = new Skybox(0.0, 25.0, 0.0, 35.0, 25.0, 35.0, 0.0, 0.0, 0.0);
    sky->Initialize("Assets/Stars.bmp");
 
    // Instantiate shovel, axe.
-   shovel = new Shovel(20.0, 1.35, 10.0, 0.25, 0.25, 0.25, 0.0, 0.0, 0.0);
+   shovel = new Shovel(20.0, 1.35, 13.0, 0.25, 0.25, 0.25, 15.0, 0.0, 0.0);
    shovel->Initialize("Assets/Wood.bmp");
 
-   axe = new Axe(-23.2, 1.0, -14.625, 0.7, 0.7, 0.7, -30.0, 0.0, 0.0);
+   axe = new Axe(-25.2, 1.0, -20.625, 0.7, 0.7, 0.7, -30.0, 0.0, 0.0);
    axe->Initialize("Assets/Wood.bmp");
 
    // Instantiate Cabin.
@@ -109,7 +97,7 @@ void initialize_objects()
    cabin->Initialize("Assets/Bricks.bmp");
 
    // Instantiate Lantern.
-   lantern = new Lantern(22.5, 2.0, 22.5, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0);
+   lantern = new Lantern(-28.0, 3.7, -20.5, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0);
    lantern->Initialize("Assets/RustyMetal.bmp");
 }
 
@@ -180,14 +168,15 @@ void display()
       tent.at(i)->Render();
 
    // Render other objects.
-   for (int i = 0; i < 49; i++)
-      ground.at(i)->Render();
+   ground->Render();
    shovel->Render();
    axe->Render();
    cabin->Render();
    sky->Render();
    lantern->Render();
-   lantern->lightSource(player);
+
+   glWindowPos2i(5, 5);
+   Print("Current position: (%.1lf, %.1lf, %.1lf)", player->getEyeX(), player->getEyeY(), player->getEyeZ());
 
    // Check for errors in GLUT, flush and swap buffers.
    ErrCheck("display");
@@ -198,18 +187,8 @@ void display()
 // Special function, called by GLUT when the user presses an arrow key.
 void special(int key, int x, int y)
 {
-   // If the player presses up arrow, move camera forward.
-   if(key == GLUT_KEY_UP)
-   {
-      player->MoveForward();
-   }
-   // If the player presses down arrow, move camera backward.
-   else if (key == GLUT_KEY_DOWN)
-   {
-      player->MoveBackward();
-   }
    // If the player presses right arrow, turn camera right.
-   else if (key == GLUT_KEY_RIGHT)
+   if (key == GLUT_KEY_RIGHT)
    {
       int theta = player->getTheta() + 5;
       theta %= 360;
@@ -240,6 +219,16 @@ void key(unsigned char key, int x, int y)
    else if (key == 'f' || key == 'F')
    {
       player->toggleLight();
+   }
+   // If the player presses the 'W' key, move the Camera forward.
+   else if (key == 'w' || key == 'W')
+   {
+      player->MoveForward();
+   }
+   // If the player presses the 'S' key, move the Camera backward.
+   else if (key == 's' || key == 'S')
+   {
+      player->MoveBackward();
    }
 
    glutPostRedisplay();
