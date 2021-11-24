@@ -6,6 +6,7 @@
  */
 
 #include "GameObject.h"
+#include <cmath>
 
 #pragma once
 
@@ -29,8 +30,8 @@ class Lantern : public GameObject
       float rotZ;
       float lightDir[3];
       float Ambient[4] = {0.0, 0.0, 0.0, 1.0};
-      float Diffuse[4] = {1.0, 1.0, 1.0, 1.0};
-      float Specular[4] = {0.0, 0.0, 0.0, 1.0};
+      float Diffuse[4] = {0.933, 0.91, 0.667, 1.0};
+      float Specular[4] = {0.933, 0.91, 0.667, 1.0};
       float white[4] = {1.0, 1.0, 1.0, 0.2};
 
    public:
@@ -98,6 +99,15 @@ class Lantern : public GameObject
        *   Parameter:      The active Camera object. 
        */
       void resolveCollision(Camera* camera);
+
+      /*
+       *   Function prototype for Lantern class lightSource funciton.
+       *   Precondition:  An instance of a Lantern object has been instantiated and rendered to the scene.
+       *   Postcondition: The light source at the center of the object has been activated, and the attenuation factors
+       *                  have been computed.
+       *   Parameter:     The active Camera object. 
+       */
+      void lightSource();
 
       /*
        *   Function prototype for Lantern class setPosition setter function.

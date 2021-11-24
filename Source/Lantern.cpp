@@ -57,10 +57,6 @@ int Lantern::Initialize(const char* filename)
 // Function definition for Lantern class Render function implementation.
 void Lantern::Render()
 {
-   float spotE[] = {90.0};
-   float spotC[] = {15.0};
-   float spotPosition[] = {0.0, 0.5, 0.0, 0.0};
-
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -235,6 +231,8 @@ void Lantern::Render()
    glEnable(GL_BLEND);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, Specular);
+
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
@@ -251,48 +249,10 @@ void Lantern::Render()
    glEnd();
 
    glDisable(GL_CULL_FACE);
-   // Draw lantern bulb.
-   glBegin(GL_QUAD_STRIP);
-   for (int i = 0; i <= 12; i++)
-   {
-      int theta = i * 30;
-      float x = Cos(theta);
-      float z = Sin(theta);
-
-      glNormal3f(x, -0.4, z);
-      glTexCoord2f(0.0, i * 1.0/12.0);
-      glVertex3f(BULB_RAD * x, -0.6, BULB_RAD * z);
-      glTexCoord2f(12.0, i * 1.0/12.0);
-      glVertex3f(BULB_RAD * x, -0.2, BULB_RAD * z);
-   }
-   glEnd();
-
-   glNormal3f(0.0, -0.1, 0.0);
-   glBegin(GL_TRIANGLE_FAN);
-   glTexCoord2f(0.5, 0.5);
-   glVertex3f(0.0, -0.1, 0.0);
-   for (int i = 0; i <= 360; i += 30)
-   {
-      glNormal3f(Cos(i), -0.15, Sin(i));
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(BULB_RAD * Cos(i), -0.2, BULB_RAD * Sin(i));
-   }
-   glEnd();
-
-   // Set up light source.
-   glLoadIdentity();
-   glEnable(GL_LIGHT0);
-   glLightfv(GL_LIGHT0, GL_AMBIENT, Ambient);
-   glLightfv(GL_LIGHT0, GL_DIFFUSE, Diffuse);
-   glLightfv(GL_LIGHT0, GL_SPECULAR, Specular);
-   glLightfv(GL_LIGHT0, GL_POSITION, spotPosition);
-   //glLightfv(GL_LIGHT0, GL_SPOT_EXPONENT, spotE);
-   //glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, spotC);
 
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
    glDisable(GL_BLEND);
-   glEnable(GL_CULL_FACE);
 }
 
 // Function definition for Lantern class detectCollision function.
@@ -337,10 +297,12 @@ void Lantern::resolveCollision(Camera* camera)
    float cosine = Cos(this->rotY);
 
    wall collision = getSide(camera);
+   glWindowPos2i(5, 25);
 
    if (collision == FRONT)
    {
       float newX, newZ;
+      Print("Front");
 
       newZ = minZ - 0.5;
       newX = camX;
@@ -357,6 +319,7 @@ void Lantern::resolveCollision(Camera* camera)
    else if (collision == BACK)
    {
       float newX, newZ;
+      Print("Back");
 
       newZ = maxZ + 0.5;
       newX = camX;
@@ -373,6 +336,7 @@ void Lantern::resolveCollision(Camera* camera)
    else if (collision == LEFT)
    {
       float newX, newZ;
+      Print("Left");
 
       newZ = camZ;
       newX = minX - 0.5;
@@ -389,9 +353,10 @@ void Lantern::resolveCollision(Camera* camera)
    else if (collision == RIGHT)
    {
       float newX, newZ;
+      Print("Right");
 
       newZ = camZ;
-      newX = minX + 0.5;
+      newX = maxX + 0.5;
 
       // Undo transformation and convert back to world coordinates (transformatino matrix inverse courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
@@ -418,12 +383,16 @@ wall Lantern::getSide(Camera* camera)
    float maxX = LANTERN_RAD * this->scaleX;
    float minZ = -LANTERN_RAD * this->scaleZ;
    float maxZ = LANTERN_RAD * this->scaleZ;
+   float diffXMin = camX - minX;
+   float diffXMax = maxX - camX;
+   float diffZMin = camZ - minZ;
+   float diffZMax = maxZ - camZ;
 
    // Determine which wall the Camera has collided with.
-   bool front = camX > minX && camX < maxX && camZ < 0.0;
-   bool back = camX > minX && camX < maxX && camZ > 0.0;
-   bool left = camZ > minZ && camZ < maxZ && camX < 0.0;
-   bool right = camZ > minZ && camZ < maxZ && camX > 0.0;
+   bool left = diffXMin < diffXMax && diffXMin < diffZMin && diffXMin < diffZMax;
+   bool right = diffXMax < diffXMin && diffXMax < diffZMin && diffXMax < diffZMax;
+   bool front = diffZMin < diffZMax && diffZMin < diffXMin && diffZMin < diffXMax;
+   bool back = diffZMax < diffZMin && diffZMax < diffXMin && diffZMax < diffXMax;
 
    // Return the appropriate wall.
    if (front)
@@ -436,6 +405,32 @@ wall Lantern::getSide(Camera* camera)
       return RIGHT;
    else
       return NONE;
+}
+
+// Function definition for Lantern class lightSource function.
+void Lantern::lightSource()
+{
+   // Declare parameters for Lantern light source.
+   float spotE[] = { 0.0 };
+   float spotC[] = { 180.0 };
+   float spotPosition[] = { this->posX, this->posY, this->posZ, 1.0 };
+   float spotDirection[] = {0.0, 0.0, -1.0};
+   float cAttenuation[] = { 1.0 };
+   float lAttenuation[] = { 0.09 };
+   float qAttenuation[] = { 0.032 };
+
+   // Enable light source.
+   glEnable(GL_LIGHT0);
+   glLightfv(GL_LIGHT0, GL_AMBIENT, Ambient);
+   glLightfv(GL_LIGHT0, GL_DIFFUSE, Diffuse);
+   glLightfv(GL_LIGHT0, GL_SPECULAR, Specular);
+   glLightfv(GL_LIGHT0, GL_POSITION, spotPosition);
+   glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spotDirection);
+   glLightfv(GL_LIGHT0, GL_SPOT_EXPONENT, spotE);
+   glLightfv(GL_LIGHT0, GL_CONSTANT_ATTENUATION, cAttenuation);
+   glLightfv(GL_LIGHT0, GL_LINEAR_ATTENUATION, lAttenuation);
+   glLightfv(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, qAttenuation);
+   glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, spotC);
 }
 
 // Function definition for Lantern class setPosition function.
