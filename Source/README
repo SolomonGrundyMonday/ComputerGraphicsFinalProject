@@ -33,6 +33,9 @@ Sources (Textures):
    texture was retrieved from: https://pixabay.com/illustrations/stars-night-dark-sky-space-3750824/
    I intended to source the skybox texture myself, however I do not own any professional photography
    equipment, and my phone was not able to get a decent quality picture of the night sky.
+   Additionally, for the same reason, the skyline/horizon texture was originally sourced from:
+   https://pixabay.com/vectors/dark-darkness-meteor-night-2024127/
+   (I did some editing and resizing of the original image for this one).
    The metal texture used for the Cabin doorhandle and hinges was sourced from the following address:
    https://pixabay.com/illustrations/metal-background-steel-brushed-1212115/
    Similar to the night sky texture, I was unable to get a good picture of a "shiny" metal surface
