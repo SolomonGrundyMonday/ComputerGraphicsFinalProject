@@ -271,8 +271,8 @@ bool Lantern::detectCollision(Camera* camera)
    float maxZ = LANTERN_RAD * this->scaleZ;
 
    // Determine if Camera is colliding with the object along both x and z axes, respectively.
-   bool xCollide = camX > minX - 0.5 && camX < maxX + 0.5;
-   bool zCollide = camZ > minZ - 0.5 && camZ < maxZ + 0.5;
+   bool xCollide = camX > minX - 0.7 && camX < maxX + 0.7;
+   bool zCollide = camZ > minZ - 0.7 && camZ < maxZ + 0.7;
 
    return xCollide && zCollide;
 }
@@ -304,7 +304,7 @@ void Lantern::resolveCollision(Camera* camera)
       float newX, newZ;
       Print("Front");
 
-      newZ = minZ - 0.5;
+      newZ = minZ - 0.7;
       newX = camX;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
@@ -321,7 +321,7 @@ void Lantern::resolveCollision(Camera* camera)
       float newX, newZ;
       Print("Back");
 
-      newZ = maxZ + 0.5;
+      newZ = maxZ + 0.7;
       newX = camX;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
@@ -339,7 +339,7 @@ void Lantern::resolveCollision(Camera* camera)
       Print("Left");
 
       newZ = camZ;
-      newX = minX - 0.5;
+      newX = minX - 0.7;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
@@ -356,7 +356,7 @@ void Lantern::resolveCollision(Camera* camera)
       Print("Right");
 
       newZ = camZ;
-      newX = maxX + 0.5;
+      newX = maxX + 0.7;
 
       // Undo transformation and convert back to world coordinates (transformatino matrix inverse courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
@@ -379,10 +379,10 @@ wall Lantern::getSide(Camera* camera)
    camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
 
    // Compute x, z maximum and minimum values for object hitbox.
-   float minX = -LANTERN_RAD * this->scaleX;
-   float maxX = LANTERN_RAD * this->scaleX;
-   float minZ = -LANTERN_RAD * this->scaleZ;
-   float maxZ = LANTERN_RAD * this->scaleZ;
+   float minX = (-LANTERN_RAD * this->scaleX) - 0.7;
+   float maxX = (LANTERN_RAD * this->scaleX) + 0.7;
+   float minZ = (-LANTERN_RAD * this->scaleZ) - 0.7;
+   float maxZ = (LANTERN_RAD * this->scaleZ) + 0.7;
    float diffXMin = camX - minX;
    float diffXMax = maxX - camX;
    float diffZMin = camZ - minZ;

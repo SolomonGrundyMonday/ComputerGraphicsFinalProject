@@ -173,12 +173,10 @@ void Horizon::resolveCollision(Camera* camera)
    float camZ = camera->getEyeZ();
 
    wall collision = getSide(camera);
-   glWindowPos2i(5, 25);
 
    // If Camera collided with the front wall.
    if (collision == FRONT)
    {
-      Print("Front");
       if (camX > this->scaleX - 0.5)
          camX = this->scaleX - 0.5;
       else if (camX < -this->scaleX + 0.5)
@@ -189,7 +187,6 @@ void Horizon::resolveCollision(Camera* camera)
    // If Camera collided with the back wall.
    else if (collision == BACK)
    {
-      Print("Back");
       if (camX > this->scaleX - 0.5)
          camX = this->scaleX - 0.5;
       else if (camX < -this->scaleX + 0.5)
@@ -200,7 +197,6 @@ void Horizon::resolveCollision(Camera* camera)
    // If Camera collided with the left wall.
    else if (collision == LEFT)
    {
-      Print("Left");
       camX = -this->scaleX + 0.5;
 
       if (camZ > this->scaleZ - 0.5)
@@ -211,7 +207,6 @@ void Horizon::resolveCollision(Camera* camera)
    // If Camera collided with the right wall.
    else if (collision == RIGHT)
    {
-      Print("Right");
       camX = this->scaleX - 0.5;
 
       if (camZ > this->scaleZ - 0.5)
