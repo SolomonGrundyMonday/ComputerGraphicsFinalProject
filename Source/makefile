@@ -25,7 +25,7 @@ CLEAN=rm -f $(EXE) *.o *.a
 endif
 
 # Dependencies
-FinalMain.o: FinalMain.cpp CSCIx229.h Cuboid.h Tree.h Shovel.h Axe.h Cabin.h Skybox.o Lantern.h Tent.h GameObject.h Camera.h
+FinalMain.o: FinalMain.cpp CSCIx229.h Cuboid.h Tree.h Shovel.h Axe.h Cabin.h Skybox.h Lantern.h Tent.h Horizon.h GameObject.h Camera.h
 fatal.o: fatal.c CSCIx229.h 
 errcheck.o: errcheck.c CSCIx229.h
 print.o: print.c CSCIx229.h
@@ -41,6 +41,7 @@ Cabin.o: Cabin.cpp Cabin.h GameObject.h Camera.h CSCIx229.h
 Skybox.o: Skybox.cpp Skybox.h GameObject.h Camera.h CSCIx229.h
 Lantern.o: Lantern.cpp Lantern.h GameObject.h Camera.h CSCIx229.h
 Tent.o: Tent.cpp Tent.h GameObject.h Camera.h CSCIx229.h
+Horizon.o: Horizon.cpp Horizon.h GameObject.h Camera.h CSCIx229.h
 
 # Create archive
 CSCIx229.a:fatal.o errcheck.o print.o loadtexbmp.o loadobj.o projection.o
@@ -53,7 +54,7 @@ CSCIx229.a:fatal.o errcheck.o print.o loadtexbmp.o loadobj.o projection.o
 	g++ -c $(CFLG)  $<
 
 #  Link
-final:FinalMain.o   Cuboid.o   Camera.o   Tree.o   Shovel.o   Axe.o   Cabin.o   Skybox.o   Lantern.o   Tent.o   CSCIx229.a
+final:FinalMain.o   Cuboid.o   Camera.o   Tree.o   Shovel.o   Axe.o   Cabin.o   Skybox.o   Lantern.o   Tent.o   Horizon.o   CSCIx229.a
 	g++ $(CFLG) -o $@ $^  $(LIBS)
 
 #  Clean
