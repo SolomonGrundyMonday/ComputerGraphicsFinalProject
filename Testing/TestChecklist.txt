@@ -13,7 +13,7 @@ Texture Test:
 Cuboid   -   Complete
 Shovel   -   Complete
 Axe      -   Complete
-Cabin    -   Still has placeholder textures. 
+Cabin    -   Complete 
 Tree     -   Complete
 Tent     -   Complete
 Lantern  -   Still has placeholder textures.
@@ -27,7 +27,7 @@ Axe      -   Complete
 Cabin    -   Complete
 Tree     -   Complete
 Tent     -   Complete
-Lantern  -   
+Lantern  -   Complete
 Skybox   -   Complete
 Camera   -   N/A (Camera is the instigator)
 
@@ -35,8 +35,8 @@ Integration Tests:
 Compile on Linux           -    
 Performance on VM          -   
 Final object positioning   -
-Final keybindings/controls -
+Final keybindings/controls -   Complete
 Soak test                  -
 Edge cases                 -
 Debug mode                 -
-Flashlight implementation  -
+Flashlight implementation  -   Complete
