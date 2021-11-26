@@ -69,7 +69,7 @@ void Shovel::Render()
    glBegin(GL_QUAD_STRIP);
 
    // Draw the handle.
-   for (int i = 0; i < 12; i++)
+   for (int i = 0; i <= 12; i++)
    {
       int theta = i * 30;
       float y = RADIUS * Sin(theta) + HANDLE_HEIGHT;
@@ -268,13 +268,6 @@ bool Shovel::detectCollision(Camera* camera)
    bool xCollide = camX > minX - 0.5 && camX < maxX + 0.5;
    bool zCollide = camZ > minZ - 0.5 && camZ < maxZ + 0.5;
 
-   glWindowPos2i(5, 45);
-   Print("(camX, camZ) = (%.1lf, %.1lf)", camX, camZ);
-   glWindowPos2i(5, 65);
-   Print("(minX, maxX) = (%.1lf, %.1lf)", minX, maxX);
-   glWindowPos2i(5, 85);
-   Print("(minZ, maxZ) = (%.1lf, %.1lf)", minZ, maxZ);
-
    return xCollide && zCollide;
 }
 
@@ -292,12 +285,16 @@ wall Shovel::getSide(Camera* camera)
    float maxX = (HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX + HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
    float minZ = -RADIUS * Cos(this->rotZ) * this->scaleZ - (SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
    float maxZ = RADIUS * Cos(this->rotZ) * this->scaleZ + (HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float diffXMin = camX - minX;
+   float diffXMax = maxX - camX;
+   float diffZMin = camZ - minZ;
+   float diffZMax = maxZ - camZ; 
 
    // Determine if the camera has collided with the front, back, left or right side of the Shovel hitbox.
-   bool front = camX > minX - 0.5 && camX < maxX + 0.5 && camZ < minZ;
-   bool back = camX > minX - 0.5 && camX < maxX + 0.5 && camZ > maxZ;
-   bool left = camZ > minZ - 0.5 && camZ < maxZ + 0.5 && camX < minX;
-   bool right = camZ > minZ - 0.5 && camZ < maxZ + 0.5 && camX > maxX;
+   bool front = diffZMin < diffZMax && diffZMin < diffXMin && diffZMin < diffXMax;
+   bool back = diffZMax < diffZMin && diffZMax < diffXMin && diffZMax < diffXMax;
+   bool left = diffXMin < diffXMax && diffXMin < diffZMin && diffXMin < diffZMax;
+   bool right = diffXMax < diffXMin && diffXMax < diffZMin && diffXMax < diffZMax;
 
    // Return the appropriate side.
    if (front)
