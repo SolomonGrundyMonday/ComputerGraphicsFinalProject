@@ -12,6 +12,8 @@
 #include "Skybox.h"
 #include "Tent.h"
 #include "Lantern.h"
+#include "Horizon.h"
+#include "TreeStump.h"
 #include <vector>
 
 // Variables for graphical objects.
@@ -23,42 +25,36 @@ Axe* axe;
 Cabin* cabin;
 Skybox* sky;
 Lantern* lantern;
+Horizon* horizon;
+TreeStump* stump;
 std::vector<Tent *> tent;
 
-const int treeCount = 71;
+const int treeCount = 49;
 const int tentCount = 4;
-const int groundCount = 66;
 
 // Initialize game objects.
 void initialize_objects()
 {
-   // Coordinates for Tree objects. -- Possibly reduce area map size, increase tree density, reduce tree count.
-   float treeCoord[treeCount][2] = { {-19.0, -17.0}, {-16.0, -14.0}, {-18.0, -10.0},
+   // Coordinates for Tree objects.
+   float treeCoord[treeCount][2] = { {-27.0, -8.5}, {-16.0, -14.0}, {-18.0, -10.0},
                                      {-15.0, -3.0}, {-16.0, 4.0}, {-19.0, 9.0},
-                                     {-17.0, 15.0}, {-15.0, 22.0}, {-28.0, -16.0},
-                                     {-24.0, -11.0}, {-22.0, -3.0}, {-23.0, 6.0},
-                                     {-24.0, 13.0}, {-22.0, 19.0}, {-24.0, 24.0},
-                                     {-18.0, 24.0}, {-24.5, -17.0}, {-24.5, 0.0},
-                                     {-24.5, 19.0}, {-12.0, -24.5}, {-14.0, -19.5},
+                                     {-17.0, 15.0}, {-15.0, 22.0}, {10.5, -22.0},
+                                     {-22.0, -3.0}, {-23.0, 6.0}, {-22.0, 19.0},
+                                     {3.0, -10.0}, {-9.0, -25.5}, {-14.0, -19.5},
                                      {-11.0, -12.0}, {-10.0, -6.0}, {-11.0, 1.5},
                                      {-12.0, 7.0}, {-10.5, 13.0}, {-11.5, 19.0},
                                      {-4.0, -23.0}, {-2.0, -16.5}, {-3.0, -10.0},
                                      {-6.0, -1.5}, {-4.0, 6.5}, {-5.0, 13.0},
-                                     {-3.0, 17.0}, {-6.0, 23.0}, {5.0, -24.0},
-									 {-1.0, -4.5}, {-11.0, -32.0}, {-4.0, -31.5},
-                                     {6.0, -30.0}, {7.0, -13.5}, {4.0, -3.0},
+                                     {-3.0, 17.0}, {-6.0, 23.0}, {-25.5, 11.5},
+									 {-1.0, -4.5}, {10.0, 1.0}, {0.0, 11.5},
+                                     {7.0, -13.5}, {4.0, -3.0}, {11.0, -6.5},
                                      {3.0, 7.0}, {5.0, 14.5}, {4.0, 21.0},
-                                     {12.0, 19.5}, {11.0, -33.0}, {27.0, 5.0},
-                                     {11.5, 8.5}, {10.0, -24.0}, {12.0, -15.5},
-                                     {11.0, -6.5}, {10.0, 1.0}, {15.0, -32.0},
-                                     {17.0, -25.5}, {16.0, -17.0}, {15.5, -10.0},
-                                     {17.0, -2.0}, {15.0, 5.0}, {28.5, -2.0},
-                                     {22.0, -25.0}, {20.0, -19.5}, {21.5, -11.0},
-                                     {22.0, -3.0}, {23.0, 5.0}, {27.5, -9.5},
-                                     {26.5, -17.0} };
+                                     {-11.0, -23.5}, {12.0, -15.5}, {-7.0, -18.0},
+                                     {6.0, -24.5}, {-21.0, 26.0}, {4.0, -18.5},
+                                     {-8.0, 4.5}, {-6.0, -7.0}, {-18.5, 1.0} };
 
    // Coordinates for Tent objects.
-   float tentCoord[tentCount][2] = { {20.0, 15.0}, {20.0, 25.0}, {25.0, 15.0}, {25.0, 25.0} };
+   float tentCoord[tentCount][2] = { {15.0, 10.0}, {15.0, 20.0}, {20.0, 10.0}, {20.0, 20.0} };
 
    // Instantiate Trees.
    for (int i = 0; i < treeCount; i++)
@@ -82,23 +78,28 @@ void initialize_objects()
    ground->Initialize("Assets/Dirt.bmp");
 
    // Instantiate skybox.
-   sky = new Skybox(0.0, 25.0, 0.0, 35.0, 25.0, 35.0, 0.0, 0.0, 0.0);
+   sky = new Skybox(0.0, 25.0, 0.0, 30.0, 25.0, 30.0, 0.0, 0.0, 0.0);
    sky->Initialize("Assets/Stars.bmp");
+   horizon = new Horizon(0.0, 3.0, 0.0, 29.9, 2.0, 29.9, 0.0, 0.0, 0.0);
+   horizon->Initialize("Assets/Horizon.bmp");
 
    // Instantiate shovel, axe.
-   shovel = new Shovel(20.0, 1.35, 14.0, 0.25, 0.25, 0.25, 15.0, 0.0, 0.0);
+   shovel = new Shovel(17.5, 1.35, 15.0, 0.25, 0.25, 0.25, 15.0, 0.0, 0.0);
    shovel->Initialize("Assets/Wood.bmp");
 
-   axe = new Axe(-25.2, 1.0, -20.625, 0.7, 0.7, 0.7, -30.0, 0.0, 0.0);
+   axe = new Axe(-25.2, 1.0, -20.8, 0.4, 0.4, 0.4, -30.0, 0.0, 0.0);
    axe->Initialize("Assets/Wood.bmp");
 
    // Instantiate Cabin.
-   cabin = new Cabin(-28.0, 2.0, -26.0, 3.0, 1.0, 5.0, 0.0, 0.0, 0.0);
+   cabin = new Cabin(-23.0, 2.0, -21.0, 3.0, 1.0, 5.0, 0.0, 0.0, 0.0);
    cabin->Initialize("Assets/Bricks.bmp");
 
    // Instantiate Lantern.
-   lantern = new Lantern(-28.0, 3.7, -20.5, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0);
+   lantern = new Lantern(-23.0, 1.5, -13.5, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0);
    lantern->Initialize("Assets/RustyMetal.bmp");
+
+   stump = new TreeStump(18.5, 1.0, 15.0, 0.1, 0.2, 0.1, 0.0, 0.0, 0.0);
+   stump->Initialize("Assets/Bark.bmp");
 }
 
 // Display function, called by GLUT to update the screen.
@@ -128,7 +129,9 @@ void display()
    player->Turn();
 
    // Resolve object collisions.
-   sky->resolveCollision(player);
+   if (horizon->detectCollision(player))
+      horizon->resolveCollision(player);
+
    cabin->resolveCollision(player);
    if (axe->detectCollision(player))
       axe->resolveCollision(player);
@@ -139,8 +142,13 @@ void display()
    if (lantern->detectCollision(player))
       lantern->resolveCollision(player);
 
+   if (stump->detectCollision(player))
+      stump->resolveCollision(player);
+
    for (int i = 0; i < treeCount; i++)
+   {
       tree.at(i)->resolveCollision(player);
+   }
 
    for (int i = 0; i < tentCount; i++)
    {
@@ -173,7 +181,10 @@ void display()
    axe->Render();
    cabin->Render();
    sky->Render();
+   horizon->Render();
    lantern->Render();
+   lantern->lightSource();
+   stump->Render();
 
    glWindowPos2i(5, 5);
    Print("Current position: (%.1lf, %.1lf, %.1lf)", player->getEyeX(), player->getEyeY(), player->getEyeZ());
@@ -230,10 +241,12 @@ void key(unsigned char key, int x, int y)
    {
       player->MoveBackward();
    }
+   // If the player presses the 'A' key, strafe the Camera to the left.
    else if (key == 'a' || key == 'A')
    {
       player->StrafeLeft();
    }
+   // If the player presses the 'D' key, strafe the Camera to the right.
    else if (key == 'd' || key == 'D')
    {
       player->StrafeRight();

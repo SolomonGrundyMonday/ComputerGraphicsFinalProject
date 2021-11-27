@@ -120,13 +120,14 @@ int Tree::branch(float l, float r)
    for (int i = 0; i <= 360; i += 60)
    {
       // Reduce number of floating-point calculations per loop iteration.
+      int next = i + 30;
       float x = Cos(i);
       float z = Sin(i);
       float texX = i / 120.0;
-      float x1 = Cos(i + 30);
-      float z1 = Sin(i + 30);
+      float x1 = Cos(next);
+      float z1 = Sin(next);
       float texY = l/r;
-      float texX1 = (i + 30) / 120.0;
+      float texX1 = (next) / 120.0;
 
       // Draw four vertices per iteration (loop unrolling).
       glNormal3f(x, 1 - SHRINK_FACTOR, z);
@@ -202,7 +203,7 @@ void Tree::Render()
    glScaled(this->scaleX, this->scaleY, this->scaleZ);
 
    // Place recursive call to branchFractal with length 2.0 and radius 0.2.
-   this->branchFractal(2.0, 0.2);
+   this->branchFractal(1.8, 0.2);
    glPopMatrix();
 }
 
