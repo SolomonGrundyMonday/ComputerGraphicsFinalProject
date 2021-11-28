@@ -101,9 +101,7 @@ int Tree::branch(float l, float r)
 
    // Set Material/color properties.
    glColor4fv(brown);
-   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.0);
    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, brown);
-   glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, Emission);
 
    // Enable textures, and apply bark texture to branches.
    glEnable(GL_TEXTURE_2D);
