@@ -117,7 +117,7 @@ void Cuboid::Render()
       {
          float minX = i / this->scaleX;
          float maxX = (i + 1) / this->scaleX;
-         float minZ = j / this->scaleX;
+         float minZ = j / this->scaleZ;
          float maxZ = (j + 1) / this->scaleZ;
 
          glNormal3f( (maxX - minX) / 2.0, 1.0, (maxZ - minZ) / 2.0);
