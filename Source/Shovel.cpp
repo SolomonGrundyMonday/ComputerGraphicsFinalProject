@@ -261,8 +261,8 @@ bool Shovel::detectCollision(Camera* camera)
    // Compute minimum and maximum x, z  values based ont the rotations, scaling and dimensions of the object.
    float minX = (-HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX - ((SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
    float maxX = (HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX + (HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float minZ = -RADIUS * Cos(this->rotZ) * this->scaleZ - ((SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float maxZ = RADIUS * Cos(this->rotZ) * this->scaleZ + (HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float minZ = -RADIUS * Cos(this->rotX) * this->scaleZ - ((SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float maxZ = RADIUS * Cos(this->rotX) * this->scaleZ + (HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
 
    // Determine if the Camera is colliding with the object's hitbox along the x and z axes, respectively.
    bool xCollide = camX > minX - 0.5 && camX < maxX + 0.5;
@@ -317,6 +317,8 @@ void Shovel::resolveCollision(Camera* camera)
    float camZ = camera->getEyeZ() - this->posZ;
    camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
    camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+   glWindowPos2i(5, 65);
+   Print("Shovel resolveCollision.");
 
    // Compute the minimmum and maximum x and z values for the hitbox based on the rotations, scaling and dimensions of the object.
    float minX = (-HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX - (SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
