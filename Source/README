@@ -10,11 +10,17 @@ User Controls:
     RIGHT ARROW key -   Turn the first-person camera to the right by 5 degrees.
     LEFT ARROW key  -   Turn the first-person cmaera to the left by five degrees.
 
+Instructions:
+   To run the application, unzip the directory into whatever file location you desire, and
+   navigate to the main project directory "FinalProject".  Open the terminal in this directory
+   and type "make".  The user controls within the application are listed in the above
+   section of this README.  
+
 Sources (Code):
 
    The transformation matrices that I used in converting Camera eye coordinates from the world
-   coordinate system to object coordinate systems (used in the collision functions for each object)
-   was retrieved from my old coursework in my Intro to Robotics class from last semester.  The 
+   coordinate system to local object coordinate systems (used in the collision functions)
+   were retrieved from my old coursework in my Intro to Robotics class from last semester.  The 
    inverse matrix that I used to convert back to world coordinates after the collision was resolved
    was computed by the Symbolab online calculator.  Additionally, I found some resources on
    StackExchange to help me understand texture blending (specifically to make the translucent
@@ -24,21 +30,43 @@ Sources (Code):
    I also got the idea to tessalate the larger polygons in my objects to get the spotlight effect to
    look better from the following source: https://www.glprogramming.com/red/chapter05.html.
    Lastly, the code for generating trees was borrowed from the in-class notes about creating trees
-   using fractals.  I made a few minor modifications for optimization so that I could have a large
-   quantity of trees rendering at one time.
+   using fractals.  I made a few minor modifications for optimization so that I could have a larger
+   quantity of trees rendering at one time, particularly reducing the number of leaves on each tree.
+   My justification for doing so is that the user is exploring the forest in Autumn.  
      
 
 Sources (Textures):
-   All textures used in this project were sourced by me, using my phone camera except for two.  The skybox
-   texture was retrieved from: https://pixabay.com/illustrations/stars-night-dark-sky-space-3750824/
-   I intended to source the skybox texture myself, however I do not own any professional photography
+   All textures used in this project were sourced by me, using my phone camera except for the following textures.  
+   The skybox texture was retrieved from: 
+   https://pixabay.com/illustrations/stars-night-dark-sky-space-3750824/
+   and the horizon texture was sourced from:
+   https://pixabay.com/vectors/dark-darkness-meteor-night-2024127/
+   I intended to source the skybox and horizon textures myself, however I do not own any professional photography
    equipment, and my phone was not able to get a decent quality picture of the night sky.
-   The metal texture used for the Cabin doorhandle and hinges was sourced from the following address:
+   The metal texture used for the Cabin doorhandle and hinges and as the base texture for the glass on the Lantern
+   object was sourced from the following address:
    https://pixabay.com/illustrations/metal-background-steel-brushed-1212115/
    Similar to the night sky texture, I was unable to get a good picture of a "shiny" metal surface
    without negatively affecting the lighting (any light reflected off of the metal surface that was picked 
    up by my phone camera ruined the effect of the lighting in-application).
+   Additional texture sources.
    Tree stump surface texture: https://pixabay.com/photos/wood-stump-tree-texture-wooden-6806631/.
    Cave wall texture: https://pixabay.com/photos/rock-erosion-scenery-landscape-5352025/.
 
 Estimated Time:
+   So far I have spent around 64 hours on this project.  The breakdown is as follows:
+   Time spent sourcing and editing texture images: around 2 hours.
+   Time spent implementing the object geometry (render functions):  About 12 hours.
+   Time spent implementing surface normals and testing lighting: about 16 hours.
+   Time spent implementing and testing object collisions:  about 20 hours.
+   Time spent placing objects and designing the environment:  about 10 hours. 
+   Time spent testing the performance on my VM (to get a floor for performance) and making optimization passes: 4 hours.
+
+Things that still need to be done:
+   I don't like how the cave area of the map looks right now, so I need to spend some time fixing the cave walls/roof
+   (geometry and textures).  Additionally, given the limited amount of time I have left, I may cut the area and replace it
+   with more tent objects, or another Cabin.  If there is time between coursework for other classes, I would also like to
+   touch up the collisions for the Cabin and Tent objects specifically.  My collisions for these objects are not currently
+   as robust as I would like them to be (they only work if the objects are rotated at 0.0 or 180.0 degrees).  Lastly, I
+   would like to replace some of the textures that I am using if time allows (specifically the textures for the axe head,
+   shovel head, shovel handle and the axe handle/shovel shaft.  
