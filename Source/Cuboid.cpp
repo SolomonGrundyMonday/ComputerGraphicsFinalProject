@@ -146,7 +146,7 @@ void Cuboid::Render()
 // Function definition for Cuboid class resolveCollision function implementation.
 void Cuboid::resolveCollision(Camera* camera)
 {
-   // Do stuff here.
+   // For now, there is no need to implement collisions for Cuboid as it is currently only used as the floor.
 }
 
 // Function definition for getPosX getter function of Cuboid : GameObject class.

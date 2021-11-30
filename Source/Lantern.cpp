@@ -297,12 +297,10 @@ void Lantern::resolveCollision(Camera* camera)
    float cosine = Cos(this->rotY);
 
    wall collision = getSide(camera);
-   glWindowPos2i(5, 25);
 
    if (collision == FRONT)
    {
       float newX, newZ;
-      Print("Front");
 
       newZ = minZ - 0.7;
       newX = camX;
@@ -319,7 +317,6 @@ void Lantern::resolveCollision(Camera* camera)
    else if (collision == BACK)
    {
       float newX, newZ;
-      Print("Back");
 
       newZ = maxZ + 0.7;
       newX = camX;
@@ -336,7 +333,6 @@ void Lantern::resolveCollision(Camera* camera)
    else if (collision == LEFT)
    {
       float newX, newZ;
-      Print("Left");
 
       newZ = camZ;
       newX = minX - 0.7;
@@ -353,7 +349,6 @@ void Lantern::resolveCollision(Camera* camera)
    else if (collision == RIGHT)
    {
       float newX, newZ;
-      Print("Right");
 
       newZ = camZ;
       newX = maxX + 0.7;

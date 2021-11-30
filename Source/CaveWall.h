@@ -13,7 +13,6 @@ class CaveWall : public GameObject
    // Private member variables for position, rotation, scaling and textures.
    private:
       unsigned char texture;
-      unsigned char exterior;
       float posX;
       float posY;
       float posZ;

@@ -423,8 +423,8 @@ bool Tent::detectCollision(Camera* camera)
    float PosZ = -this->posX * Sin(-this->rotY) + this->posZ * Cos(-this->rotY);
 
    // Determine if camera is colliding with the object along the x or z axis, respectively.
-   bool xCollide = camX >= PosX - this->scaleX - 0.5 && camX <= PosX + this->scaleX + 0.5;
-   bool zCollide = camZ >= PosZ - this->scaleX - 0.5 && camZ <= PosZ + this->scaleX + 0.5;
+   bool xCollide = camX >= PosX - this->scaleX - 0.6 && camX <= PosX + this->scaleX + 0.6;
+   bool zCollide = camZ >= PosZ - this->scaleX - 0.6 && camZ <= PosZ + this->scaleX + 0.6;
 
    // Camera is colliding with the object iff it is colliding along both x and y axis.
    return xCollide && zCollide;
@@ -442,11 +442,11 @@ wall Tent::getWall(Camera* camera)
    float z1 = camera->getEyeZ() * Cos(this->rotY) + camera->getEyeX() * Sin(this->rotY);
 
    // Determine if collision occured with the back wall, left wall, right wall, front right wall or front left wall.
-   bool back = z1 > (z0 - this->scaleZ - 0.5) && z1 < (z0 - this->scaleZ + 0.5) && x1 < (x0 + this->scaleX + 0.5) && x1 > (x0 - this->scaleX - 0.5);
-   bool frontRight = z1 > (z0 + this->scaleZ - 0.5) && z1 < (z0 + this->scaleZ + 0.5) && x1 < (x0 + this->scaleX + 0.5) && x1 > (x0 + this->scaleX - 0.6);
-   bool frontLeft = z1 > (z0 + this->scaleZ - 0.5) && z1 < (z0 + this->scaleZ + 0.5) && x1 < (x0 - this->scaleX + 0.6) && x1 > (x0 - this->scaleX - 0.5);
-   bool left = z1 > (z0 - this->scaleZ - 0.5) && z1 < (z0 + this->scaleZ + 0.5) && x1 < (x0 - this->scaleX + 0.5) && x1 > (x0 - this->scaleX - 0.5);
-   bool right = z1 > (z0 - this->scaleZ - 0.5) && z1 < (z0 + this->scaleZ + 0.5) && x1 > (x0 + this->scaleX - 0.5) && x1 < (x0 + this->scaleX + 0.5);
+   bool back = z1 > (z0 - this->scaleZ - 0.6) && z1 < (z0 - this->scaleZ + 0.6) && x1 < (x0 + this->scaleX + 0.6) && x1 > (x0 - this->scaleX - 0.6);
+   bool frontRight = z1 > (z0 + this->scaleZ - 0.6) && z1 < (z0 + this->scaleZ + 0.6) && x1 < (x0 + this->scaleX + 0.6) && x1 > (x0 + this->scaleX - 0.6);
+   bool frontLeft = z1 > (z0 + this->scaleZ - 0.6) && z1 < (z0 + this->scaleZ + 0.6) && x1 < (x0 - this->scaleX + 0.6) && x1 > (x0 - this->scaleX - 0.6);
+   bool left = z1 > (z0 - this->scaleZ - 0.6) && z1 < (z0 + this->scaleZ + 0.6) && x1 < (x0 - this->scaleX + 0.6) && x1 > (x0 - this->scaleX - 0.6);
+   bool right = z1 > (z0 - this->scaleZ - 0.6) && z1 < (z0 + this->scaleZ + 0.6) && x1 > (x0 + this->scaleX - 0.6) && x1 < (x0 + this->scaleX + 0.6);
 
    // Return appropriate enum value.
    if (back)
@@ -488,26 +488,26 @@ void Tent::resolveCollision(Camera* camera)
       // If player collides with wall exterior.
       if (camZ < -1.0)
       {
-         newZ = -1.5;
+         newZ = -1.6;
          newX = camX;
       }
       // If player collides with wall interior.
       else
       {
-         if (camX < 0.5 && camX > -0.5)
+         if (camX < 0.4 && camX > -0.4)
          {
-            newZ = -0.5;
+            newZ = -0.4;
             newX = camX;
          }
-         else if (camX > 0.5)
+         else if (camX > 0.4)
          {
-            newZ = (camX > 1.0) ? camZ : -0.5;
-            newX = (camX > 1.0) ? 1.5 : 0.5;
+            newZ = (camX > 1.0) ? camZ : -0.4;
+            newX = (camX > 1.0) ? 1.6 : 0.4;
          }
          else 
          {
-            newZ = (camX < -1.0) ? camZ : - 0.5;
-            newX = (camX < -1.0) ? -1.5 : -0.5;
+            newZ = (camX < -1.0) ? camZ : - 0.4;
+            newX = (camX < -1.0) ? -1.6 : -0.4;
          }
       }
 
@@ -529,25 +529,25 @@ void Tent::resolveCollision(Camera* camera)
       if (camZ > 1.0)
       {
          newX = camX;
-         newZ = 1.5;
+         newZ = 1.6;
       }
       // If player collides with wall interior.
       else
       {
-         if (camX < 0.5)
+         if (camX < 0.4)
          {
             newX = camX;
-            newZ = 0.5;
+            newZ = 0.4;
          }
-         else if (camX > 0.5)
+         else if (camX > 0.4)
          {
-            newX = (camX > 1.0) ? 1.5 : 0.5;
-            newZ = (camX > 1.0) ? camZ : 0.5;
+            newX = (camX > 1.0) ? 1.6 : 0.4;
+            newZ = (camX > 1.0) ? camZ : 0.4;
          }
          else
          {
-            newX = (camX > 1.0) ? 1.5 : 0.5;
-            newZ = (camX > 1.0) ? camZ : 0.5;
+            newX = (camX > 1.0) ? 1.6 : 0.4;
+            newZ = (camX > 1.0) ? camZ : 0.4;
          }
       }
 
@@ -569,25 +569,25 @@ void Tent::resolveCollision(Camera* camera)
       if (camZ > 1.0)
       {
          newX = camX;
-         newZ = 1.5;
+         newZ = 1.6;
       }
       // If player collides with wall interior.
       else
       {
-         if (camX > -0.5)
+         if (camX > -0.4)
          {
             newX = camX;
-            newZ = 0.5;
+            newZ = 0.4;
          }
-         else if (camX < -0.5)
+         else if (camX < -0.4)
          {
-            newX = (camX < -1.0) ? -1.5 : -0.5;
-            newZ = (camX < -1.0) ? camZ : 0.5;
+            newX = (camX < -1.0) ? -1.6 : -0.4;
+            newZ = (camX < -1.0) ? camZ : 0.4;
          }
          else
          {
-            newX = (camX < -1.0) ? -1.5 : -0.5;
-            newZ = (camX < -1.0) ? camZ : 0.5;
+            newX = (camX < -1.0) ? -1.6 : -0.4;
+            newZ = (camX < -1.0) ? camZ : 0.4;
          }
       }
 
@@ -608,25 +608,25 @@ void Tent::resolveCollision(Camera* camera)
       // If player collides with wall exterior.
       if(camX < -1.0)
       {
-         newX = -1.5;
+         newX = -1.6;
          newZ = camZ;
       }
       // If player collides with wall interior.
       else
       {
-         if (camZ > 0.5)
+         if (camZ > 0.4)
          {
-            newX = -0.5;
-            newZ = 0.5;
+            newX = -0.4;
+            newZ = 0.4;
          }
-         else if (camZ < -0.5)
+         else if (camZ < -0.4)
          {
-            newX = -0.5;
-            newZ = -0.5;
+            newX = -0.4;
+            newZ = -0.4;
          }
          else
          {
-            newX = -0.5;
+            newX = -0.4;
             newZ = camZ;
          }
       }
@@ -648,25 +648,25 @@ void Tent::resolveCollision(Camera* camera)
       // If player collides with wall exterior.
       if (camX > 1.0)
       {
-         newX = 1.5;
+         newX = 1.6;
          newZ = camZ;
       }
       // If player collides with wall interior.
       else
       {
-         if (camZ > 0.5)
+         if (camZ > 0.4)
          {
-            newX = 0.5;
-            newZ = 0.5;
+            newX = 0.4;
+            newZ = 0.4;
 		 }
          else if (camZ < -0.5)
          {
-            newX = 0.5;
-            newZ = -0.5;
+            newX = 0.4;
+            newZ = -0.4;
          }
          else
          {
-            newX = 0.5;
+            newX = 0.4;
             newZ = camZ;
          }
       }

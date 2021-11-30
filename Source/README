@@ -1,4 +1,5 @@
 Jeff Colgan, CSCI-4229 Final Project
+Project Review submission, November 30, 2021.
 
 User Controls:
 
@@ -51,7 +52,7 @@ Sources (Textures):
    up by my phone camera ruined the effect of the lighting in-application).
    Additional texture sources.
    Tree stump surface texture: https://pixabay.com/photos/wood-stump-tree-texture-wooden-6806631/.
-   Cave wall texture: https://pixabay.com/photos/rock-erosion-scenery-landscape-5352025/.
+   Hedge maze wall texture: https://pixabay.com/photos/bank-park-to-sit-park-bench-4237809/.
 
 Estimated Time:
    So far I have spent around 64 hours on this project.  The breakdown is as follows:
@@ -63,10 +64,19 @@ Estimated Time:
    Time spent testing the performance on my VM (to get a floor for performance) and making optimization passes: 4 hours.
 
 Things that still need to be done:
-   I don't like how the cave area of the map looks right now, so I need to spend some time fixing the cave walls/roof
-   (geometry and textures).  Additionally, given the limited amount of time I have left, I may cut the area and replace it
+   Additionally, given the limited amount of time I have left, I may cut the area and replace it
    with more tent objects, or another Cabin.  If there is time between coursework for other classes, I would also like to
-   touch up the collisions for the Cabin and Tent objects specifically.  My collisions for these objects are not currently
-   as robust as I would like them to be (they only work if the objects are rotated at 0.0 or 180.0 degrees).  Lastly, I
-   would like to replace some of the textures that I am using if time allows (specifically the textures for the axe head,
-   shovel head, shovel handle and the axe handle/shovel shaft.  
+   touch up the collisions for the Cabin, Tent and hedge maze walls objects.  My collisions for the Tent and cabin objects are not
+   as robust as I would like them to be (they only work if the objects are rotated at 0.0 or 180.0 degrees) and the hedge maze
+   walls need slightly different thresholds for a collision (collision resolution is a bit wonky around the corners right now).  
+   Lastly, I would like to replace some of the textures that I am using if time allows (specifically the textures for the axe head,
+   shovel head, shovel handle and the axe handle/shovel shaft.  If necessary, I would also like to implement a debug mode that
+   allows the user to examine each individual object with an orbiting light source to demonstrate that the normals are working.
+   In first-person mode, it isn't really possible to shine a light on certain surfaces given the limitations of character movement.
+
+Additional notes:
+   The hedge maze area was originally intended to be a cave area for the user to explore, however I had severe difficulty getting 
+   the area to look decent, so with the limited time that I have left for the project, I decided to pivot to making this part of the
+   map a basic hedge maze.  This is largely to demonstrate the collisions that I had already implemented for what were originally intended
+   to be cave walls.  The hedge maze walls also add modular walls that can be rapidly added to the application as necessary for further
+   design iterations.

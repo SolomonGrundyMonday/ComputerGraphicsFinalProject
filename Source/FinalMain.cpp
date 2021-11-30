@@ -31,12 +31,14 @@ CaveWall* back;
 CaveWall* left;
 CaveWall* right;
 CaveWall* front;
+std::vector<CaveWall *> innerWalls;
 std::vector<TreeStump *> stump;
 std::vector<Tent *> tent;
 
 const int treeCount = 47;
 const int tentCount = 4;
 const int stumpCount = 8;
+const int wallCount = 9;
 
 // Initialize game objects.
 void initialize_objects()
@@ -66,6 +68,11 @@ void initialize_objects()
    float stumpCoord[stumpCount][2] = { {5.0, 14.5}, {18.5, 15.0}, {4.0, 21.0},
                                        {3.5, 9.5}, {1.0, 17.0}, {6.5, 18.0},
                                        {9.0, 14.0}, {10.5, 7.5} };
+
+   // Coordinates for inner walls of hedge maze area.
+   float wallCoord[wallCount][4] = { {18.0, -3.5, 2.0, 0.0}, {21.75, -17.0, 2.0, 90.0}, {18.4, -1.0, 2.0, 90.0},
+                                     {21.2, -3.2, 1.5, 90.0}, {20.0, -6.5, 2.2, 0.0}, {19.0, -11.1, 3.5, 90.0},
+                                     {17.3, -16.6, 1.5, 0.0}, {21.0, -12.1, 1.0, 0.0}, {21.0, -11.8, 1.5, 90.0} };
 
    // Instantiate Trees.
    for (int i = 0; i < treeCount; i++)
@@ -105,7 +112,7 @@ void initialize_objects()
    shovel = new Shovel(18.5, 1.25, 14.85, 0.25, 0.25, 0.25, 55.0, 0.0, 0.0);
    shovel->Initialize("Assets/Wood.bmp");
 
-   axe = new Axe(9.5, 1.45, 14.0, 0.4, 0.4, 0.4, 0.0, 0.0, 120.0);
+   axe = new Axe(9.4, 1.45, 14.0, 0.4, 0.4, 0.4, 0.0, 0.0, 120.0);
    axe->Initialize("Assets/Wood.bmp");
 
    // Instantiate Cabin.
@@ -116,18 +123,26 @@ void initialize_objects()
    lantern = new Lantern(18.5, 1.3, 15.0, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0);
    lantern->Initialize("Assets/RustyMetal.bmp");
 
-   // Instatiate CaveWalls.
-   back = new CaveWall(19.0, 1.0, -18.0, 3.0, 2.0, 1.0, 0.0, 0.0, 0.0);
-   back->Initialize("Assets/Rocks.bmp");
+   // Instatiate Exterior walls of hedge maze.
+   back = new CaveWall(18.25, 2.0, -17.8, 2.5, 2.0, 1.0, 0.0, 0.0, 0.0);
+   back->Initialize("Assets/Hedge.bmp");
 
-   left = new CaveWall(17.0, 1.0, -9.0, 10.0, 2.0, 1.0, 0.0, 90.0, 0.0);
-   left->Initialize("Assets/Rocks.bmp");
+   left = new CaveWall(17.0, 2.0, -9.0, 10.0, 2.0, 1.0, 0.0, 90.0, 0.0);
+   left->Initialize("Assets/Hedge.bmp");
 
-   right = new CaveWall(21.0, 1.0, -9.0, 10.0, 2.0, 1.0, 0.0, -90.0, 0.0);
-   right->Initialize("Assets/Rocks.bmp");
+   right = new CaveWall(21.0, 2.0, -9.0, 10.0, 2.0, 1.0, 0.0, -90.0, 0.0);
+   right->Initialize("Assets/Hedge.bmp");
 
-   front = new CaveWall(20.0, 1.0, 0.0, 2.0, 2.0, 1.0, 0.0, 180.0, 0.0);
-   front->Initialize("Assets/Rocks.bmp");
+   front = new CaveWall(19.7, 2.0, 0.0, 2.5, 2.0, 1.0, 0.0, 180.0, 0.0);
+   front->Initialize("Assets/Hedge.bmp");
+
+   // Instantiate inner walls of hedge maze.
+   for (int i = 0; i < wallCount; i++)
+   {
+      innerWalls.push_back(new CaveWall(wallCoord[i][0], 2.0, wallCoord[i][1], wallCoord[i][2], 2.0, 1.0, 0.0, wallCoord[i][3], 0.0));
+      innerWalls.at(i)->Initialize("Assets/Hedge.bmp");
+   }
+
 }
 
 // Display function, called by GLUT to update the screen.
@@ -189,12 +204,11 @@ void display()
    {
       if (tent.at(i)->detectCollision(player))
       {
-         glWindowPos2i(5, 5);
          tent.at(i)->resolveCollision(player);
       }
    }
 
-   // Resolve collisions for CaveWalls.
+   // Resolve collisions for exterior hedge maze walls.
    if (back->detectCollision(player))
       back->resolveCollision(player);
    if (left->detectCollision(player))
@@ -203,6 +217,13 @@ void display()
       right->resolveCollision(player);
    if (front->detectCollision(player))
       front->resolveCollision(player);
+
+   // Resolve collisions for interior hedge maze walls.
+   for (int i = 0; i < wallCount; i++)
+   {
+      if (innerWalls.at(i)->detectCollision(player))
+         innerWalls.at(i)->resolveCollision(player);
+   }
 
    // Update Camera center vector based on player movement.
    player->setCenterPos(Eye[0] + player->getCenterX(), player->getCenterY(), Eye[2] + player->getCenterZ());
@@ -245,11 +266,15 @@ void display()
    lantern->Render();
    lantern->lightSource();
 
-   // Render CaveWall objects.
+   // Render exterior hedge maze walls.
    back->Render();
    left->Render();
    right->Render();
    front->Render();
+
+   // Render inner hedge maze walls.
+   for (int i = 0; i < wallCount; i++)
+      innerWalls.at(i)->Render();
 
    glWindowPos2i(5, 5);
    Print("Current position: (%.1lf, %.1lf, %.1lf)", player->getEyeX(), player->getEyeY(), player->getEyeZ());

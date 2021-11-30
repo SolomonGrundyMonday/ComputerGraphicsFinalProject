@@ -48,7 +48,6 @@ CaveWall::CaveWall(float x, float y, float z, float dx, float dy, float dz, floa
 int CaveWall::Initialize(const char* filename)
 {
    texture = LoadTexBMP(filename);
-   exterior = LoadTexBMP("Assets/Rocks.bmp");
 
    return 0;
 }
@@ -71,15 +70,16 @@ void CaveWall::Render()
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
 
    // Wall long side.
-   for (int i = -this->scaleX; i < this->scaleX; i++)
+   float i = -this->scaleX;
+   while (i < this->scaleX)
    {
-      float count = this->scaleY * 2.0;
-      for (int j = -this->scaleY; j < this->scaleY; j++)
+      float j = -this->scaleY;
+      while (j < this->scaleY)
       {
          float minX = i / this->scaleX;
-         float maxX = (i + 1) / this->scaleX;
+         float maxX = (i + 1 > this->scaleX) ? 1.0 : (i + 1) / this->scaleX;
          float minY = j / this->scaleY;
-         float maxY = (j + 1) / this->scaleY;
+         float maxY = (j + 1 > this->scaleY) ? 1.0 : (j + 1) / this->scaleY;
 
          // Interior wall.
          glNormal3f((maxX - minX) / 2.0, (maxY - minY) / 2.0, 1.0);
@@ -98,40 +98,90 @@ void CaveWall::Render()
          glNormal3f((maxX - minX) / 2.0, (maxY - minY) / 2.0, -1.2);
          glBegin(GL_QUADS);
          glTexCoord2f(0.0, 0.0);
-         glVertex3f(maxX, minY, -1.0 - (count * 0.2));
+         glVertex3f(maxX, minY, -1.2);
          glTexCoord2f(1.0, 0.0);
-         glVertex3f(minX, minY, -1.0 - (count * 0.2));
+         glVertex3f(minX, minY, -1.2);
          glTexCoord2f(1.0, 1.0);
-         glVertex3f(minX, maxY, -1.0 - ((count - 1) * 0.2));
+         glVertex3f(minX, maxY, -1.2);
          glTexCoord2f(0.0, 1.0);
-         glVertex3f(maxX, maxY, -1.0 - ((count - 1) * 0.2));
+         glVertex3f(maxX, maxY, -1.2);
          glEnd();
 
-         count -= 1.0;
+         j += 1.0;
       }
+      i += 1.0;
    }
 
-   // Front end cap.
-   glNormal3f(-1.0, 0.5, (-1.0 - (this->scaleY * 0.4)) / 2.0);
-   glBegin(GL_TRIANGLES);
-   glTexCoord2f(0.0, 0.0);
-   glVertex3f(-1.0, -1.0, -1.0);
-   glTexCoord2f(1.0, 0.0);
-   glVertex3f(-1.0, -1.0, -1.0 - (this->scaleY * 0.4));
-   glTexCoord2f(1.0, 1.0);
-   glVertex3f(-1.0, 1.0, -1.0);
-   glEnd();
+   // Wall end caps.
+   i = -this->scaleX;
+   while (i < this->scaleY)
+   {
+      float minY = i / this->scaleY;
+      float maxY = (i + 1 > this->scaleY) ? 1.0 : (i + 1) / this->scaleY;
 
-   // Back end cap.
-   glNormal3f(1.0, 0.5, (-1.0 - (this->scaleY * 0.4)) / 2.0);
-   glBegin(GL_TRIANGLES);
-   glTexCoord2f(0.0, 0.0);
-   glVertex3f(1.0, -1.0, -1.0 - (this->scaleY * 0.4));
-   glTexCoord2f(1.0, 0.0);
-   glVertex3f(1.0, -1.0, -1.0);
-   glTexCoord2f(1.0, 1.0);
-   glVertex3f(1.0, 1.0, -1.0);
-   glEnd();
+      // Back side.
+      glNormal3f(-1.0, (maxY - minY) / 2.0, -1.1);
+      glBegin(GL_QUADS);
+      glTexCoord2f(0.0, 0.0);
+      glVertex3f(-1.0, maxY, -1.0);
+      glTexCoord2f(1.0, 0.0);
+      glVertex3f(-1.0, minY, -1.0);
+      glTexCoord2f(0.0, 1.0);
+      glVertex3f(-1.0, minY, -1.2);
+      glTexCoord2f(1.0, 1.0);
+      glVertex3f(-1.0, maxY, -1.2);
+      glEnd();
+
+      // Front side.
+      glNormal3f(1.0, (maxY - minY) / 2.0, -1.1);
+      glBegin(GL_QUADS);
+      glTexCoord2f(0.0, 0.0);
+      glVertex3f(1.0, minY, -1.0);
+      glTexCoord2f(1.0, 0.0);
+      glVertex3f(1.0, maxY, -1.0);
+      glTexCoord2f(0.0, 1.0);
+      glVertex3f(1.0, maxY, -1.2);
+      glTexCoord2f(1.0, 1.0);
+      glVertex3f(1.0, minY, -1.2);
+      glEnd();
+      i += 1.0;
+   }
+
+   // Wall top caps.
+   i = -this->scaleX;
+   while (i < this->scaleX)
+   {
+      float minX = i / this->scaleX;
+      float maxX = (i + 1 > this->scaleX) ? 1.0 : (i + 1) / this->scaleX;
+
+      // Top side.
+      glNormal3f((maxX - minX) / 2.0, 1.0, -1.1);
+      glBegin(GL_QUADS);
+      glTexCoord2f(0.0, 0.0);
+      glVertex3f(minX, 1.0, -1.0);
+      glTexCoord2f(1.0, 0.0);
+      glVertex3f(maxX, 1.0, -1.0);
+      glTexCoord2f(0.0, 1.0);
+      glVertex3f(maxX, 1.0, -1.2);
+      glTexCoord2f(1.0, 1.0);
+      glVertex3f(minX, 1.0, -1.2);
+      glEnd();
+
+      // Bottom side.
+      glNormal3f((maxX - minX) / 2.0, -1.0, -1.1);
+      glBegin(GL_QUADS);
+      glTexCoord2f(0.0, 0.0);
+      glVertex3f(maxX, -1.0, -1.0);
+      glTexCoord2f(1.0, 0.0);
+      glVertex3f(minX, -1.0, -1.0);
+      glTexCoord2f(0.0, 1.0);
+      glVertex3f(minX, -1.0, -1.2);
+      glTexCoord2f(1.0, 1.0);
+      glVertex3f(maxX, -1.0, -1.2);
+      glEnd();
+
+      i += 1.0;
+   }
 
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
@@ -150,8 +200,8 @@ wall CaveWall::getSide(Camera* camera)
 
    float diffXMin = objX - (-this->scaleX - 0.6);
    float diffXMax = (this->scaleX + 0.6) - objX;
-   float diffZMin = objZ - (-this->scaleZ - 0.9);
-   float diffZMax = (-(this->scaleY * 0.4) + 0.6) - objZ;
+   float diffZMin = objZ - (-this->scaleZ - 0.6);
+   float diffZMax = (-this->scaleY + 0.6) - objZ;
 
    // Determine the wall of the hitbox that is experiencing the collision.
    bool left = diffXMin < diffXMax && diffXMin < diffZMin && diffXMin < diffZMax;
@@ -186,8 +236,8 @@ bool CaveWall::detectCollision(Camera* camera)
    // Compute x, z minimum and maximum values for object hitbox.
    float minX = -this->scaleX;
    float maxX = this->scaleX;
-   float minZ = -this->scaleZ;
-   float maxZ = -(this->scaleY * 0.4);
+   float minZ = -this->scaleZ - 0.2;
+   float maxZ = -this->scaleZ;
 
    // Determine if Camera is colliding with the object along the x, z axes.
    bool xCollide = objX > minX - 0.6 && objX < maxX + 0.6;
@@ -211,8 +261,8 @@ void CaveWall::resolveCollision(Camera* camera)
    wall collision = getSide(camera);
    float minX = -this->scaleX;
    float maxX = this->scaleX;
-   float minZ = -this->scaleZ;
-   float maxZ = -(this->scaleY * 0.4);
+   float minZ = -this->scaleZ - 0.2;
+   float maxZ = -this->scaleZ;
 
    if (collision == FRONT)
    {

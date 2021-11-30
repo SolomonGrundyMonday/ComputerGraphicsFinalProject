@@ -19,7 +19,7 @@ Camera::Camera()
    this->UpPos[2] = 0.0;
 
    // Default values for focal length, aspect ratio, field of view.
-   this->dim = 5.0;
+   this->dim = 6.0;
    this->asp = 1.0;
    this->theta = 0;
 
@@ -81,9 +81,9 @@ void Camera::shineLight()
       float Ambient[] = { 0.0, 0.0, 0.0, 1.0 };
       float Diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
       float Specular[] = { 1.0, 1.0, 1.0, 1.0 };
-      float spotPosition[] = { this->EyePos[0], this->EyePos[1], this->EyePos[2], 1.0 };
+      float spotPosition[] = {this->EyePos[0], this->EyePos[1], this->EyePos[2], 1.0 };
       float exponent[] = { 128.0 };
-      float cutoff[] = { 35.0 };
+      float cutoff[] = { 45.0 };
       float cAttenuation[] = { 1.0 };
       float lAttenuation[] = { 0.0 };
       float qAttenuation[] = { 0.0 };

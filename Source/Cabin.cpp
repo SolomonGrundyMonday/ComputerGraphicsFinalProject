@@ -80,7 +80,7 @@ void Cabin::Render()
          float maxY = (j + 1) / this->scaleY;
 
          // Front wall segment
-         glNormal3f((minX + maxX) / 2.0, (minY + maxY) / 2.0, 1.0);
+         glNormal3f((maxX - minX) / 2.0, (maxY - minY) / 2.0, 1.0);
          glBegin(GL_QUADS);
          glTexCoord2f(0.0, 0.0);
          glVertex3f(minX, minY, 1.0);
@@ -93,7 +93,7 @@ void Cabin::Render()
          glEnd();
 
          // Back Wall segment.
-         glNormal3f((minX + maxX) / 2.0, (minY + maxY) / 2.0, -1.0);
+         glNormal3f((maxX - minX) / 2.0, (maxY - minY) / 2.0, -1.0);
          glBegin(GL_QUADS);
          glTexCoord2f(0.0, 0.0);
          glVertex3f(maxX, minY, -1.0);
@@ -118,7 +118,7 @@ void Cabin::Render()
          float maxY = (j + 1) / this->scaleY;
 
          // Left Wall segment.
-         glNormal3f(-1.0, (minY + maxZ) / 2.0, (minZ + maxZ) / 2.0);
+         glNormal3f(-1.0, (maxY - minY) / 2.0, (maxZ - minZ) / 2.0);
          glBegin(GL_QUADS);
          glTexCoord2f(0.0, 0.0);
          glVertex3f(-1.0, minY, minZ);
@@ -131,7 +131,7 @@ void Cabin::Render()
          glEnd();
 
          // Right wall segment.
-         glNormal3f(1.0, (minY + maxY) / 2.0, (minZ + minZ) / 2.0);
+         glNormal3f(1.0, (maxY - minY) / 2.0, (maxZ - minZ) / 2.0);
          glBegin(GL_QUADS);
          glTexCoord2f(0.0, 0.0);
          glVertex3f(1.0, minY, maxZ);
@@ -168,9 +168,9 @@ void Cabin::Render()
    glEnd();
 
    glBindTexture(GL_TEXTURE_2D, shingles);
-   
+
    // Roof right segment.
-   glNormal3f((1.0 + OVERHANG)/2.0, (1.0 + STEEPLE_HEIGHT)/2.0, 0.0);
+   glNormal3f((1.0 + OVERHANG) / 2.0, (1.0 + STEEPLE_HEIGHT) / 2.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(1.0 + OVERHANG, 0.9, -1.0 - OVERHANG);
@@ -183,7 +183,7 @@ void Cabin::Render()
    glEnd();
 
    // Roof left segment.
-   glNormal3f((-1.0 - OVERHANG)/2.0, (1.0 + STEEPLE_HEIGHT)/2.0, 0.0);
+   glNormal3f((-1.0 - OVERHANG) / 2.0, (1.0 + STEEPLE_HEIGHT) / 2.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-1.0 - OVERHANG, 0.9, 1.0 + OVERHANG);
@@ -295,7 +295,7 @@ void Cabin::Render()
       int theta = i * 30;
       float x = (-HINGE_RADIUS * Cos(theta)) - 0.105;
       float z = (-HINGE_RADIUS * Sin(theta)) + 1.005;
-      glNormal3f(-Cos(theta), -HINGE_RADIUS, -Sin(theta));
+      glNormal3f(-Cos(theta), -0.2 - HINGE_HEIGHT, -Sin(theta));
       glTexCoord2f(0.0, i * 1.0/6.0);
       glVertex3f(x, -0.2 - HINGE_HEIGHT, z);
       glTexCoord2f(6.0, i * 1.0/6.0);
@@ -340,7 +340,7 @@ void Cabin::Render()
       int theta = i * 30;
       float x = (-HINGE_RADIUS * Cos(theta)) - 0.105;
       float z = (-HINGE_RADIUS * Sin(theta)) + 1.005;
-      glNormal3f(-Cos(theta), -1.0 + HINGE_HEIGHT, -Sin(theta));
+      glNormal3f(-Cos(theta), -1.0 + (2.0 * HINGE_HEIGHT), -Sin(theta));
       glTexCoord2f(0.0, i * 1.0/6.0);
       glVertex3f(x, -1.0 + HINGE_HEIGHT, z);
       glTexCoord2f(6.0, i * 1.0/6.0);
