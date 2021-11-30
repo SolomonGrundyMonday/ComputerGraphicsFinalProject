@@ -35,7 +35,7 @@ std::vector<CaveWall *> innerWalls;
 std::vector<TreeStump *> stump;
 std::vector<Tent *> tent;
 
-const int treeCount = 47;
+const int treeCount = 38;
 const int tentCount = 4;
 const int stumpCount = 8;
 const int wallCount = 9;
@@ -56,10 +56,7 @@ void initialize_objects()
                                      {-3.0, 17.0}, {-6.0, 23.0}, {-25.5, 11.5},
 									 {-1.0, -4.5}, {9.0, 1.0}, {0.0, 11.5},
                                      {6.5, -11.0}, {4.0, -3.0}, {9.5, -6.5},
-                                     {2.5, 6.5}, {-6.0, -7.0}, {-18.5, 1.0},
-                                     {-11.5, -23.5}, {10.0, -15.5}, {-7.0, -18.0},
-                                     {4.0, -24.5}, {-21.0, 26.0}, {3.0, -18.5},
-                                     {-8.0, 4.5} };
+                                     {2.5, 6.5} };
 
    // Coordinates for Tent objects.
    float tentCoord[tentCount][2] = { {15.0, 10.0}, {15.0, 20.0}, {20.0, 10.0}, {20.0, 20.0} };

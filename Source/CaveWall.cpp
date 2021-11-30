@@ -69,7 +69,8 @@ void CaveWall::Render()
    glRotatef(this->rotZ, 0, 0, 1);
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
 
-   // Wall long side.
+   // Wall long side.  (Tesselated to improve lighing effects on large polygons)
+   // Idea borrowed from contents of https://www.glprogramming.com/red/chapter05.html.
    float i = -this->scaleX;
    while (i < this->scaleX)
    {
@@ -112,7 +113,8 @@ void CaveWall::Render()
       i += 1.0;
    }
 
-   // Wall end caps.
+   // Wall end caps. (Tesselated to improve lighing effects on large polygons)
+   // Idea borrowed from contents of https://www.glprogramming.com/red/chapter05.html.
    i = -this->scaleX;
    while (i < this->scaleY)
    {
@@ -147,7 +149,8 @@ void CaveWall::Render()
       i += 1.0;
    }
 
-   // Wall top caps.
+   // Wall top caps.  (Tesselated to improve lighing effects on large polygons)
+   // Idea borrowed from contents of https://www.glprogramming.com/red/chapter05.html.
    i = -this->scaleX;
    while (i < this->scaleX)
    {

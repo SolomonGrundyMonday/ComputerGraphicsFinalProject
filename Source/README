@@ -15,7 +15,7 @@ Instructions:
    To run the application, unzip the directory into whatever file location you desire, and
    navigate to the main project directory "FinalProject".  Open the terminal in this directory
    and type "make".  The user controls within the application are listed in the above
-   section of this README.  
+   section of this README.   
 
 Sources (Code):
 
@@ -25,8 +25,7 @@ Sources (Code):
    inverse matrix that I used to convert back to world coordinates after the collision was resolved
    was computed by the Symbolab online calculator.  Additionally, I found some resources on
    StackExchange to help me understand texture blending (specifically to make the translucent
-   glass texture on my lantern object).  I didn't borrow any code from this thread, but the question
-   and some of the answers helped me get the effect to look semi-decent.
+   glass texture on my lantern object).  I borrowed two lines of code from this thread
    Thread address: https://stackoverflow.com/questions/24399431/opengl-texture-with-transparency-alpha
    I also got the idea to tessalate the larger polygons in my objects to get the spotlight effect to
    look better from the following source: https://www.glprogramming.com/red/chapter05.html.
@@ -64,15 +63,19 @@ Estimated Time:
    Time spent testing the performance on my VM (to get a floor for performance) and making optimization passes: 4 hours.
 
 Things that still need to be done:
-   Additionally, given the limited amount of time I have left, I may cut the area and replace it
-   with more tent objects, or another Cabin.  If there is time between coursework for other classes, I would also like to
-   touch up the collisions for the Cabin, Tent and hedge maze walls objects.  My collisions for the Tent and cabin objects are not
-   as robust as I would like them to be (they only work if the objects are rotated at 0.0 or 180.0 degrees) and the hedge maze
-   walls need slightly different thresholds for a collision (collision resolution is a bit wonky around the corners right now).  
+   I would like to touch up the collisions for the Cabin, Tent and hedge maze walls objects.  My collisions for the Tent and cabin 
+   objects are not as robust as I would like them to be (they only work if the objects are rotated at 0.0 or 180.0 degrees) and the hedge maze
+   walls need slightly different thresholds for a collision (collision resolution is a bit wonky around the corners right now).  Additionally,
+   I need to do a little work on the Tent surface normals, as they currently don't look quite right.  
    Lastly, I would like to replace some of the textures that I am using if time allows (specifically the textures for the axe head,
    shovel head, shovel handle and the axe handle/shovel shaft.  If necessary, I would also like to implement a debug mode that
-   allows the user to examine each individual object with an orbiting light source to demonstrate that the normals are working.
-   In first-person mode, it isn't really possible to shine a light on certain surfaces given the limitations of character movement.
+   allows the user to examine each individual object with an orbiting light source to demonstrate that the normals are working, since
+   in first-person mode, it isn't really possible to shine a light on certain surfaces given the limitations of character movement.  Last but
+   not least, I will be making one additional optimization pass before the final submission.  Currently, I was running into severe framerate
+   issues on the test VM that I have to get a performance floor, so I just reduced the number of trees in the environment significantly.  Once
+   collisions and surface normals are up to speed, I will remove various inefficiencies present in this test build as well as refactor variables
+   and classes and ensure that the code is properly formatted (I moved a lot of code pieces around in the last few days, so there may currently
+   be some erronious tab-spaces - my IDE puts them in automatically and I don't know what setting to change to stop it).
 
 Additional notes:
    The hedge maze area was originally intended to be a cave area for the user to explore, however I had severe difficulty getting 
@@ -80,3 +83,14 @@ Additional notes:
    map a basic hedge maze.  This is largely to demonstrate the collisions that I had already implemented for what were originally intended
    to be cave walls.  The hedge maze walls also add modular walls that can be rapidly added to the application as necessary for further
    design iterations.
+   The things to pay attention to/things I am proud of for this project are as follows:
+   The collisions for Tent objects - even though the collisions are not currently very robust, it took a lot of time and effort to get the
+   collisions to work such that the user can't pass through the tent walls, but the tent doorway allows the user to pass through.
+   Tesselation of large polygons for the lighting effects - since I am using a spot light type of light source based at the Camera
+   eye position, I needed to tesselate the larger surfaces (hedge maze walls, cabin walls, ground surface, etc.) in order for the lighting effect
+   to work right as the spotlight passes over them.  Even though I still need to do a little work on the Cabin object to get the normals right for
+   the smaller components, I am really proud of the algorithm that I developed to break the walls into smaller quads programatically.
+   The normals and geometry for the Shovel and Tent objects - The complicated geometry of these objects was particularly difficult to get right, and I am proud
+   of the work I did here.
+   Lastly, I am proud of the optimization work that I have done so far to try and get a large number of trees and objects, as well as have a large scale environment 
+   without a massive hit to performance.

@@ -69,7 +69,8 @@ void Cabin::Render()
    glRotatef(this->rotZ, 0, 0, 1);
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
 
-   // Front and back walls.
+   // Front and back walls. (Tesselated to improve lighing effects on large polygons)
+   // Idea borrowed from contents of https://www.glprogramming.com/red/chapter05.html.
    for (int i = -this->scaleX; i < this->scaleX; i++)
    {
       for (int j = -this->scaleY; j < this->scaleY; j++)
@@ -107,7 +108,8 @@ void Cabin::Render()
       }
    }
 
-   // Left and Right walls.
+   // Left and Right walls.  (Tesselated to improve lighing effects on large polygons)
+   // Idea borrowed from contents of https://www.glprogramming.com/red/chapter05.html.
    for (int i = -this->scaleZ; i < this->scaleZ; i++)
    {
       for (int j = -this->scaleY; j < this->scaleY; j++)
