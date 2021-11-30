@@ -2,9 +2,9 @@ Lighting/Normals Test:
 Cuboid   -   Complete
 Shovel   -   Complete
 Axe      -   Complete
-Cabin    -   Partial - object is complex, needs more involved testing.
-Tree     -   Parital - object is complex, needs more involved testing.
-Tent     -   Complete, need better texture image to be sure.
+Cabin    -   Complete.
+Tree     -   Complete.
+Tent     -   Needs a little work on surface normals.
 Lantern  -   Complete
 Skybox   -   N/A
 Camera   -   N/A
