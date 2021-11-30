@@ -10,6 +10,7 @@ User Controls:
    'D' key          -   Strafe right.
     RIGHT ARROW key -   Turn the first-person camera to the right by 5 degrees.
     LEFT ARROW key  -   Turn the first-person cmaera to the left by five degrees.
+    ESC key         -   Quit the application.
 
 Instructions:
    To run the application, unzip the directory into whatever file location you desire, and
@@ -29,6 +30,8 @@ Sources (Code):
    Thread address: https://stackoverflow.com/questions/24399431/opengl-texture-with-transparency-alpha
    I also got the idea to tessalate the larger polygons in my objects to get the spotlight effect to
    look better from the following source: https://www.glprogramming.com/red/chapter05.html.
+   Additionally, the CSCIx229 library is borrowed, and the format of the makefile is based on the 
+   makefiles from previous assignments and in-class examples.
    Lastly, the code for generating trees was borrowed from the in-class notes about creating trees
    using fractals.  I made a few minor modifications for optimization so that I could have a larger
    quantity of trees rendering at one time, particularly reducing the number of leaves on each tree.
