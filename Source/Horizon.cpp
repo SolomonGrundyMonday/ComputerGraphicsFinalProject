@@ -222,6 +222,7 @@ void Horizon::resolveCollision(Camera* camera)
 // Function definition for Horizon class setPosition function.
 void Horizon::setPosition(float x, float y, float z)
 {
+   // Set object translation coordinates.
    this->posX = x;
    this->posY = y;
    this->posZ = z;
@@ -230,6 +231,7 @@ void Horizon::setPosition(float x, float y, float z)
 // Function definition for Horizon class setScale function.
 void Horizon::setScale(float x, float y, float z)
 {
+   // Set object's scaling.
    this->scaleX = x;
    this->scaleY = y;
    this->scaleZ = z;
@@ -238,6 +240,7 @@ void Horizon::setScale(float x, float y, float z)
 // Function definition for Horizon class setRotation function.
 void Horizon::setRotation(float x, float y, float z)
 {
+   // Set object's rotation about each axis.
    this->rotX = x;
    this->rotY = y;
    this->rotZ = z;

@@ -13,15 +13,15 @@
 #include <string.h>
 #include <stdlib.h>
 
- // Enum for the walls that have hit boxes associated with them.
+// Enum for the walls that have hit boxes associated with them.
 enum wall {
-    FRONT,
-	FRONT_RIGHT,
-	FRONT_LEFT,
-	LEFT,
-	RIGHT,
-	BACK,
-	NONE
+   FRONT,
+   FRONT_RIGHT,
+   FRONT_LEFT,
+   LEFT,
+   RIGHT,
+   BACK,
+   NONE
 };
 
 class GameObject
@@ -45,5 +45,4 @@ class GameObject
        *    All subclasses of Gameobject must implement this function. 
        */
       virtual void resolveCollision(Camera* camera) = 0;
-
 };

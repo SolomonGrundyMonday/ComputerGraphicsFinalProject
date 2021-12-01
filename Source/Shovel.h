@@ -42,6 +42,7 @@ class Shovel : public GameObject
       wall getSide(Camera* camera);
 
    public:
+
       /*
        *   Function prototype for Shovel object default constructor.  DO NOT USE.
        *   Precondition:  None.

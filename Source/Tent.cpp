@@ -408,7 +408,6 @@ void Tent::DrawSpike(float px, float pz)
       glVertex3f(cosine * 0.02 + px, -0.89, sine * 0.02 + pz);
    }
    glEnd();
-
 }
 
 // Function definition for Tent object detectCollision function implementation.
@@ -460,8 +459,7 @@ wall Tent::getWall(Camera* camera)
    else if (right)
       return RIGHT;
    else
-      return NONE;
-   
+      return NONE;   
 }
 
 // Function definition for Tent object resovleCollision function implementation.
@@ -658,7 +656,7 @@ void Tent::resolveCollision(Camera* camera)
          {
             newX = 0.4;
             newZ = 0.4;
-		 }
+         }
          else if (camZ < -0.5)
          {
             newX = 0.4;
@@ -685,6 +683,7 @@ void Tent::resolveCollision(Camera* camera)
 // Function definition for Tent object setPosition function.
 void Tent::setPosition(float x, float y, float z)
 {
+   // Set object translation coordinates.
    this->posX = x;
    this->posY = y;
    this->posZ = z;
@@ -693,6 +692,7 @@ void Tent::setPosition(float x, float y, float z)
 // Function definition for Tent object setScale function.
 void Tent::setScale(float x, float y, float z)
 {
+   // Set object scaling.
    this->scaleX = x;
    this->scaleY = y;
    this->scaleZ = z;
@@ -701,6 +701,7 @@ void Tent::setScale(float x, float y, float z)
 // Function definition for Tent object setRotation function.
 void Tent::setRotation(float x, float y, float z)
 {
+   // Set object rotation about each axis.
    this->rotX = x;
    this->rotY = y;
    this->rotZ = z;

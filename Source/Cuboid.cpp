@@ -12,12 +12,17 @@
 // Function definition for default constructor of Cuboid : GameObject class. DO NOT USE.
 Cuboid::Cuboid()
 {
+   // Set object translation coordinates.
    this->posX = 0.0;
    this->posY = 0.0;
    this->posZ = 0.0;
+
+   // Set object's scaling.
    this->scaleX = 1.0;
    this->scaleY = 1.0;
    this->scaleZ = 1.0;
+
+   // Set object's rotation about each axis.
    this->rotX = 0.0;
    this->rotY = 0.0;
    this->rotZ = 0.0;
@@ -26,12 +31,17 @@ Cuboid::Cuboid()
 // Function definition for constructor of Cuboid : GameObject class.
 Cuboid::Cuboid(float x, float y, float z, float scaleX, float scaleY, float scaleZ, float rotX, float rotY, float rotZ)
 {
+   // Set object translation coordinates.
    this->posX = x;
    this->posY = y;
    this->posZ = z;
+
+   // Set object's scaling.
    this->scaleX = scaleX;
    this->scaleY = scaleY;
    this->scaleZ = scaleZ;
+
+   // Set object's rotation about each axis.
    this->rotX = rotX;
    this->rotY = rotY;
    this->rotZ = rotZ;
@@ -41,6 +51,7 @@ Cuboid::Cuboid(float x, float y, float z, float scaleX, float scaleY, float scal
 int Cuboid::Initialize(const char* filename)
 {
    texture = LoadTexBMP(filename);
+
    return 0;
 }
 
@@ -76,37 +87,53 @@ void Cuboid::Render()
    // Right face texture coordinates/vertices.
    glNormal3f(0.0, 0.0, 1.0);
    glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0); glVertex3f(-1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, this->scaleZ); glVertex3f(1.0, 1.0, 1.0);
-   glTexCoord2f(this->scaleY, this->scaleZ); glVertex3f(1.0, -1.0, 1.0);
-   glTexCoord2f(this->scaleY, 0.0); glVertex3f(-1.0, -1.0, 1.0);
+   glTexCoord2f(0.0, 0.0); 
+   glVertex3f(-1.0, 1.0, 1.0);
+   glTexCoord2f(0.0, this->scaleZ); 
+   glVertex3f(1.0, 1.0, 1.0);
+   glTexCoord2f(this->scaleY, this->scaleZ); 
+   glVertex3f(1.0, -1.0, 1.0);
+   glTexCoord2f(this->scaleY, 0.0); 
+   glVertex3f(-1.0, -1.0, 1.0);
    glEnd();
 
    // Left face texturecoordinates/vertices.
    glNormal3f(0.0, 0.0, -1.0);
    glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0); glVertex3f(1.0, 1.0, -1.0);
-   glTexCoord2f(0.0, this->scaleZ); glVertex3f(-1.0, 1.0, -1.0);
-   glTexCoord2f(this->scaleY, this->scaleZ); glVertex3f(-1.0, -1.0, -1.0);
-   glTexCoord2f(this->scaleY, 0.0); glVertex3f(1.0, -1.0, -1.0);
+   glTexCoord2f(0.0, 0.0); 
+   glVertex3f(1.0, 1.0, -1.0);
+   glTexCoord2f(0.0, this->scaleZ); 
+   glVertex3f(-1.0, 1.0, -1.0);
+   glTexCoord2f(this->scaleY, this->scaleZ); 
+   glVertex3f(-1.0, -1.0, -1.0);
+   glTexCoord2f(this->scaleY, 0.0); 
+   glVertex3f(1.0, -1.0, -1.0);
    glEnd();
 
    // Front face texture coordinates/vertices.
    glNormal3f(-1.0, 0.0, 0.0);
    glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0); glVertex3f(-1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, this->scaleY); glVertex3f(-1.0, -1.0, 1.0);
-   glTexCoord2f(this->scaleX, this->scaleY); glVertex3f(-1.0, -1.0, -1.0);
-   glTexCoord2f(this->scaleX, 0.0); glVertex3f(-1.0, 1.0, -1.0);
+   glTexCoord2f(0.0, 0.0); 
+   glVertex3f(-1.0, 1.0, 1.0);
+   glTexCoord2f(0.0, this->scaleY); 
+   glVertex3f(-1.0, -1.0, 1.0);
+   glTexCoord2f(this->scaleX, this->scaleY); 
+   glVertex3f(-1.0, -1.0, -1.0);
+   glTexCoord2f(this->scaleX, 0.0); 
+   glVertex3f(-1.0, 1.0, -1.0);
    glEnd();
 
    // Back face texture coordinates/vertices.
    glNormal3f(1.0, 0.0, 0.0);
    glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0); glVertex3f(1.0, 1.0, 1.0);
-   glTexCoord2f(0.0, this->scaleY); glVertex3f(1.0, -1.0, 1.0);
-   glTexCoord2f(this->scaleX, this->scaleY); glVertex3f(1.0, -1.0, -1.0);
-   glTexCoord2f(this->scaleX, 0.0); glVertex3f(1.0, 1.0, -1.0);
+   glTexCoord2f(0.0, 0.0); 
+   glVertex3f(1.0, 1.0, 1.0);
+   glTexCoord2f(0.0, this->scaleY); 
+   glVertex3f(1.0, -1.0, 1.0);
+   glTexCoord2f(this->scaleX, this->scaleY); 
+   glVertex3f(1.0, -1.0, -1.0);
+   glTexCoord2f(this->scaleX, 0.0); 
+   glVertex3f(1.0, 1.0, -1.0);
    glEnd();
 
    // Top face texture coordinates/vertices (tesselated to improve lighting effects for large polygons)
@@ -122,10 +149,14 @@ void Cuboid::Render()
 
          glNormal3f( (maxX - minX) / 2.0, 1.0, (maxZ - minZ) / 2.0);
          glBegin(GL_QUADS);
-         glTexCoord2f(0.0, 0.0); glVertex3f(maxX, 1.0, maxZ);
-         glTexCoord2f(0.0, 1.0); glVertex3f(maxX, 1.0, minZ);
-         glTexCoord2f(1.0, 1.0); glVertex3f(minX, 1.0, minZ);
-         glTexCoord2f(1.0, 0.0); glVertex3f(minX, 1.0, maxZ);
+         glTexCoord2f(0.0, 0.0); 
+         glVertex3f(maxX, 1.0, maxZ);
+         glTexCoord2f(0.0, 1.0); 
+         glVertex3f(maxX, 1.0, minZ);
+         glTexCoord2f(1.0, 1.0); 
+         glVertex3f(minX, 1.0, minZ);
+         glTexCoord2f(1.0, 0.0); 
+         glVertex3f(minX, 1.0, maxZ);
          glEnd();
       }
    }
@@ -133,10 +164,14 @@ void Cuboid::Render()
    // Bottom face texture coordintates/vertices.
    glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_QUADS);
-   glTexCoord2f(0.0, 0.0); glVertex3f(1.0, -1.0, 1.0);
-   glTexCoord2f(0.0, this->scaleX); glVertex3f(1.0, -1.0, -1.0);
-   glTexCoord2f(this->scaleZ, this->scaleX); glVertex3f(-1.0, -1.0, -1.0);
-   glTexCoord2f(this->scaleZ, 0.0); glVertex3f(-1.0, -1.0, 1.0);
+   glTexCoord2f(0.0, 0.0); 
+   glVertex3f(1.0, -1.0, 1.0);
+   glTexCoord2f(0.0, this->scaleX); 
+   glVertex3f(1.0, -1.0, -1.0);
+   glTexCoord2f(this->scaleZ, this->scaleX); 
+   glVertex3f(-1.0, -1.0, -1.0);
+   glTexCoord2f(this->scaleZ, 0.0); 
+   glVertex3f(-1.0, -1.0, 1.0);
    glEnd();
 
    glDisable(GL_TEXTURE_2D);
@@ -206,6 +241,7 @@ float Cuboid::getScaleZ()
 // Function definition for setPosition setter function of Cuboid : GameObject class.
 void Cuboid::setPosition(float x, float y, float z)
 {
+   // Set object translation coordinates.
    this->posX = x;
    this->posY = y;
    this->posZ = z;
@@ -214,6 +250,7 @@ void Cuboid::setPosition(float x, float y, float z)
 // Function definition for setScale setter function of Cuboid : GameObject class.
 void Cuboid::setScale(float x, float y, float z)
 {
+   // Set object's scaling.
    this->scaleX = x;
    this->scaleY = y;
    this->scaleZ = z;
@@ -222,6 +259,7 @@ void Cuboid::setScale(float x, float y, float z)
 // Function definition for setRotation function of Cuboid : GameObject class.
 void Cuboid::setRotation(float x, float y, float z)
 {
+   // Set object's rotation about each axis.
    this->rotX = x;
    this->rotY = y;
    this->rotZ = z;

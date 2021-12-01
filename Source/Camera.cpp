@@ -118,6 +118,7 @@ void Camera::toggleLight()
 // Function definition for setEyePos method of Camera class.
 void Camera::setEyePos(double x, double y, double z)
 {
+   // Set Camera eye position vector.
    this->EyePos[0] = x;
    this->EyePos[1] = y;
    this->EyePos[2] = z;
@@ -126,6 +127,7 @@ void Camera::setEyePos(double x, double y, double z)
 // Function definition for setCenterPos method of Camera class.
 void Camera::setCenterPos(double x, double y, double z)
 {
+   // Set Camera center position vector.
    this->CenterPos[0] = x;
    this->CenterPos[1] = y;
    this->CenterPos[2] = z;
@@ -134,6 +136,7 @@ void Camera::setCenterPos(double x, double y, double z)
 // Function definition for setUpPos method of Camera class.
 void Camera::setUpPos(double x, double y, double z)
 {
+   // Set Camera up vector.
    this->UpPos[0] = x;
    this->UpPos[1] = y;
    this->UpPos[2] = z;

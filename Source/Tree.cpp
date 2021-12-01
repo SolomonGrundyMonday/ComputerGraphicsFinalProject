@@ -65,7 +65,7 @@ int Tree::branchFractal(float l0, float r0)
    {
       glRotatef(angle, 0, 1, 0);
 
-	  
+  
       glRotatef(360/BRANCH_NUM, 0, 1, 0);
       ntri += this->leaf();
    }
@@ -77,14 +77,14 @@ int Tree::branchFractal(float l0, float r0)
       float left = BRANCH_RATIO * l0;
 
       // Make recursive calls to branchFractal for number of branches iterations.
-	  for (int i = 0; i < BRANCH_NUM; i++)
-	  {
+      for (int i = 0; i < BRANCH_NUM; i++)
+      {
          glPushMatrix();
          glRotatef(angle + i * 360 / BRANCH_NUM, 0, 1, 0);
          glRotatef(30.0, 1, 0, 0);
          ntri += this->branchFractal(left, r);
          glPopMatrix();
-	  }
+      }
    }
 
    glColor4fv(white);
@@ -185,6 +185,7 @@ int Tree::Initialize(const char* filename)
    // Import texture here, need good bark picture to use.
    texture = LoadTexBMP(filename);
    leafTex = LoadTexBMP("Assets/Leaf.bmp");
+
    return 0;
 }
 
@@ -227,43 +228,44 @@ void Tree::resolveCollision(Camera* camera)
       float diffZMax = maxZ - camZ;
 
       // If collision is on the maximum x-coordinate, or maximum z-coordinate.
-	  if (diffXMax < diffXMin && diffZMax < diffZMin)
-	  {
+      if (diffXMax < diffXMin && diffZMax < diffZMin)
+      {
          if(diffXMax < diffZMax)
             camera->setEyePos(maxX, camera->getEyeY(), camZ);
          else
             camera->setEyePos(camX, camera->getEyeY(), maxZ);
-	  }
+      }
       // If collision is on the maximum x-coordinate, or minimum z-coordinate.
-	  else if (diffXMax < diffXMin && diffZMin < diffZMax)
-	  {
+      else if (diffXMax < diffXMin && diffZMin < diffZMax)
+      {
          if (diffXMax < diffZMin)
             camera->setEyePos(maxX, camera->getEyeY(), camZ);
          else
             camera->setEyePos(camX, camera->getEyeY(), minZ);
-	  }
+      }
       // If collision is on the minimum x-coordinate, or maximum z-coordinate.
-	  else if (diffXMin < diffXMax && diffZMax < diffZMin)
-	  {
+      else if (diffXMin < diffXMax && diffZMax < diffZMin)
+      {
          if (diffXMin < diffZMax)
             camera->setEyePos(minX, camera->getEyeY(), camZ);
          else
             camera->setEyePos(camX, camera->getEyeY(), maxZ);
-	  }
+      }
       // If collision is on the minimum x-coordinate or minimum z-coordinate.
-	  else if (diffXMin < diffXMax && diffZMin < diffZMax)
-	  {
+      else if (diffXMin < diffXMax && diffZMin < diffZMax)
+      {
          if (diffXMin < diffZMin)
             camera->setEyePos(minX, camera->getEyeY(), camZ);
          else
             camera->setEyePos(camX, camera->getEyeY(), minZ);
-	  }
+      }
    }
 }
 
 // Function definition for Tree class setPosition setter function.
 void Tree::setPosition(float x, float y, float z)
 {
+   // Set object translation coordinates.
    this->posX = x;
    this->posY = y;
    this->posZ = z;
@@ -272,6 +274,7 @@ void Tree::setPosition(float x, float y, float z)
 // Function definition for Tree class setScale setter function.
 void Tree::setScale(float x, float y, float z)
 {
+   // Set object scaling.
    this->scaleX = x;
    this->scaleY = y;
    this->scaleZ = z;
@@ -280,6 +283,7 @@ void Tree::setScale(float x, float y, float z)
 // Function definition for Tree class setRotation setter function.
 void Tree::setRotation(float x, float y, float z)
 {
+   // Set object rotation about each axis.
    this->rotX = x;
    this->rotY = y;
    this->rotZ = z;

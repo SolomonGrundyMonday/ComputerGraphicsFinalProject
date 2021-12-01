@@ -9,14 +9,17 @@
 // Definition of Shovel class default constructor.
 Shovel::Shovel()
 {
+   // Set object translation coordinates.
    this->posX = 0.0;
    this->posY = 0.0;
    this->posZ = 0.0;
 
+   // Set object's scaling.
    this->scaleX = 1.0;
    this->scaleY = 1.0;
    this->scaleZ = 1.0;
 
+   // Set object's rotation about each axis.
    this->rotX = 0.0;
    this->rotY = 0.0;
    this->rotZ = 0.0;
@@ -25,14 +28,17 @@ Shovel::Shovel()
 // Definition of Shovel class constructor.
 Shovel::Shovel(float x, float y, float z, float dx, float dy, float dz, float rx, float ry, float rz)
 {
+   // Set object translation coordinates.
    this->posX = x;
    this->posY = y;
    this->posZ = z;
 
+   // Set object's scaling.
    this->scaleX = dx;
    this->scaleY = dy;
    this->scaleZ = dz;
 
+   // Set object's rotation about each axis.
    this->rotX = rx;
    this->rotY = ry;
    this->rotZ = rz;
@@ -167,7 +173,7 @@ void Shovel::Render()
 
       glNormal3f(Cos(theta), -RADIUS, Sin(theta));
       glTexCoord2f(0.0, i * 1.0/12.0);
-	  glVertex3f(x, -RADIUS - SHAFT_LEN, z);
+      glVertex3f(x, -RADIUS - SHAFT_LEN, z);
       glTexCoord2f(12.0, i * 1.0/12.0);
       glVertex3f(x, -RADIUS, z);
    }
@@ -400,12 +406,12 @@ void Shovel::resolveCollision(Camera* camera)
       // Update Camera position.
       camera->setEyePos(newX, camera->getEyeY(), newZ);
    }
-
 }
 
 // Definition of Shovel class setPosition function.
 void Shovel::setPosition(float x, float y, float z)
 {
+   // Set object translation coordinates.
    this->posX = x;
    this->posY = y;
    this->posZ = z;
@@ -414,6 +420,7 @@ void Shovel::setPosition(float x, float y, float z)
 // Definition of Shovel class setScale function.
 void Shovel::setScale(float x, float y, float z)
 {
+   // Set object's scaling.
    this->scaleX = x;
    this->scaleY = y;
    this->scaleZ = z;
@@ -422,6 +429,7 @@ void Shovel::setScale(float x, float y, float z)
 // Definition of Shovel class setRotation function.
 void Shovel::setRotation(float x, float y, float z)
 {
+   // Set object's rotation about each axis.
    this->rotX = x;
    this->rotY = y;
    this->rotZ = z;

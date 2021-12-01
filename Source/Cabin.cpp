@@ -9,14 +9,17 @@
 // Function definition for Cabin class default constructor.
 Cabin::Cabin()
 {
+   // Set object translation coordinates.
    this->posX = 0.0;
    this->posY = 0.0;
    this->posZ = 0.0;
 
+   // Set object's scaling.
    this->scaleX = 1.0;
    this->scaleY = 1.0;
    this->scaleZ = 1.0;
 
+   // Set object's rotation about each axis.
    this->rotX = 0.0;
    this->rotY = 0.0;
    this->rotZ = 0.0;
@@ -25,14 +28,17 @@ Cabin::Cabin()
 // Function definition for Cabin class constructor.
 Cabin::Cabin(float x, float y, float z, float dx, float dy, float dz, float rx, float ry, float rz)
 {
+   // Set object translation coordinates.
    this->posX = x;
    this->posY = y;
    this->posZ = z;
 
+   // Set object's scaling.
    this->scaleX = dx;
    this->scaleY = dy;
    this->scaleZ = dz;
 
+   // Set object's rotation about each axis.
    this->rotX = rx;
    this->rotY = ry;
    this->rotZ = rz;
@@ -46,6 +52,7 @@ int Cabin::Initialize(const char* filename)
    this->wood = LoadTexBMP("Assets/Door.bmp");
    this->metal = LoadTexBMP("Assets/Metal.bmp");
    this->shutters = LoadTexBMP("Assets/Shutters.bmp");
+
    return 0;
 }
 
@@ -261,6 +268,7 @@ void Cabin::Render()
    {
       float x = 0.05 * Cos(i);
       float y = 3.0 * 0.05 * Sin(i) + ((1.0 + STEEPLE_HEIGHT)/2.0);
+
       glNormal3f(Cos(i), Sin(i), 1.01);
       glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
       glVertex3f(x, y, 1.01);
@@ -274,6 +282,7 @@ void Cabin::Render()
       int theta = i * 30;
       float x = 0.05 * Cos(theta);
       float y = 3.0 * 0.05 * Sin(theta) + ((1.0 + STEEPLE_HEIGHT)/2.0);
+
       glNormal3f(Cos(theta), Sin(theta), 1.0);
       glTexCoord2f(0.0, i * 1.0/6.0);
       glVertex3f(x, y, 1.0);
@@ -297,6 +306,7 @@ void Cabin::Render()
       int theta = i * 30;
       float x = (-HINGE_RADIUS * Cos(theta)) - 0.105;
       float z = (-HINGE_RADIUS * Sin(theta)) + 1.005;
+
       glNormal3f(-Cos(theta), -0.2 - HINGE_HEIGHT, -Sin(theta));
       glTexCoord2f(0.0, i * 1.0/6.0);
       glVertex3f(x, -0.2 - HINGE_HEIGHT, z);
@@ -314,6 +324,7 @@ void Cabin::Render()
    {
       float x = (-HINGE_RADIUS * Cos(i)) - 0.105;
       float z = (-HINGE_RADIUS * Sin(i)) + 1.005;
+
       glNormal3f(Cos(i) - 0.105, -0.2 - HINGE_HEIGHT, Sin(i) + 1.005);
       glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
       glVertex3f(x, -0.2 - HINGE_HEIGHT, z);
@@ -329,6 +340,7 @@ void Cabin::Render()
    {
       float x = (-HINGE_RADIUS * Cos(i)) - 0.105;
       float z = (-HINGE_RADIUS * Sin(i)) + 1.005;
+
       glNormal3f(Cos(i) - 0.105, -HINGE_HEIGHT, Sin(i) + 1.005);
       glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
       glVertex3f(x, -0.2 - (2.0 * HINGE_HEIGHT), z);
@@ -342,6 +354,7 @@ void Cabin::Render()
       int theta = i * 30;
       float x = (-HINGE_RADIUS * Cos(theta)) - 0.105;
       float z = (-HINGE_RADIUS * Sin(theta)) + 1.005;
+
       glNormal3f(-Cos(theta), -1.0 + (2.0 * HINGE_HEIGHT), -Sin(theta));
       glTexCoord2f(0.0, i * 1.0/6.0);
       glVertex3f(x, -1.0 + HINGE_HEIGHT, z);
@@ -359,6 +372,7 @@ void Cabin::Render()
    {
       float x = (-HINGE_RADIUS * Cos(i)) - 0.105;
       float z = (-HINGE_RADIUS * Sin(i)) + 1.005;
+
       glNormal3f(Cos(i) - 0.105, -1.0 + HINGE_HEIGHT, Sin(i) + 1.005);
       glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
       glVertex3f(x, -1.0 + HINGE_HEIGHT, z);
@@ -374,6 +388,7 @@ void Cabin::Render()
    {
       float x = (-HINGE_RADIUS * Cos(i)) - 0.105;
       float z = (-HINGE_RADIUS * Sin(i)) + 1.005;
+
       glNormal3f(Cos(i) - 0.105, -1.0 + (2.0 * HINGE_HEIGHT), Sin(i) + 1.005);
       glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
       glVertex3f(x, -1.0 + (2.0 * HINGE_HEIGHT), z);
@@ -387,6 +402,7 @@ void Cabin::Render()
       int theta = i * 30;
       float x = (KNOB_RADIUS * Cos(theta)) + 0.075;
       float y = (3.0 * KNOB_RADIUS * Sin(theta)) - 0.65;
+
       glNormal3f(Cos(theta) + 0.04, Sin(theta) - 0.65, (1.01 + KNOB_PROTRUSION)/2.0);
       glTexCoord2f(0.0, i%2);
       glVertex3f(x, y, 1.01);
@@ -611,50 +627,51 @@ void Cabin::resolveCollision(Camera* camera)
       float diffZMax = maxZ - camZ;
 
       // If Camera collided with the right or front edge.
-	  if (diffXMax < diffXMin && diffZMax < diffZMin)
-	  {
+      if (diffXMax < diffXMin && diffZMax < diffZMin)
+      {
          // If Camera collided with the right edge.
          if (diffXMax < diffZMax)
             camera->setEyePos(maxX, camera->getEyeY(), camZ);
          // If Camera collided with the front edge.
          else
             camera->setEyePos(camX, camera->getEyeY(), maxZ);
-	  }
+      }
       // If Camera collided with the right or back edge.
-	  else if (diffXMax < diffXMin && diffZMin < diffZMax)
-	  {
+      else if (diffXMax < diffXMin && diffZMin < diffZMax)
+      {
          // If Camera collided with the right edge.
          if (diffXMax < diffZMin)
             camera->setEyePos(maxX, camera->getEyeY(), camZ);
          // If Camera collided with the back edge.
          else
             camera->setEyePos(camX, camera->getEyeY(), minZ);
-	  }
+      }
       // If Camera collided with the left or front edge. 
-	  else if (diffXMin < diffXMax && diffZMax < diffZMin)
-	  {
+      else if (diffXMin < diffXMax && diffZMax < diffZMin)
+      {
          // If Camera collided with the left edge.
          if (diffXMin < diffZMax)
             camera->setEyePos(minX, camera->getEyeY(), camZ);
          // If Camera collided with the front edge.
          else
             camera->setEyePos(camX, camera->getEyeY(), maxZ);
-	  }
+      }
       // If Camera collided with the left or back edge.
-	  else if (diffXMin < diffXMax && diffZMin < diffZMax)
-	  {
+      else if (diffXMin < diffXMax && diffZMin < diffZMax)
+      {
          // If Camera collided with the left edge.
          if (diffXMin < diffZMin)
             camera->setEyePos(minX, camera->getEyeY(), camZ);
          else
             camera->setEyePos(camX, camera->getEyeY(), minZ);
-	  }
+      }
    }
 }
 
 // Function definition for Cabin class setPosition function.
 void Cabin::setPosition(float x, float y, float z)
 {
+   // Set object translation coordinates.
    this->posX = x;
    this->posY = y;
    this->posZ = z;
@@ -663,6 +680,7 @@ void Cabin::setPosition(float x, float y, float z)
 // Function definition for Cabin class setScale function.
 void Cabin::setScale(float x, float y, float z)
 {
+   // Set object's scaling.
    this->scaleX = x;
    this->scaleY = y;
    this->scaleZ = z;
@@ -671,6 +689,7 @@ void Cabin::setScale(float x, float y, float z)
 // Function definition for Cabin class setRotation function.
 void Cabin::setRotation(float x, float y, float z)
 {
+   // Set object's rotation about each axis.
    this->rotX = x;
    this->rotY = y;
    this->rotZ = z;

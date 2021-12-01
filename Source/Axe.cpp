@@ -9,14 +9,17 @@
 // Function definition for Axe class default constructor.
 Axe::Axe()
 {
+   // Set object translation coordinates.
    this->posX = 0.0;
    this->posY = 0.0;
    this->posZ = 0.0;
 
+   // Set object's scaling.
    this->scaleX = 1.0;
    this->scaleY = 1.0;
    this->scaleZ = 1.0;
 
+   // Set object's rotation about each axis.
    this->rotX = 0.0;
    this->rotY = 0.0;
    this->rotZ = 0.0;
@@ -25,14 +28,17 @@ Axe::Axe()
 // Function definition for Axe class constructor.
 Axe::Axe(float x, float y, float z, float dx, float dy, float dz, float rx, float ry, float rz)
 {
+   // Set object translation coordinates.
    this->posX = x;
    this->posY = y;
    this->posZ = z;
 
+   // Set object's scaling.
    this->scaleX = dx;
    this->scaleY = dy;
    this->scaleZ = dz;
 
+   // Set object's rotation about each axis.
    this->rotX = rx;
    this->rotY = ry;
    this->rotZ = rz;
@@ -386,6 +392,7 @@ wall Axe::getSide(Camera* camera)
 // Function definition for Axe class setPosition function.
 void Axe::setPosition(float x, float y, float z)
 {
+   // Set object translation coordinates.
    this->posX = x;
    this->posY = y;
    this->posZ = z;
@@ -394,6 +401,7 @@ void Axe::setPosition(float x, float y, float z)
 // Function definition for Axe class setScale function.
 void Axe::setScale(float x, float y, float z)
 {
+   // Set object's scaling.
    this->scaleX = x;
    this->scaleY = y;
    this->scaleZ = z;
@@ -402,6 +410,7 @@ void Axe::setScale(float x, float y, float z)
 // Function definition for Axe class setRotation function.
 void Axe::setRotation(float x, float y, float z)
 {
+   // Set object's rotation about each axis.
    this->rotX = x;
    this->rotY = y;
    this->rotZ = z;

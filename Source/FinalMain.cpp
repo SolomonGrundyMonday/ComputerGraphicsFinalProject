@@ -14,7 +14,7 @@
 #include "Lantern.h"
 #include "Horizon.h"
 #include "TreeStump.h"
-#include "CaveWall.h"
+#include "HedgeWall.h"
 #include <vector>
 
 // Variables for graphical objects.
@@ -27,11 +27,11 @@ Cabin* cabin;
 Skybox* sky;
 Lantern* lantern;
 Horizon* horizon;
-CaveWall* back;
-CaveWall* left;
-CaveWall* right;
-CaveWall* front;
-std::vector<CaveWall *> innerWalls;
+HedgeWall* back;
+HedgeWall* left;
+HedgeWall* right;
+HedgeWall* front;
+std::vector<HedgeWall *> innerWalls;
 std::vector<TreeStump *> stump;
 std::vector<Tent *> tent;
 
@@ -54,7 +54,7 @@ void initialize_objects()
                                      {-4.0, -23.0}, {-2.0, -14.5}, {-3.0, -10.0},
                                      {-7.0, 0.5}, {-4.0, 6.5}, {-5.0, 13.0},
                                      {-3.0, 17.0}, {-6.0, 23.0}, {-25.5, 11.5},
-									 {-1.0, -4.5}, {9.0, 1.0}, {0.0, 11.5},
+                                     {-1.0, -4.5}, {9.0, 1.0}, {0.0, 11.5},
                                      {6.5, -11.0}, {4.0, -3.0}, {9.5, -6.5},
                                      {2.5, 6.5} };
 
@@ -67,9 +67,9 @@ void initialize_objects()
                                        {9.0, 14.0}, {10.5, 7.5} };
 
    // Coordinates for inner walls of hedge maze area.
-   float wallCoord[wallCount][4] = { {18.0, -3.5, 2.0, 0.0}, {21.75, -17.0, 2.0, 90.0}, {18.4, -1.0, 2.0, 90.0},
+   float wallCoord[wallCount][4] = { {18.0, -3.5, 2.0, 0.0}, {21.8, -17.0, 2.0, 90.0}, {18.4, -1.0, 2.0, 90.0},
                                      {21.2, -3.2, 1.5, 90.0}, {20.0, -6.5, 2.2, 0.0}, {19.0, -11.1, 3.5, 90.0},
-                                     {17.3, -16.6, 1.5, 0.0}, {21.0, -12.1, 1.0, 0.0}, {21.0, -11.8, 1.5, 90.0} };
+                                     {17.3, -16.2, 1.5, 0.0}, {21.0, -12.1, 1.0, 0.0}, {21.0, -11.8, 1.5, 90.0} };
 
    // Instantiate Trees.
    for (int i = 0; i < treeCount; i++)
@@ -121,25 +121,24 @@ void initialize_objects()
    lantern->Initialize("Assets/RustyMetal.bmp");
 
    // Instatiate Exterior walls of hedge maze.
-   back = new CaveWall(18.25, 2.0, -17.8, 2.5, 2.0, 1.0, 0.0, 0.0, 0.0);
+   back = new HedgeWall(18.3, 2.0, -17.8, 2.5, 2.0, 1.0, 0.0, 0.0, 0.0);
    back->Initialize("Assets/Hedge.bmp");
 
-   left = new CaveWall(17.0, 2.0, -9.0, 10.0, 2.0, 1.0, 0.0, 90.0, 0.0);
+   left = new HedgeWall(17.0, 2.0, -9.0, 10.0, 2.0, 1.0, 0.0, 90.0, 0.0);
    left->Initialize("Assets/Hedge.bmp");
 
-   right = new CaveWall(21.0, 2.0, -9.0, 10.0, 2.0, 1.0, 0.0, -90.0, 0.0);
+   right = new HedgeWall(21.0, 2.0, -9.0, 10.0, 2.0, 1.0, 0.0, -90.0, 0.0);
    right->Initialize("Assets/Hedge.bmp");
 
-   front = new CaveWall(19.7, 2.0, 0.0, 2.5, 2.0, 1.0, 0.0, 180.0, 0.0);
+   front = new HedgeWall(19.7, 2.0, 0.0, 2.5, 2.0, 1.0, 0.0, 180.0, 0.0);
    front->Initialize("Assets/Hedge.bmp");
 
    // Instantiate inner walls of hedge maze.
    for (int i = 0; i < wallCount; i++)
    {
-      innerWalls.push_back(new CaveWall(wallCoord[i][0], 2.0, wallCoord[i][1], wallCoord[i][2], 2.0, 1.0, 0.0, wallCoord[i][3], 0.0));
+      innerWalls.push_back(new HedgeWall(wallCoord[i][0], 2.0, wallCoord[i][1], wallCoord[i][2], 2.0, 1.0, 0.0, wallCoord[i][3], 0.0));
       innerWalls.at(i)->Initialize("Assets/Hedge.bmp");
    }
-
 }
 
 // Display function, called by GLUT to update the screen.

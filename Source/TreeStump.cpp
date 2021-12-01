@@ -134,10 +134,12 @@ void TreeStump::Render()
 bool TreeStump::detectCollision(Camera* camera)
 {
    // Compute relative Camera x, z coordinates and convert to object coordinate system.
+   float sine = Sin(this->rotY);
+   float cosine = Cos(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
-   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+   camX = camX * cosine - camZ * sine;
+   camZ = camZ * cosine + camX * sine;
 
    // Compute x, z minimum and maximum coordinates for object hitbox.
    float minX = -2.0 * this->scaleX;
@@ -156,10 +158,12 @@ bool TreeStump::detectCollision(Camera* camera)
 void TreeStump::resolveCollision(Camera* camera)
 {
    // Compute relativve Camera x, z coordinates and convert to object coordinates.
+   float sine = Sin(this->rotY);
+   float cosine = Cos(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
-   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+   camX = camX * cosine - camZ * sine;
+   camZ = camZ * cosine + camX * sine;
 
    // Compute x, z minimum and maximum values for object hitbox.
    float minX = -2.0 * this->scaleX;
@@ -167,8 +171,6 @@ void TreeStump::resolveCollision(Camera* camera)
    float minZ = -2.0 * this->scaleZ;
    float maxZ = 2.0 * this->scaleZ;
 
-   float sine = Sin(this->rotY);
-   float cosine = Cos(this->rotY);
    wall collision = getSide(camera);
 
    if (collision == FRONT)
@@ -241,10 +243,12 @@ void TreeStump::resolveCollision(Camera* camera)
 wall TreeStump::getSide(Camera* camera)
 {
    // Compute relative position and convert to object coordinates.
+   float sine = Sin(this->rotY);
+   float cosine = Cos(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
-   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+   camX = camX * cosine - camZ * sine;
+   camZ = camZ * cosine + camX * sine;
 
    // Compute x, z maximum and minimum values for object hitbox.
    float minX = -2.0 * this->scaleX - 0.7;
