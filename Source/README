@@ -66,7 +66,7 @@ Estimated Time:
    Time spent testing the performance on my VM (to get a floor for performance) and making optimization passes: 4 hours.
 
 Things that still need to be done:
-   I would like to touch up the collisions for the Cabin and Tent objects.  My collisions for the Tent and cabin 
+   I would like to touch up the collisions for the Tent objects.  My collisions for the Tent 
    objects are not as robust as I would like them to be (they only work if the objects are rotated at 0.0 or 180.0 degrees).  Additionally,
    I need to do a little work on the Tent surface normals, as they currently don't look quite right.  
    Lastly, I would like to replace some of the textures that I am using if time allows (specifically the textures for the axe head,
