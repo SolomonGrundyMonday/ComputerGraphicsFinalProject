@@ -193,16 +193,15 @@ void display()
    // Resolve collisions for Trees.
    for (int i = 0; i < treeCount; i++)
    {
-      tree.at(i)->resolveCollision(player);
+      if (tree.at(i)->detectCollision(player))
+         tree.at(i)->resolveCollision(player);
    }
 
    // Resolve collisions for Tents.
    for (int i = 0; i < tentCount; i++)
    {
       if (tent.at(i)->detectCollision(player))
-      {
          tent.at(i)->resolveCollision(player);
-      }
    }
 
    // Resolve collisions for exterior hedge maze walls.

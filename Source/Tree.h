@@ -51,6 +51,16 @@ class Tree : public GameObject
        */
       int branchFractal(float l0, float r0);
 
+      /*
+       *   Function prototype for getSide helper function.
+       *   Precondition:   A Tree object has been instantiated, rendered to the scene, and a collision
+       *                   with the active Camera object has been detected.
+       *   Postcondition:  The side of the object's hitbox that is experiencing the collision has been returned
+       *                   to the caller.
+       *   Parameter:      The active Camera object. 
+       */
+      wall getSide(Camera* camera);
+
    public:
 
       /*
@@ -96,6 +106,15 @@ class Tree : public GameObject
        *                  position has been updated such that the Camera is prevented from "clipping" through the Tree.0  
        */
       void resolveCollision(Camera* camera);
+
+      /*
+       *   Function prototype for Tree object detectCollision function.
+       *   Precondition:   A Tree object has been instantiated and rendered to the scene.
+       *   Postcondition:  The function returns True if the active Camera object is colliding with the object's hitbox, false
+       *                   otherwise.
+       *   Parameter:      The active Camera object.  
+       */
+      bool detectCollision(Camera* camera);
 
       /*
        *   Function prototype for Tree object setPosition function.
