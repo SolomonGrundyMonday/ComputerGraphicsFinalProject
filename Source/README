@@ -66,9 +66,8 @@ Estimated Time:
    Time spent testing the performance on my VM (to get a floor for performance) and making optimization passes: 4 hours.
 
 Things that still need to be done:
-   I would like to touch up the collisions for the Cabin, Tent and hedge maze walls objects.  My collisions for the Tent and cabin 
-   objects are not as robust as I would like them to be (they only work if the objects are rotated at 0.0 or 180.0 degrees) and the hedge maze
-   walls need slightly different thresholds for a collision (collision resolution is a bit wonky around the corners right now).  Additionally,
+   I would like to touch up the collisions for the Cabin and Tent objects.  My collisions for the Tent and cabin 
+   objects are not as robust as I would like them to be (they only work if the objects are rotated at 0.0 or 180.0 degrees).  Additionally,
    I need to do a little work on the Tent surface normals, as they currently don't look quite right.  
    Lastly, I would like to replace some of the textures that I am using if time allows (specifically the textures for the axe head,
    shovel head, shovel handle and the axe handle/shovel shaft.  If necessary, I would also like to implement a debug mode that
@@ -76,9 +75,7 @@ Things that still need to be done:
    in first-person mode, it isn't really possible to shine a light on certain surfaces given the limitations of character movement.  Last but
    not least, I will be making one additional optimization pass before the final submission.  Currently, I was running into severe framerate
    issues on the test VM that I have to get a performance floor, so I just reduced the number of trees in the environment significantly.  Once
-   collisions and surface normals are up to speed, I will remove various inefficiencies present in this test build as well as refactor variables
-   and classes and ensure that the code is properly formatted (I moved a lot of code pieces around in the last few days, so there may currently
-   be some erronious tab-spaces - my IDE puts them in automatically and I don't know what setting to change to stop it).
+   collisions and surface normals are up to speed, I will remove various inefficiencies present in this test build.
 
 Additional notes:
    The hedge maze area was originally intended to be a cave area for the user to explore, however I had severe difficulty getting 
