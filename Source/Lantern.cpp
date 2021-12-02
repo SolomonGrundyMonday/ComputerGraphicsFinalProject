@@ -416,7 +416,6 @@ void Lantern::lightSource()
    float spotE[] = { 0.0 };
    float spotC[] = { 180.0 };
    float spotPosition[] = { this->posX, this->posY, this->posZ, 1.0 };
-   float spotDirection[] = {0.0, 0.0, -1.0};
    float cAttenuation[] = { 1.0 };
    float lAttenuation[] = { 0.09 };
    float qAttenuation[] = { 0.032 };
@@ -427,7 +426,6 @@ void Lantern::lightSource()
    glLightfv(GL_LIGHT0, GL_DIFFUSE, Diffuse);
    glLightfv(GL_LIGHT0, GL_SPECULAR, Specular);
    glLightfv(GL_LIGHT0, GL_POSITION, spotPosition);
-   glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spotDirection);
    glLightfv(GL_LIGHT0, GL_SPOT_EXPONENT, spotE);
    glLightfv(GL_LIGHT0, GL_CONSTANT_ATTENUATION, cAttenuation);
    glLightfv(GL_LIGHT0, GL_LINEAR_ATTENUATION, lAttenuation);

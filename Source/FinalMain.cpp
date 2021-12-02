@@ -234,6 +234,9 @@ void display()
    for (int i = 0; i < treeCount; i++)
       tree.at(i)->Render();
 
+   // Render lantern and enable the light source at its origin.
+   lantern->lightSource();
+
    // Render Tent objects.
    for (int i = 0; i < tentCount; i++)
       tent.at(i)->Render();
@@ -248,6 +251,8 @@ void display()
    // Render Shovel object.
    shovel->Render();
 
+   lantern->Render();
+
    // Render Axe object.
    axe->Render();
 
@@ -257,10 +262,6 @@ void display()
    // Render Skybox/Horizon objects.
    sky->Render();
    horizon->Render();
-
-   // Render Lantern, enable Lantern light source.
-   lantern->Render();
-   lantern->lightSource();
 
    // Render exterior hedge maze walls.
    back->Render();
