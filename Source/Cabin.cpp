@@ -63,6 +63,8 @@ void Cabin::Render()
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    glBindTexture(GL_TEXTURE_2D, texture);
+   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.0);
+   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -605,66 +607,147 @@ void Cabin::drawWindow(float x, float y, float z)
    glEnd();
 }
 
+// Function definition for Cabin class getSide helper function.
+wall Cabin::getSide(Camera* camera)
+{
+   // Compute the relative x, z coordinates and convert to object coordinates.
+   float cosine = Cos(this->rotY);
+   float sine = Sin(this->rotY);
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   float objX = (camX * cosine) - (camZ * sine);
+   float objZ = (camZ * cosine) + (camX * sine);
+
+   float diffXMin = objX - (-this->scaleX - 0.75);
+   float diffXMax = (this->scaleX + 0.75) - objX;
+   float diffZMin = objZ - (-this->scaleZ - 0.75);
+   float diffZMax = (this->scaleZ + 0.75) - objZ;
+
+   // Determine which wall of the hitbox is experiencing the collision.
+   bool left = diffXMin < diffXMax && diffXMin < diffZMin && diffXMin < diffZMax;
+   bool right = diffXMax < diffXMin && diffXMax < diffZMin && diffXMax < diffZMax;
+   bool front = diffZMin < diffZMax && diffZMin < diffXMin && diffZMin < diffXMax;
+   bool back = diffZMax < diffZMin && diffZMax < diffXMin && diffZMax < diffXMax;
+
+   // Return the appropriate wall.
+   if (front)
+      return FRONT;
+   else if (back)
+      return BACK;
+   else if (left)
+      return LEFT;
+   else if (right)
+      return RIGHT;
+   else
+      return NONE;
+}
+
+// Function definition for Cabin class detectCollision function.
+bool Cabin::detectCollision(Camera* camera)
+{
+   // Compute the relative x, z coordinates and convert to object coordinates.
+   float cosine = Cos(this->rotY);
+   float sine = Sin(this->rotY);
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   float objX = (camX * cosine) - (camZ * sine);
+   float objZ = (camZ * cosine) + (camX * sine);
+
+   // Compute x and z maximum and minimum (with offset to prevent Camera clipping).
+   float minX = -this->scaleX - 0.75;
+   float maxX = this->scaleX + 0.75;
+   float minZ = -this->scaleZ - 0.75;
+   float maxZ = this->scaleZ + 0.75;
+
+   // Determine if the Camera is colliding with the x, z components of the hitbox.
+   bool xCollide = objX > minX && objX < maxX;
+   bool zCollide = objZ > minZ && objZ < maxZ;
+
+   return xCollide && zCollide;
+}
+
 // Function definition for Cabin class resolveCollision function implementation.
 void Cabin::resolveCollision(Camera* camera)
 {
-   float camX = camera->getEyeX();
-   float camZ = camera->getEyeZ();
-   float xOffset = (0.7 * Sin(camera->getTheta()));
-   float zOffset = (0.7 * Cos(camera->getTheta()));
-   float minX = (-this->scaleX + this->getPosX()) - (xOffset + 0.5);
-   float maxX = (this->scaleX + this->getPosX()) - (xOffset - 0.5);
-   float minZ = (-this->scaleZ + this->getPosZ()) + (zOffset - 0.5);
-   float maxZ = (this->scaleZ + this->getPosZ()) + zOffset + 0.5;
+   // Compute relative x, z coordinate and convert to object coordinates.
+   float cosine = Cos(this->rotY);
+   float sine = Sin(this->rotY);
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   float objX = (camX * cosine) - (camZ * sine);
+   float objZ = (camZ * cosine) + (camX * sine);
 
-   // Only need to resolve collision if the camera eye position is within x, z boundaries of object.
-   if (camX > minX && camX < maxX && camZ > minZ && camZ < maxZ)
+   // Compute minimum, maximum x and z values.
+   float minX = -this->scaleX - 0.75;
+   float maxX = this->scaleX + 0.75;
+   float minZ = -this->scaleZ - 0.75;
+   float maxZ = this->scaleZ + 0.75;
+
+   wall collision = getSide(camera);
+
+   if (collision == FRONT)
    {
-      // Compute the minimum and maximum x and z values.
-      float diffXMin = camX - minX;
-      float diffXMax = maxX - camX;
-      float diffZMin = camZ - minZ;
-      float diffZMax = maxZ - camZ;
+      float newX, newZ;
 
-      // If Camera collided with the right or front edge.
-      if (diffXMax < diffXMin && diffZMax < diffZMin)
-      {
-         // If Camera collided with the right edge.
-         if (diffXMax < diffZMax)
-            camera->setEyePos(maxX, camera->getEyeY(), camZ);
-         // If Camera collided with the front edge.
-         else
-            camera->setEyePos(camX, camera->getEyeY(), maxZ);
-      }
-      // If Camera collided with the right or back edge.
-      else if (diffXMax < diffXMin && diffZMin < diffZMax)
-      {
-         // If Camera collided with the right edge.
-         if (diffXMax < diffZMin)
-            camera->setEyePos(maxX, camera->getEyeY(), camZ);
-         // If Camera collided with the back edge.
-         else
-            camera->setEyePos(camX, camera->getEyeY(), minZ);
-      }
-      // If Camera collided with the left or front edge. 
-      else if (diffXMin < diffXMax && diffZMax < diffZMin)
-      {
-         // If Camera collided with the left edge.
-         if (diffXMin < diffZMax)
-            camera->setEyePos(minX, camera->getEyeY(), camZ);
-         // If Camera collided with the front edge.
-         else
-            camera->setEyePos(camX, camera->getEyeY(), maxZ);
-      }
-      // If Camera collided with the left or back edge.
-      else if (diffXMin < diffXMax && diffZMin < diffZMax)
-      {
-         // If Camera collided with the left edge.
-         if (diffXMin < diffZMin)
-            camera->setEyePos(minX, camera->getEyeY(), camZ);
-         else
-            camera->setEyePos(camX, camera->getEyeY(), minZ);
-      }
+      newX = objX;
+      newZ = minZ;
+
+      // Undo transformation and convert back to world coordinates (transform matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   else if (collision == BACK)
+   {
+      float newX, newZ;
+
+      newX = objX;
+      newZ = maxZ;
+
+      // Undo transformation and convert back to world coordinates (transform matrix inverse courtesy of Symbolab).
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   else if (collision == LEFT)
+   {
+      float newX, newZ;
+
+      newX = minX;
+      newZ = objZ;
+
+      // Undo transformation and convert back to world coordinates (transform matrix inverse courtesy of Symbolab).
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (objZ * sine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
+   }
+   else if (collision == RIGHT)
+   {
+      float newX, newZ;
+
+      newX = maxX;
+      newZ = objZ;
+
+      // Undo transformation and convert back to world coordinates (transform matrix inverse courtesy of Symbolab).
+      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (objZ * sine / (-sine * sine - cosine * cosine));
+      newX += this->posX;
+      newZ += this->posZ;
+
+      // Update Camera position.
+      camera->setEyePos(newX, camera->getEyeY(), newZ);
    }
 }
 

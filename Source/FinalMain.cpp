@@ -172,7 +172,8 @@ void display()
       horizon->resolveCollision(player);
 
    // Resolve collisions for Cabin.
-   cabin->resolveCollision(player);
+   if (cabin->detectCollision(player))
+      cabin->resolveCollision(player);
 
    // Resolve collisions for Axe.
    if (axe->detectCollision(player))

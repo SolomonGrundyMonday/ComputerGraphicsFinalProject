@@ -52,6 +52,16 @@ class Cabin : public GameObject
        */
       void drawWindow(float x, float y, float z);
 
+      /*
+       *   Function prototype for Cabin object getSide helper function.
+       *   Precondition:   A Cabin object has been instantiated, rendered to the scene, and a collision with
+       *                   the active Camera object has been detected.
+       *   Postcondition:  The side of the Cabin's hitbox that is experiencing the collision has been returned
+       *                   to the caller.
+       *   Parameter:      The active Camera object.  
+       */
+      wall getSide(Camera* camera);
+
    public:
      
       /*
@@ -89,6 +99,15 @@ class Cabin : public GameObject
        *    Parameter:     The active Camera object. 
        */
       void resolveCollision(Camera* camera);
+
+      /*
+       *    Function prototype for Cabin object detectCollision function.
+       *    Precondition:  A Cabin object has been instantiated and rendered to the scene.
+       *    Postcondition: The function returns true if the object's hitbox is experiencing a collision with the active Camera
+       *                   object, false otherwise.
+       *    Parameter:     True if the Camera is colliding with the hitbox, false otherwise. 
+       */
+      bool detectCollision(Camera* camera);
 
       /*
        *    Function prototype for Cabin object implementation of Render function.
