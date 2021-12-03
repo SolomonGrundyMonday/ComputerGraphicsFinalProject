@@ -36,7 +36,7 @@ Compile on Linux           -   Complete
 Performance on VM          -   Major framerate issues, making further optimization passes
 Final object positioning   -   Complete
 Final keybindings/controls -   Complete
-Soak test                  -
+Soak test                  -   Complete
 Edge cases                 -
 Debug mode                 -
 Flashlight implementation  -   Complete
