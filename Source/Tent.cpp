@@ -413,39 +413,55 @@ void Tent::DrawSpike(float px, float pz)
 // Function definition for Tent object detectCollision function implementation.
 bool Tent::detectCollision(Camera* camera)
 {
-   // Convert camera x, y coordinates to object coordinates.
-   float camX = camera->getEyeX() * Cos(this->rotY) - camera->getEyeZ() * Sin(this->rotY);
-   float camZ = camera->getEyeZ() * Cos(this->rotY) + camera->getEyeX() * Sin(this->rotY);
+   // Compute relative x, z coordinates and convert to object coordinates.
+   float cosine = Cos(this->rotY);
+   float sine = Sin(this->rotY);
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   float objX = (camX * cosine) - (camZ * sine);
+   float objZ = (camZ * cosine) + (camX * sine);
 
    // Rotate position coordinates about the y-axis.
-   float PosX = this->posX * Cos(-this->rotY) + this->posZ * Sin(-this->rotY);
-   float PosZ = -this->posX * Sin(-this->rotY) + this->posZ * Cos(-this->rotY);
+
+   // Compute x, z minimum and maximum values for object hitbox.
+   float minX = -this->scaleX - 0.6;
+   float maxX = this->scaleX + 0.6;
+   float minZ = -this->scaleZ - 0.6;
+   float maxZ = this->scaleZ + 0.6;
 
    // Determine if camera is colliding with the object along the x or z axis, respectively.
-   bool xCollide = camX >= PosX - this->scaleX - 0.6 && camX <= PosX + this->scaleX + 0.6;
-   bool zCollide = camZ >= PosZ - this->scaleX - 0.6 && camZ <= PosZ + this->scaleX + 0.6;
+   bool xCollide = (objX > minX && objX < -this->scaleX + 0.6) || (objX > this->scaleX - 0.6 && objX < maxX);
+   bool zCollide = (objZ > minZ && objZ < -this->scaleZ + 0.6) || (objZ > this->scaleZ - 0.6 && objZ < maxZ);
+   bool xInside = objX > minX && objX < maxX;
+   bool zInside = objZ > minZ && objZ < maxZ;
 
    // Camera is colliding with the object iff it is colliding along both x and y axis.
-   return xCollide && zCollide;
+   return (xCollide && zInside) || (zCollide && xInside);
 }
 
 // Definition of Tent class getWall function. 
 wall Tent::getWall(Camera* camera)
 {
-   // Rotate object origin about the y-axis by factor of this->rotY.
-   float x0 = this->posX * Cos(-this->rotY) + this->posZ * Sin(-this->rotY);
-   float z0 = -this->posX * Sin(-this->rotY) + this->posZ * Cos(-this->rotY);
+   // Compute relative x, z coordinates and convert to object coordinates.
+   float cosine = Cos(this->rotY);
+   float sine = Sin(this->rotY);
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   float objX = (camX * cosine) - (camZ * sine);
+   float objZ = (camZ * cosine) + (camX * sine);
 
    // Convert Camera world coordinates to object coordinate system. 
-   float x1 = camera->getEyeX() * Cos(this->rotY) - camera->getEyeZ() * Sin(this->rotY);
-   float z1 = camera->getEyeZ() * Cos(this->rotY) + camera->getEyeX() * Sin(this->rotY);
+   float diffXMin = objX - (-this->scaleX - 0.6);
+   float diffXMax = (this->scaleX + 0.6) - objX;
+   float diffZMin = objZ - (-this->scaleZ - 0.6);
+   float diffZMax = (this->scaleZ + 0.6) - objZ;
 
    // Determine if collision occured with the back wall, left wall, right wall, front right wall or front left wall.
-   bool back = z1 > (z0 - this->scaleZ - 0.6) && z1 < (z0 - this->scaleZ + 0.6) && x1 < (x0 + this->scaleX + 0.6) && x1 > (x0 - this->scaleX - 0.6);
-   bool frontRight = z1 > (z0 + this->scaleZ - 0.6) && z1 < (z0 + this->scaleZ + 0.6) && x1 < (x0 + this->scaleX + 0.6) && x1 > (x0 + this->scaleX - 0.6);
-   bool frontLeft = z1 > (z0 + this->scaleZ - 0.6) && z1 < (z0 + this->scaleZ + 0.6) && x1 < (x0 - this->scaleX + 0.6) && x1 > (x0 - this->scaleX - 0.6);
-   bool left = z1 > (z0 - this->scaleZ - 0.6) && z1 < (z0 + this->scaleZ + 0.6) && x1 < (x0 - this->scaleX + 0.6) && x1 > (x0 - this->scaleX - 0.6);
-   bool right = z1 > (z0 - this->scaleZ - 0.6) && z1 < (z0 + this->scaleZ + 0.6) && x1 > (x0 + this->scaleX - 0.6) && x1 < (x0 + this->scaleX + 0.6);
+   bool back = diffZMin < diffZMax && diffZMin <= diffXMin && diffZMin <= diffXMax;
+   bool frontRight = diffZMax < diffZMin && diffZMax <= diffXMin && diffZMax <= diffXMax && objX > 0.3;
+   bool frontLeft = diffZMax < diffZMin && diffZMax <= diffXMin && diffZMax <= diffZMin && objX < -0.3;
+   bool left = diffXMin < diffXMax && diffXMin < diffZMin && diffXMin < diffZMax;
+   bool right = diffXMax < diffXMin && diffXMax < diffZMin && diffXMax < diffZMax;
 
    // Return appropriate enum value.
    if (back)
@@ -465,18 +481,21 @@ wall Tent::getWall(Camera* camera)
 // Function definition for Tent object resovleCollision function implementation.
 void Tent::resolveCollision(Camera* camera)
 {
-   // Get the wall that the Camera is colliding with.
-   wall collision = getWall(camera);
-
-   // Compute Camera coordinates relative to the object, then convert from world coordinates to object coordinates.
-   float relX = camera->getEyeX() - this->posX;
-   float relZ = camera->getEyeZ() - this->posZ;
-   float camX = relX * Cos(this->rotY) - relZ * Sin(this->rotY);
-   float camZ = relZ * Cos(this->rotY) + relX * Sin(this->rotY);
-
-   // Optimization, reduce function calls to cosine and sine.
+   // Compute relative x, z coordinates and convert to object coordinates.
    float cosine = Cos(this->rotY);
    float sine = Sin(this->rotY);
+   float camX = camera->getEyeX() - this->posX;
+   float camZ = camera->getEyeZ() - this->posZ;
+   float objX = (camX * cosine) - (camZ * sine);
+   float objZ = (camZ * cosine) + (camX * sine);
+
+   float minX = -this->scaleX - 0.6;
+   float maxX = this->scaleX + 0.6;
+   float minZ = -this->scaleZ - 0.6;
+   float maxZ = this->scaleZ + 0.6;
+
+   // Get the wall that the Camera is colliding with.
+   wall collision = getWall(camera);
 
    // If camera collided with back wall.
    if (collision == BACK)
@@ -484,34 +503,39 @@ void Tent::resolveCollision(Camera* camera)
       float newX, newZ;
 
       // If player collides with wall exterior.
-      if (camZ < -1.0)
+      if (objZ < -this->scaleZ)
       {
-         newZ = -1.6;
-         newX = camX;
+         newZ = minZ;
+         newX = objX;
       }
       // If player collides with wall interior.
       else
       {
-         if (camX < 0.4 && camX > -0.4)
+         if (objX < this->scaleX && objX > -this->scaleX)
          {
-            newZ = -0.4;
-            newX = camX;
+            newZ = -this->scaleZ + 0.6;
+            if (objX > this->scaleX - 0.6)
+               newX = this->scaleX - 0.6;
+            else if (objX < -this->scaleX + 0.6)
+               newX = -this->scaleX + 0.6;
+            else
+               newX = objX;
          }
-         else if (camX > 0.4)
+         else if (objX > this->scaleX)
          {
-            newZ = (camX > 1.0) ? camZ : -0.4;
-            newX = (camX > 1.0) ? 1.6 : 0.4;
+            newZ = (objX > this->scaleX) ? objZ : -this->scaleZ + 0.6;
+            newX = (objX > this->scaleX) ? maxX : this->scaleX - 0.6;
          }
          else 
          {
-            newZ = (camX < -1.0) ? camZ : - 0.4;
-            newX = (camX < -1.0) ? -1.6 : -0.4;
+            newZ = (objX < -this->scaleX) ? objZ : -this->scaleZ + 0.6;
+            newX = (objX < -this->scaleX) ? minX : -this->scaleX + 0.6;
          }
       }
 
    // Undo transformations to convert back to world coordinates (inverse transform matrix courtesy of Symbolab).
    newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
-   newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+   newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
    newX += this->posX;
    newZ += this->posZ;
 
@@ -524,34 +548,24 @@ void Tent::resolveCollision(Camera* camera)
       float newX, newZ;
 
       // If player collides with wall exterior.
-      if (camZ > 1.0)
+      if (objZ > this->scaleZ)
       {
-         newX = camX;
-         newZ = 1.6;
+         newX = objX;
+         newZ = maxZ;
       }
       // If player collides with wall interior.
       else
       {
-         if (camX < 0.4)
-         {
-            newX = camX;
-            newZ = 0.4;
-         }
-         else if (camX > 0.4)
-         {
-            newX = (camX > 1.0) ? 1.6 : 0.4;
-            newZ = (camX > 1.0) ? camZ : 0.4;
-         }
+         if (objX > this->scaleX - 0.6)
+            newX = this->scaleX - 0.6;
          else
-         {
-            newX = (camX > 1.0) ? 1.6 : 0.4;
-            newZ = (camX > 1.0) ? camZ : 0.4;
-         }
+            newX = objX;
+         newZ = this->scaleZ - 0.6;
       }
 
       // Undo transformations to convert back to world coordinates (inverse transform matrix courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
-      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -562,36 +576,27 @@ void Tent::resolveCollision(Camera* camera)
    else if (collision == FRONT_LEFT)
    {
       float newX, newZ;
+      Print("Front left");
 
       // If player collides with wall exterior.
-      if (camZ > 1.0)
+      if (objZ > this->scaleZ)
       {
-         newX = camX;
-         newZ = 1.6;
+         newX = objX;
+         newZ = maxZ;
       }
       // If player collides with wall interior.
       else
       {
-         if (camX > -0.4)
-         {
-            newX = camX;
-            newZ = 0.4;
-         }
-         else if (camX < -0.4)
-         {
-            newX = (camX < -1.0) ? -1.6 : -0.4;
-            newZ = (camX < -1.0) ? camZ : 0.4;
-         }
+         if (objX < -this->scaleX + 0.6)
+            newX = -this->scaleX + 0.6;
          else
-         {
-            newX = (camX < -1.0) ? -1.6 : -0.4;
-            newZ = (camX < -1.0) ? camZ : 0.4;
-         }
+            newX = objX;
+         newZ = this->scaleZ - 0.6;
       }
 
       // Undo transformations to convert back to world coordinates (inverse transform matrix courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
-      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -602,36 +607,38 @@ void Tent::resolveCollision(Camera* camera)
    else if (collision == LEFT)
    {
       float newX, newZ;
+      Print("Left");
       
       // If player collides with wall exterior.
-      if(camX < -1.0)
+      if(objX < -this->scaleX)
       {
-         newX = -1.6;
-         newZ = camZ;
+         newX = minX;
+         newZ = objZ;
       }
       // If player collides with wall interior.
       else
       {
-         if (camZ > 0.4)
+
+         if (objZ > this->scaleZ - 0.6)
          {
-            newX = -0.4;
-            newZ = 0.4;
+            newX = -this->scaleX + 0.6;
+            newZ = this->scaleZ - 0.6;
          }
-         else if (camZ < -0.4)
+         else if (objZ < -this->scaleZ + 0.6)
          {
-            newX = -0.4;
-            newZ = -0.4;
+            newX = -this->scaleX + 0.6;
+            newZ = -this->scaleZ + 0.6;
          }
          else
          {
-            newX = -0.4;
-            newZ = camZ;
+            newX = -this->scaleX + 0.6;
+            newZ = objZ;
          }
       }
 
       // Undo transformations to convert back to world coordinates (inverse transform matrix courtesy of Symbolab).
-      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
       newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (objZ * sine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -642,36 +649,38 @@ void Tent::resolveCollision(Camera* camera)
    else if (collision == RIGHT)
    {
       float newX = 0, newZ = 0;
+      Print("Right");
 
       // If player collides with wall exterior.
-      if (camX > 1.0)
+      if (objX > this->scaleX)
       {
-         newX = 1.6;
-         newZ = camZ;
+         newX = maxX;
+         newZ = objZ;
       }
       // If player collides with wall interior.
       else
       {
-         if (camZ > 0.4)
+
+         if (objZ > this->scaleZ - 0.6)
          {
-            newX = 0.4;
-            newZ = 0.4;
+            newX = this->scaleX - 0.6;
+            newZ = this->scaleZ - 0.6;
          }
-         else if (camZ < -0.5)
+         else if (objZ < -this->scaleZ + 0.6)
          {
-            newX = 0.4;
-            newZ = -0.4;
+            newX = this->scaleX - 0.6;
+            newZ = -this->scaleZ + 0.6;
          }
          else
          {
-            newX = 0.4;
-            newZ = camZ;
+            newX = this->scaleX - 0.6;
+            newZ = objZ;
          }
       }
 
       // Undo transformations to convert back to world coordinates (inverse transform matrix courtesy of Symbolab).
-      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
       newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (objZ * sine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
