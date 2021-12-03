@@ -57,18 +57,16 @@ Sources (Textures):
    Hedge maze wall texture: https://pixabay.com/photos/bank-park-to-sit-park-bench-4237809/.
 
 Estimated Time:
-   So far I have spent around 64 hours on this project.  The breakdown is as follows:
-   Time spent sourcing and editing texture images: around 2 hours.
+   So far I have spent around 68 hours on this project.  The breakdown is as follows:
+   Time spent sourcing and editing texture images: around 2.5 hours.
    Time spent implementing the object geometry (render functions):  About 12 hours.
-   Time spent implementing surface normals and testing lighting: about 16 hours.
-   Time spent implementing and testing object collisions:  about 20 hours.
+   Time spent implementing surface normals and testing lighting: about 16.5 hours.
+   Time spent implementing and testing object collisions:  about 23 hours.
    Time spent placing objects and designing the environment:  about 10 hours. 
    Time spent testing the performance on my VM (to get a floor for performance) and making optimization passes: 4 hours.
 
-Things that still need to be done:
-   I need to do a little work on the Tent surface normals, as they currently don't look quite right.  
-   Lastly, I would like to replace some of the textures that I am using if time allows (specifically the textures for the axe head,
-   shovel head, shovel handle and the axe handle/shovel shaft.  If necessary, I would also like to implement a debug mode that
+Things that still need to be done:  
+   If necessary, I would also like to implement a debug mode that
    allows the user to examine each individual object with an orbiting light source to demonstrate that the normals are working, since
    in first-person mode, it isn't really possible to shine a light on certain surfaces given the limitations of character movement.  Last but
    not least, I will be making one additional optimization pass before the final submission.  Currently, I was running into severe framerate
@@ -79,16 +77,22 @@ Additional notes:
    The hedge maze area was originally intended to be a cave area for the user to explore, however I had severe difficulty getting 
    the area to look decent, so with the limited time that I have left for the project, I decided to pivot to making this part of the
    map a basic hedge maze.  This is largely to demonstrate the collisions that I had already implemented for what were originally intended
-   to be cave walls.  The hedge maze walls also add modular walls that can be rapidly added to the application as necessary for further
-   design iterations.
-   The things to pay attention to/things I am proud of for this project are as follows:
-   The collisions for Tent objects - even though the collisions are not currently very robust, it took a lot of time and effort to get the
-   collisions to work such that the user can't pass through the tent walls, but the tent doorway allows the user to pass through.
-   Tesselation of large polygons for the lighting effects - since I am using a spot light type of light source based at the Camera
-   eye position, I needed to tesselate the larger surfaces (hedge maze walls, cabin walls, ground surface, etc.) in order for the lighting effect
-   to work right as the spotlight passes over them.  Even though I still need to do a little work on the Cabin object to get the normals right for
-   the smaller components, I am really proud of the algorithm that I developed to break the walls into smaller quads programatically.
-   The normals and geometry for the Shovel and Tent objects - The complicated geometry of these objects was particularly difficult to get right, and I am proud
-   of the work I did here.
-   Lastly, I am proud of the optimization work that I have done so far to try and get a large number of trees and objects, as well as have a large scale environment 
-   without a massive hit to performance.
+   to be cave walls.  The HedgeWall class also add modular building blocks that can be rapidly added to the application as necessary for further
+   design iterations (I have experience working in both Unity Engine and Unreal Engine, so this is where the idea of having modular building
+   blocks comes from).
+   
+
+The things to pay attention to/things I am proud of:
+   * The collisions for Tent objects              - it took a lot of time and effort to get the collisions to work such that the user can't pass through 
+                                                    the tent walls, but the tent doorway allows the user to pass through.
+   * Tesselation of large polygons for lighting   - since I am using a spot light type of light source based at the Camera
+                                                    eye position, I needed to tesselate the larger surfaces (hedge maze walls, cabin walls, 
+                                                    ground surface, etc.) in order for the lighting effect to work right as the spotlight passes 
+                                                    over them.  I am really proud of the algorithm that I developed to break the walls into smaller 
+                                                    quads programatically.
+   * The normals/geometry for Shovel/Tent objects - The complicated geometry of these objects was particularly difficult to get right, and I am proud 
+                                                    of the work I did here.
+   * The optimization work that I have done       - I took advantage of various optimization techniques that I remembered from Computer Systems to try and 
+                                                    get a large number of trees and objects, as well as have a large scale environment without a massive hit 
+                                                    to performance.  Even though I still had to cut the number of Trees from the original plan, I am proud of
+                                                    my work optimizing some of the drawing algorithms we learned in this course to increase performance.
