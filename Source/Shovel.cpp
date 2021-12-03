@@ -323,8 +323,6 @@ void Shovel::resolveCollision(Camera* camera)
    float camZ = camera->getEyeZ() - this->posZ;
    camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
    camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
-   glWindowPos2i(5, 65);
-   Print("Shovel resolveCollision.");
 
    // Compute the minimmum and maximum x and z values for the hitbox based on the rotations, scaling and dimensions of the object.
    float minX = (-HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX - (SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
