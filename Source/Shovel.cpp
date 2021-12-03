@@ -48,7 +48,8 @@ Shovel::Shovel(float x, float y, float z, float dx, float dy, float dz, float rx
 int Shovel::Initialize(const char* filename)
 {
    texture = LoadTexBMP(filename);
-   metal = LoadTexBMP("Assets/RustyMetal.bmp");
+   metal = LoadTexBMP("Assets/ToolHead.bmp");
+   plastic = LoadTexBMP("Assets/Plastic.bmp");
 
    return 0;
 }
@@ -59,7 +60,7 @@ void Shovel::Render()
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-   glBindTexture(GL_TEXTURE_2D, metal);
+   glBindTexture(GL_TEXTURE_2D, plastic);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
@@ -82,9 +83,9 @@ void Shovel::Render()
       float z = RADIUS * Cos(theta);
 
       glNormal3f(HANDLE_LEN, y, z);
-      glTexCoord2f(0, i % 2);
+      glTexCoord2f(0, i * 0.25);
       glVertex3f(HANDLE_LEN, y, z);
-      glTexCoord2f(1, i % 2);
+      glTexCoord2f(1, i * 0.25);
       glVertex3f(-HANDLE_LEN, y, z);
    }
    glEnd();
@@ -240,7 +241,7 @@ void Shovel::Render()
    glTexCoord2f(0.5, 0.5);
    glVertex3f(0.0, -RADIUS - SHAFT_LEN - 0.2, -RADIUS/2);
 
-   for (int i = 30; i <= 360; i += 30)
+   for (int i = 0; i <= 360; i += 30)
    {
       float cosine = Cos(i);
       float sine = Sin(i);

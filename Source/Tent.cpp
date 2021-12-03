@@ -120,7 +120,7 @@ void Tent::Render()
    glEnd();
 
    // Draw Tent left wall.
-   glNormal3f(-0.5, 0.0, 0.0);
+   glNormal3f(-1.0, 0.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-1.0, -1.0, -1.0);
@@ -133,7 +133,7 @@ void Tent::Render()
    glEnd();
 
    // Draw Tent Right wall.
-   glNormal3f(0.5, 0.0, 0.0);
+   glNormal3f(1.0, 0.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(1.0, -1.0, 1.0);
@@ -159,7 +159,7 @@ void Tent::Render()
    glEnd();
 
    // Draw Tent roof.
-   glNormal3f(0.0, (1.5/2.0), 1.0);
+   glNormal3f(0.0, 1.25, 1.0);
    glBegin(GL_TRIANGLES);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-1.0, 1.0, 1.0);
@@ -169,7 +169,7 @@ void Tent::Render()
    glVertex3f(0.0, 1.5, 1.0);
    glEnd();
 
-   glNormal3f(0.0, 1.5/2.0, -1.0);
+   glNormal3f(0.0, 1.25, -1.0);
    glBegin(GL_TRIANGLES);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(1.0, 1.0, -1.0);
@@ -420,8 +420,6 @@ bool Tent::detectCollision(Camera* camera)
    float camZ = camera->getEyeZ() - this->posZ;
    float objX = (camX * cosine) - (camZ * sine);
    float objZ = (camZ * cosine) + (camX * sine);
-
-   // Rotate position coordinates about the y-axis.
 
    // Compute x, z minimum and maximum values for object hitbox.
    float minX = -this->scaleX - 0.6;

@@ -231,3 +231,9 @@ double Camera::getTheta()
 {
    return this->theta;
 }
+
+// Function definition for getFlashlight getter method of Camera class.
+bool Camera::getFlashlight()
+{
+   return this->lightOn;
+}

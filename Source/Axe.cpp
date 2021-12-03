@@ -48,7 +48,7 @@ Axe::Axe(float x, float y, float z, float dx, float dy, float dz, float rx, floa
 int Axe::Initialize(const char* filename)
 {
    this->texture = LoadTexBMP(filename);
-   this->metal = LoadTexBMP("Assets/RustyMetal.bmp");
+   this->metal = LoadTexBMP("Assets/ToolHead.bmp");
 
    return 0;
 }
@@ -59,14 +59,16 @@ void Axe::Render()
    float headTop = LENGTH + 0.001;
    float headBottom = headTop - HEAD_HEIGHT;
    float axeBlade = -RAD - HEAD_LENGTH;
-   float bladeNormY = headTop - (HEAD_HEIGHT/2.0);
-   float bladeNormX = -RAD - (HEAD_LENGTH/2.0);
+   float bladeNormY = headTop - (HEAD_HEIGHT / 2.0);
+   float bladeNormX = axeBlade - (HEAD_LENGTH / 2.0);
    float textureRatio = 1.0/12.0;
+   float white[] = { 1.0, 1.0, 1.0, 1.0 };
 
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    glBindTexture(GL_TEXTURE_2D, texture);
+   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
@@ -154,12 +156,12 @@ void Axe::Render()
    glEnd();
 
    // Front side.
-   glNormal3f(0.0, headTop - (HEAD_HEIGHT/2), RAD);
+   glNormal3f(0.0, bladeNormY, RAD);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(RAD, headBottom, RAD);
    glTexCoord2f(0.0, 1.0);
-   glVertex3f(-RAD, headBottom, RAD);
+   glVertex3f(-RAD, headBottom, RAD);;
    glTexCoord2f(1.0, 0.0);
    glVertex3f(-RAD, headTop, RAD);
    glTexCoord2f(1.0, 1.0);
@@ -167,7 +169,7 @@ void Axe::Render()
    glEnd();
 
    // Left side.
-   glNormal3f(RAD, headTop - (HEAD_HEIGHT/2), 0.0);
+   glNormal3f(RAD, bladeNormY, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(RAD, headBottom, RAD);
@@ -192,8 +194,8 @@ void Axe::Render()
    glVertex3f(-RAD, headBottom, -RAD);
    glEnd();
 
-   // Front axe flat side.
-   glNormal3f(-bladeNormX, bladeNormY, -RAD/2);
+   // Back axe flat side.
+   glNormal3f(bladeNormX, bladeNormY, -RAD);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-RAD, headTop, -RAD);
@@ -205,8 +207,8 @@ void Axe::Render()
    glVertex3f(axeBlade, headTop, 0.0);
    glEnd();
 
-   // Back axe flat side.
-   glNormal3f(bladeNormX, bladeNormY, RAD/2);
+   // Front axe flat side.
+   glNormal3f(bladeNormX, bladeNormY, RAD );
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-RAD, headTop, RAD);

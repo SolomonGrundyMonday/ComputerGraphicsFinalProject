@@ -235,4 +235,13 @@ class Camera
        *   Return value:  The angle of rotation (about the y-axis).
        */
       double getTheta();
+
+      /*
+       *   Function prototype for Camera class getFlashlight getter function.
+       *   Precondition:  None.
+       *   Postcondition: The Camera object's flashlight status (on/off) represented as a boolean value has been
+       *                  returned to the caller.
+       *   Return value:  True if the flashlight is active, false otherwise. 
+       */
+      bool getFlashlight();
 };

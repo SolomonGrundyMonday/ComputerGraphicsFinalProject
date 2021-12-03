@@ -34,6 +34,15 @@ class Lantern : public GameObject
       float Specular[4] = {0.933, 0.91, 0.667, 1.0};
       float white[4] = {1.0, 1.0, 1.0, 0.2};
 
+      /*
+       *   Function prototype for Lantern class getSide helper function.
+       *   Precondition:   A Lantern object has been instantiated and rendered to the scene.
+       *   Postcondition:  The side of the lantern hitbox that has been collided by the Camera object is returned to the caller.
+       *   Parameter:      The active Camera object.
+       *   Return value:   The side of the Lantern hitbox with which the Camera object has collided.
+       */
+      wall getSide(Camera* camera);
+
    public:
 
       /*
@@ -72,15 +81,6 @@ class Lantern : public GameObject
        *   Postcondition:  The object has been rendered in the OpenGL window.  
        */
       void Render();
-
-      /*
-       *   Function prototype for Lantern class getSide helper function.
-       *   Precondition:   A Lantern object has been instantiated and rendered to the scene.
-       *   Postcondition:  The side of the lantern hitbox that has been collided by the Camera object is returned to the caller.
-       *   Parameter:      The active Camera object.
-       *   Return value:   The side of the Lantern hitbox with which the Camera object has collided.  
-       */
-      wall getSide(Camera* camera);
 
       /*
        *   Function prototype for Lantern class detectCollision function.

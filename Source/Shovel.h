@@ -22,6 +22,7 @@ class Shovel : public GameObject
    private:
       unsigned char texture;
       unsigned char metal;
+      unsigned char plastic;
       float posX;
       float posY;
       float posZ;
