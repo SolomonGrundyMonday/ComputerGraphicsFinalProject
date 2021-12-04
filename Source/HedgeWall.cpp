@@ -115,7 +115,7 @@ void HedgeWall::Render()
 
    // Wall end caps. (Tesselated to improve lighing effects on large polygons)
    // Idea borrowed from contents of https://www.glprogramming.com/red/chapter05.html.
-   i = -this->scaleX;
+   i = -this->scaleY;
    while (i < this->scaleY)
    {
       float minY = i / this->scaleY;
