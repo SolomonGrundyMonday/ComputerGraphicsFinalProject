@@ -140,13 +140,16 @@ void Cuboid::Render()
    // Idea borrowed from contents of https://www.glprogramming.com/red/chapter05.html.
    for (int i = -this->scaleX; i < this->scaleX; i++)
    {
-      for (int j = -this->scaleZ; j < this->scaleZ; j++)
+      for (int j = -this->scaleZ; j < this->scaleZ - 1; j += 2)
       {
+         // Reduce number of floating-point computations per loop iteration with local variables.
          float minX = i / this->scaleX;
          float maxX = (i + 1) / this->scaleX;
          float minZ = j / this->scaleZ;
          float maxZ = (j + 1) / this->scaleZ;
+         float maxZ1 = (j + 2) / this->scaleZ;
 
+         // Optimization - draw two quads per iteration (loop unrolling).
          glNormal3f( (maxX - minX) / 2.0, 1.0, (maxZ - minZ) / 2.0);
          glBegin(GL_QUADS);
          glTexCoord2f(0.0, 0.0); 
@@ -157,6 +160,18 @@ void Cuboid::Render()
          glVertex3f(minX, 1.0, minZ);
          glTexCoord2f(1.0, 0.0); 
          glVertex3f(minX, 1.0, maxZ);
+         glEnd();
+
+         glNormal3f( (maxX - minX) / 2.0, 1.0, (maxZ1 - maxZ) / 2.0);
+         glBegin(GL_QUADS);
+         glTexCoord2f(0.0, 0.0);
+         glVertex3f(maxX, 1.0, maxZ1);
+         glTexCoord2f(0.0, 1.0);
+         glVertex3f(maxX, 1.0, maxZ);
+         glTexCoord2f(1.0, 1.0);
+         glVertex3f(minX, 1.0, maxZ);
+         glTexCoord2f(1.0, 0.0);
+         glVertex3f(minX, 1.0, maxZ1);
          glEnd();
       }
    }

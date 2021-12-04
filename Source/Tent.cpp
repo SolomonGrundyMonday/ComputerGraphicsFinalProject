@@ -205,34 +205,57 @@ void Tent::Render()
 
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
 
-   // Draw Tent flaps.
+   // Draw right Tent flaps.
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
+      // Optimization - reduce number of floating-point computations per loop iteration.
       int theta = i * 30;
       float x = Cos(theta);
       float z = Sin(theta);
+      int theta1 = (i + 1) * 30;
+      float x1 = Cos(theta1);
+      float z1 = Sin(theta1);
 
+      // Optimization - draw four vertices per loop iteration and reduce the number of iterations (loop unrolling).
       glNormal3f(x, -1.0, z);
       glTexCoord2f(0.0, i * textureRatio);
       glVertex3f(x * 0.1 + 0.6, -1.0, z * 0.1 + 1.0);
       glTexCoord2f(12.0, i * textureRatio);
       glVertex3f(x * 0.1 + 0.6, 0.2, z * 0.1 + 1.0);
+
+      glNormal3f(x1, -1.0, z1);
+      glTexCoord2f(0.0, (i + 1) * textureRatio);
+      glVertex3f(x1 * 0.1 + 0.6, -1.0, z1 * 0.1 + 1.0);
+      glTexCoord2f(12.0, (i + 1) * textureRatio);
+      glVertex3f(x1 * 0.1 + 0.6, 0.2, z1 * 0.1 + 1.0);
    }
    glEnd();
 
+   // Draw left Tent flaps.
    glBegin(GL_QUAD_STRIP);
-   for (int i = 0; i <= 12; i++)
+   for (int i = 0; i <= 12; i += 2)
    {
+      // Optimization - reduce number of floating-point computations per loop iteration.
       int theta = i * 30;
       float x = Cos(theta);
       float z = Sin(theta);
+      int theta1 = (i + 1) * 30;
+      float x1 = Cos(theta1);
+      float z1 = Sin(theta1);
 
+      // Optimization - draw four vertices per loop iteration and reduce the number of iterations (loop unrolling).
       glNormal3f(x, -1.0, z);
       glTexCoord2f(0.0, i * textureRatio);
       glVertex3f(x * 0.1 - 0.6, -1.0, z * 0.1 + 1.0);
       glTexCoord2f(12.0, i * textureRatio);
       glVertex3f(x * 0.1 - 0.6, 0.2, z * 0.1 + 1.0);
+
+      glNormal3f(x1, -1.0, z1);
+      glTexCoord2f(0.0, (i + 1) * textureRatio);
+      glVertex3f(x1 * 0.1 - 0.6, -1.0, z1 * 0.1 + 1.0);
+      glTexCoord2f(12.0, (i + 1) * textureRatio);
+      glVertex3f(x1 * 0.1 - 0.6, 0.2, z1 * 0.1 + 1.0);
    }
    glEnd();
 
@@ -269,20 +292,28 @@ void Tent::Render()
    glVertex3f(1.0, 1.0, -1.0);
    glEnd();
 
-   // Draw rolled tent flap tops and bottoms.
+   // Draw right rolled tent flap top and bottom.
    glBindTexture(GL_TEXTURE_2D, canvasWrap);
    glNormal3f(0.6, 0.2, 1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(0.6, 0.2, 1.0);
-   for (int i = 0; i <= 360; i += 30)
+   for (int i = 0; i <= 360; i += 60)
    {
+      // Optimization - reduce number of floating-point computations per loop iteration with local variables.
       float cosine = Cos(i);
       float sine = Sin(i);
+      float cosine1 = Cos(i + 30);
+      float sine1 = Sin(i + 30);
 
+      // Optimization - draw two vertices per loop iteration and reduce number of iterations (loop unrolling).
       glNormal3f(cosine + 0.6, 0.2, sine + 1.0);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(0.1 * cosine + 0.6, 0.2, 0.1 * sine + 1.0);
+
+      glNormal3f(cosine1 + 0.6, 0.2, sine1 + 1.0);
+      glTexCoord2f(0.5 * cosine1 + 0.5, 0.5 * sine1 + 0.5);
+      glVertex3f(0.1 * cosine1 + 0.6, 0.2, 0.1 * sine1 + 1.0);
    }
    glEnd();
 
@@ -290,29 +321,46 @@ void Tent::Render()
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(0.6, -1.0, 1.0);
-   for (int i = 0; i <= 360; i += 30)
+   for (int i = 0; i <= 360; i += 60)
    {
+      // Optimization - reduce floating-point computations per loop iteration with local variables.
       float cosine = Cos(i);
       float sine = Sin(i);
+      float cosine1 = Cos(i + 30);
+      float sine1 = Sin(i + 30);
 
+      // Optimization - draw two vertices per loop iteration and reduce number of iterations (loop unrolling).
       glNormal3f(cosine + 0.6, -1.0, sine + 1.0);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(0.1 * cosine + 0.6, -1.0, 0.1 * sine + 1.0);
+
+      glNormal3f(cosine1 + 0.6, -1.0, sine1 + 1.0);
+      glTexCoord2f(0.5 * cosine1 + 0.5, 0.5 * sine1 + 0.5);
+      glVertex3f(0.1 * cosine1 + 0.6, -1.0, 0.1 * sine1 + 1.0);
    }
    glEnd();
 
+   // Draw left rolled tent flap top and bottom.
    glNormal3f(-0.6, 0.2, 1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(-0.6, 0.2, 1.0);
-   for (int i = 0; i <= 360; i += 30)
+   for (int i = 0; i <= 360; i += 60)
    {
+      // Optimization - reduce floating-point computations per loop iteration with local variables.
       float cosine = Cos(i);
       float sine = Sin(i);
+      float cosine1 = Cos(i + 30);
+      float sine1 = Sin(i + 30);
 
+      // Optimization - draw two vertices per loop iteration and reduce number of iterations (loop unrolling).
       glNormal3f(cosine - 0.6, 0.2, sine + 1.0);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(0.1 * cosine - 0.6, 0.2, 0.1 * sine + 1.0);
+
+      glNormal3f(cosine1 - 0.6, 0.2, sine1 + 1.0);
+      glTexCoord2f(0.5 * cosine1 + 0.5, 0.5 * sine1 + 0.5);
+      glVertex3f(0.1 * cosine1 - 0.6, 0.2, 0.1 * sine1 + 1.0);
    }
    glEnd();
 
@@ -320,14 +368,22 @@ void Tent::Render()
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(-0.6, -1.0, 1.0);
-   for (int i = 0; i <= 360; i += 30)
+   for (int i = 0; i <= 360; i += 60)
    {
+      // Optimization - reduce floating-point computations per loop iteration with local variables.
       float cosine = Cos(i);
       float sine = Sin(i);
+      float cosine1 = Cos(i + 30);
+      float sine1 = Cos(i + 30);
 
+      // Optimization - draw two vertices per loop iteration and reduce number of iterations (loop unrolling).
       glNormal3f(cosine - 0.6, -1.0, sine + 1.0);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(0.1 * cosine - 0.6, -1.0, 0.1 * sine + 1.0);
+
+      glNormal3f(cosine1 - 0.6, -1.0, sine1 + 1.0);
+      glTexCoord2f(0.5 * cosine1 + 0.5, 0.5 * sine1 + 0.5);
+      glVertex3f(0.1 * cosine1 - 0.6, -1.0, 0.1 * sine1 + 1.0);
    }
    glEnd();
 
@@ -349,63 +405,103 @@ void Tent::DrawSpike(float px, float pz)
 
    // Draw tent spike shaft component.
    glBegin(GL_QUAD_STRIP);
-   for (int i = 0; i <= 12; i++)
+   for (int i = 0; i <= 12; i += 2)
    {
+      // Optimization - reduce floating-point computations per loop iteration.
       int theta = i * 30;
       float x = 0.01 * Cos(theta);
       float z = 0.01 * Sin(theta);
+      int theta1 = (i + 1) * 30;
+      float x1 = 0.01 * Cos(theta1);
+      float z1 = 0.01 * Sin(theta1);
 
+      // Optimization - draw four vertices per loop iteration.
       glNormal3f(x, -1.0, z);
       glTexCoord2f(0.0, textureRatio);
       glVertex3f(x + px, -1.0, z + pz);
       glTexCoord2f(12.0, textureRatio);
       glVertex3f(x + px, -0.9, z + pz);
+
+      glNormal3f(x1, -1.0, z1);
+      glTexCoord2f(0.0, textureRatio);
+      glVertex3f(x1 + px, -1.0, z1 + pz);
+      glTexCoord2f(12.0, textureRatio);
+      glVertex3f(x1 + px, -0.9, z1 + pz);
    }
    glEnd();
 
    // Draw tent spike head component.
    glBegin(GL_QUAD_STRIP);
-   for (int i = 0; i <= 12; i++)
+   for (int i = 0; i <= 12; i += 2)
    {
+      // Optimization - reduce floating-point computations per loop iteration.
       int theta = i * 30;
       float x = 0.02 * Cos(theta);
       float z = 0.02 * Sin(theta);
+      int theta1 = (i + 1) * 30;
+      float x1 = 0.02 * Cos(theta1);
+      float z1 = 0.02 * Sin(theta1);
 
+      // Optimization - draw four vertices per loop iteration.
       glNormal3f(x, -0.9, z);
       glTexCoord2f(0.0, textureRatio);
       glVertex3f(x + px, -0.9, z + pz);
       glTexCoord2f(12.0, textureRatio);
       glVertex3f(x + px, -0.89, z + pz);
+
+      glNormal3f(x1, -0.9, z1);
+      glTexCoord2f(0.0, textureRatio);
+      glVertex3f(x1 + px, -0.9, z1 + pz);
+      glTexCoord2f(12.0, textureRatio);
+      glVertex3f(x1 + px, -0.89, z1 + pz);
    }
    glEnd();
 
+   // Draw tent spike head component bottom.
    glNormal3f(px, -0.9, pz);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(px, -0.9, pz);
-   for (int i = 0; i <= 360; i += 30)
+   for (int i = 0; i <= 360; i += 60)
    {
+      // Optimization - reduce floating-point computations per loop iteration with local variables.
       float cosine = Cos(i);
       float sine = Sin(i);
+      float cosine1 = Cos(i + 30);
+      float sine1 = Sin(i + 30);
 
+      // Optimization - draw two vertices per loop iteration.
       glNormal3f(cosine + px, -0.9, sine + pz);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(cosine * 0.02 + px, -0.9, sine * 0.02 + pz);
+
+      glNormal3f(cosine1 + px, -0.9, sine1 + pz);
+      glTexCoord2f(0.5 * cosine1 + 0.5, 0.5 * sine1 + 0.5);
+      glVertex3f(cosine1 * 0.02 + px, -0.9, sine1 * 0.02 + pz);
    }
    glEnd();
 
+   // Draw tent spike head component top.
    glNormal3f(px, -0.89, pz);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(px, -0.89, pz);
-   for (int i = 0; i <= 360; i += 30)
+   for (int i = 0; i <= 360; i += 60)
    {
+      // Optimization - reduce floating-point computations per loop iteration with local variables.
       float cosine = Cos(i);
       float sine = Sin(i);
+      float cosine1 = Cos(i + 30);
+      float sine1 = Sin(i + 30);
 
+      // Optimization - draw two vertices per loop iteration.
       glNormal3f(cosine + px, -0.89, sine + pz);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(cosine * 0.02 + px, -0.89, sine * 0.02 + pz);
+
+      glNormal3f(cosine1 + px, -0.89, sine1 + pz);
+      glTexCoord2f(0.5 * cosine1 + 0.5, 0.5 * sine1 + 0.5);
+      glVertex3f(cosine1 * 0.02 + px, -0.89, sine1 * 0.02 + pz);
    }
    glEnd();
 }

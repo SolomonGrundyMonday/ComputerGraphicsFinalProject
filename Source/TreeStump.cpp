@@ -79,6 +79,7 @@ void TreeStump::Render()
    glBegin(GL_QUAD_STRIP);
    for(int i = 0; i <= 12; i += 2)
    {
+      // Optimization - reduce number of floating-point computations per loop iteration.
       int theta = i * 30;
       int theta2 = (i + 1) * 30;
       float x1 = Cos(theta);
@@ -88,6 +89,7 @@ void TreeStump::Render()
       float texRatio = i * 0.5;
       float texRatio2 = (i + 1) * 0.5; 
 
+      // Optimization - draw four vertices per loop iteration and reduce number of iterations (loop unrolling).
       glNormal3f(x1, 0.0, z1);
       glTexCoord2f(0.0, texRatio);
       glVertex3f(2.0 * x1, -1.0, 2.0 * z1);
@@ -110,11 +112,13 @@ void TreeStump::Render()
    glVertex3f(0.0, 1.0, 0.0);
    for (int i = 0; i <= 360; i += 60)
    {
+      // Optimization  - reduce number of floating-point computations per loop iteration.
       float x = Cos(i);
       float z = Sin(i);
       float x2 = Cos(i + 30);
       float z2 = Sin(i + 30);
 
+      // Optimization - draw two vertices per iteration and reduce number of iterations (loop unrolling).
       glNormal3f(x, 1.0, z);
       glTexCoord2f(0.5 * x + 0.5, 0.5 * z + 0.5);
       glVertex3f(2.0 * x, 1.0, 2.0 * z);
