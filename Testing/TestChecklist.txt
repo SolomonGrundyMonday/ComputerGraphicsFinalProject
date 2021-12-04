@@ -33,10 +33,10 @@ Camera   -   N/A (Camera is the instigator)
 
 Integration Tests:
 Compile on Linux           -   Complete
-Performance on VM          -   Major framerate issues, making further optimization passes
+Performance on VM          -   Minor framerate issues, testing further optimization techniques
 Final object positioning   -   Complete
 Final keybindings/controls -   Complete
 Soak test                  -   Complete
-Edge cases                 -
-Debug mode                 -
+Edge cases                 -   Complete
+Debug mode                 -   Complete (sort of, just an overhead perspective projection)
 Flashlight implementation  -   Complete
