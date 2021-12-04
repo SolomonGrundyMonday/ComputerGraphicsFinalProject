@@ -59,16 +59,12 @@ void Axe::Render()
    float headTop = LENGTH + 0.001;
    float headBottom = headTop - HEAD_HEIGHT;
    float axeBlade = -RAD - HEAD_LENGTH;
-   float bladeNormY = headTop - (HEAD_HEIGHT / 2.0);
-   float bladeNormX = axeBlade - (HEAD_LENGTH / 2.0);
    float textureRatio = 1.0/12.0;
-   float white[] = { 1.0, 1.0, 1.0, 1.0 };
 
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    glBindTexture(GL_TEXTURE_2D, texture);
-   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
@@ -86,31 +82,19 @@ void Axe::Render()
    for (int i = 0; i <= 12; i++)
    {
       int theta = i * 30;
-      glNormal3f(RAD * Cos(theta), 0.0, RAD * Sin(theta));
+      float cosine = Cos(theta);
+      float sine = Sin(theta);
+
+      glNormal3f(cosine, 0.0, sine);
       glTexCoord2f(0.0, i * textureRatio);
-      glVertex3f(RAD * Cos(theta), 0.0, RAD * Sin(theta));
+      glVertex3f(RAD * cosine, 0.0, RAD * sine);
       glTexCoord2f(12.0, i * textureRatio);
-      glVertex3f(RAD * Cos(theta), LENGTH, RAD * Sin(theta));
-   }
-   glEnd();
-
-   glNormal3f(0.0, LENGTH, 0.0);
-   glBegin(GL_TRIANGLE_FAN);
-   glTexCoord2f(0.5, 0.5);
-   glVertex3f(0.0, LENGTH, 0.0);
-
-   for (int i = 0; i <= 360; i += 30)
-   {
-      float cosine = Cos(i);
-      float sine = Sin(i);
-
-      glNormal3f(cosine, LENGTH, sine);
-      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(RAD * cosine, LENGTH, RAD * sine);
    }
    glEnd();
 
-   glNormal3f(0.0, 0.0, 0.0);
+   // Draw the end of the handle (only draw one end because the other is covered by the axe head).
+   glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(0.0, 0.0, 0.0);
@@ -120,7 +104,6 @@ void Axe::Render()
       float cosine = Cos(i);
       float sine = Sin(i);
 
-      glNormal3f(cosine, 0.0, sine);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(RAD * cosine, 0.0, RAD * sine);
    }
@@ -128,9 +111,10 @@ void Axe::Render()
 
    // Draw the head.
    glBindTexture(GL_TEXTURE_2D, metal);
+   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0);
 
    // Top.
-   glNormal3f(0.0, headTop, 0.0);
+   glNormal3f(0.0, 1.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-RAD, headTop, -RAD);
@@ -143,7 +127,7 @@ void Axe::Render()
    glEnd();
 
    // Bottom.
-   glNormal3f(0.0, -headBottom, 0.0);
+   glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-RAD, headBottom, -RAD);
@@ -156,7 +140,7 @@ void Axe::Render()
    glEnd();
 
    // Front side.
-   glNormal3f(0.0, bladeNormY, RAD);
+   glNormal3f(0.0, 0.0, 1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(RAD, headBottom, RAD);
@@ -169,7 +153,7 @@ void Axe::Render()
    glEnd();
 
    // Left side.
-   glNormal3f(RAD, bladeNormY, 0.0);
+   glNormal3f(1.0, 0.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(RAD, headBottom, RAD);
@@ -182,7 +166,7 @@ void Axe::Render()
    glEnd();
 
    // Back side.
-   glNormal3f(0.0, bladeNormY, -RAD);
+   glNormal3f(0.0, 0.0, -1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-RAD, headTop, -RAD);
@@ -195,7 +179,7 @@ void Axe::Render()
    glEnd();
 
    // Back axe flat side.
-   glNormal3f(bladeNormX, bladeNormY, -RAD);
+   glNormal3f(0.0, 0.0, -1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-RAD, headTop, -RAD);
@@ -208,7 +192,7 @@ void Axe::Render()
    glEnd();
 
    // Front axe flat side.
-   glNormal3f(bladeNormX, bladeNormY, RAD );
+   glNormal3f(0.0, 0.0, 1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-RAD, headTop, RAD);
@@ -221,7 +205,7 @@ void Axe::Render()
    glEnd();
 
    // Axe head top.
-   glNormal3f(bladeNormX, headTop, 0.0);
+   glNormal3f(0.0, 1.0, 0.0);
    glBegin(GL_TRIANGLES);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-RAD, headTop, RAD);
@@ -232,7 +216,7 @@ void Axe::Render()
    glEnd();
 
    // Axe head bottom.
-   glNormal3f(bladeNormX, -headBottom, 0.0);
+   glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_TRIANGLES);
    glTexCoord2f(0.0, 0.0);
    glVertex3f(-RAD, headBottom, RAD);
@@ -250,10 +234,12 @@ void Axe::Render()
 bool Axe::detectCollision(Camera* camera)
 {
    // Convert Camera x, y coordinates to object coordinates.
+   float cosine = Cos(this->rotY);
+   float sine = Sin(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
-   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+   camX = (camX * cosine) - (camZ * sine);
+   camZ = (camZ * cosine) + (camX * sine);
 
    float minX = -RAD * Cos(this->rotZ) * this->scaleX - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
    float maxX = RAD * Cos(this->rotZ) * this->scaleX + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
@@ -270,20 +256,18 @@ bool Axe::detectCollision(Camera* camera)
 void Axe::resolveCollision(Camera* camera)
 {
    // Compute Camera's relative position, then convert to object coordinates.
+   float cosine = Cos(this->rotY);
+   float sine = Sin(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
-   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+   camX = (camX * cosine) - (camZ * sine);
+   camZ = (camZ * cosine) + (camX * sine);
 
    // Compute the minimum and maximum x and z values for the hitbox based on the rotations about the x, y, z axes.
    float minX = -RAD * Cos(this->rotZ) * this->scaleX - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
    float maxX = RAD * Cos(this->rotZ) * this->scaleX + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
    float minZ = ((-RAD - HEAD_LENGTH) * Cos(this->rotX) * this->scaleZ) - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
    float maxZ = (RAD * Cos(this->rotX) * this->scaleZ) + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-
-   // Optimization - reduce function calls to sine, cosine function.
-   float cosine = Cos(this->rotY);
-   float sine = Sin(this->rotY);
 
    wall collision = getSide(camera);
    
@@ -361,10 +345,12 @@ void Axe::resolveCollision(Camera* camera)
 wall Axe::getSide(Camera* camera)
 {
    // Compute relative position and convert to object coordinates.
+   float cosine = Cos(this->rotY);
+   float sine = Sin(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
-   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+   camX = (camX * cosine) - (camZ * sine);
+   camZ = (camZ * cosine) + (camX * sine);
 
    // Compute minimum and maximum x, z values based on the rotations and scaling ont the x, y, z axes.
    float minX = -RAD * Cos(this->rotZ) * this->scaleX - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
