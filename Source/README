@@ -8,6 +8,7 @@ User Controls:
    'S' key          -   Move backward.
    'A' key          -   Strafe left.
    'D' key          -   Strafe right.
+   '~' key          -   Basic overhead view (to get your bearings)
     RIGHT ARROW key -   Turn the first-person camera to the right by 5 degrees.
     LEFT ARROW key  -   Turn the first-person cmaera to the left by five degrees.
     ESC key         -   Quit the application.
@@ -57,21 +58,53 @@ Sources (Textures):
    Hedge maze wall texture: https://pixabay.com/photos/bank-park-to-sit-park-bench-4237809/.
 
 Estimated Time:
-   So far I have spent around 68 hours on this project.  The breakdown is as follows:
+   So far I have spent around 76 hours on this project.  The breakdown is as follows:
    Time spent sourcing and editing texture images: around 2.5 hours.
-   Time spent implementing the object geometry (render functions):  About 12 hours.
-   Time spent implementing surface normals and testing lighting: about 16.5 hours.
-   Time spent implementing and testing object collisions:  about 23 hours.
-   Time spent placing objects and designing the environment:  about 10 hours. 
+   Time spent implementing the object geometry (render functions):  About 13 hours.
+   Time spent implementing surface normals and testing lighting: about 22 hours.
+   Time spent implementing and testing object collisions:  about 24 hours.
+   Time spent placing objects and designing the environment:  about 10.5 hours. 
    Time spent testing the performance on my VM (to get a floor for performance) and making optimization passes: 4 hours.
 
-Things that still need to be done:  
-   If necessary, I would also like to implement a debug mode that
-   allows the user to examine each individual object with an orbiting light source to demonstrate that the normals are working, since
-   in first-person mode, it isn't really possible to shine a light on certain surfaces given the limitations of character movement.  Last but
-   not least, I will be making one additional optimization pass before the final submission.  Currently, I was running into severe framerate
-   issues on the test VM that I have to get a performance floor, so I just reduced the number of trees in the environment significantly.  Once
-   collisions and surface normals are up to speed, I will remove various inefficiencies present in this test build.
+Changelog since project review:
+   * I fixed the issue with lighting on the ground changing on first input in the comments from the review.  I had been calling 
+     the lightSource function in the Lantern object after rendering the other objects in the scene, so the lighting effect did 
+     not appear on the ground or surrounding objects until the user pressed some input, or the window was resized.
+   * I also fixed the issue with the light changing unexpectedly when turning the camera near the Lantern object when the flashlight
+     was off.  The light source that is based in the lantern object was supposed to be a point light, but I had specified a direction
+     vector for the light source in the lightSource method of Lantern class.  I removed the direction vector, and now the surfaces on
+     the outside of the lantern are correctly dark when the flashlight is off (since the light source is inside the Lantern's glass casing,
+     the external surfaces should be shadowed.
+   * I fixed a minor graphical bug in the HedgeWall object.  It was invisible in the review build because it was under the surface of the ground, 
+     but the side edges extended beyont the bottom of the object geometry.
+   * I reduced the vertical size of HedgeWalls and TreeStumps and changed their y-translation to save on the number of triangles: both objects were currently
+     drawing twice their visible size below the floor, and there is no reason to waste computational power drawing parts of shapes that the user will
+     never see.
+   * In lieu of a debug mode with an orbiting light source (I have another huge project due next week, and I need to begin work on that
+     as soon as possible) I have added a simple overhead perspective projection view that will allow the user to get their bearings and see
+     the whole map to get their bearings.  (If debug mode for lighting of each object is needed, just ask - I do have a separate tester
+     program that I used to check the normals for each object as I made them).
+   * I aggresively optimized everything that I could to try and squeeze as much fps out of the project as I could.  Every loop that could
+     be unrolled got unrolled, and I added code to break the loop checking for Tree collisions if a collision was detected (since there are
+     a lot of trees, and the way my environment is designed it is impossible to collide with multiple treeas at the same time).  I also added
+     local variables wherever I could to reduce the number of computations needed for the render functions of each object.
+   * I made a few tweaks to the thresholds for collisions in a few objects (the corner of the Camera was still clipping through a few objects.
+   * Resized all of the textures, I don't know why but apparently my brain broke and I mistakenly thought that the texture size specified in the
+     course expectations was 512 X 512 pixels and not 256 X 256.  I resized them all to the proper dimensions of 256 X 256 pixels.
+   * I replaced the placeholder textures for the axe head, shovel head and shovel handle.
+   * I made a few minor adjustments to the normals of the Tent walls, so the lighting looks more appropriate.
+   * Fixed minor lighting bug with the Shovel handle where the lantern light source was incorrectly lighting the opposite side of the cylinder.
+   * Fixed minor lighting bug with the Shovel handle where the lantern light source was incorrectly lighting the outside of the handle connectors.
+   * Fixed major lighting bug with the Shovel head where the wrong side of the shovel head was being lit by the lantern.
+   * Fixed graphical bug in the hedge maze that was causing some z-fighting around the outside edges.
+   * Fixed minor lighting bug with the Axe head where the blade would not correctly light up when approached from certain angles with the flashlight.
+   * Removed surfaces from the Axe and Shovel objects that were unnecessary (completely covered by the object geometry).
+   * Fixed major lighting bug with the Lantern object where the inner base and top discs were not correctly illuminated by the light source (in the
+     middle of the Lantern's glass casing).
+   * Moved the axe object to make the campsite area a little less crowded.
+
+Things still to be done:
+   Once collisions and surface normals are up to speed, I will remove various inefficiencies present in this test build.
 
 Additional notes:
    The hedge maze area was originally intended to be a cave area for the user to explore, however I had severe difficulty getting 
@@ -80,6 +113,11 @@ Additional notes:
    to be cave walls.  The HedgeWall class also add modular building blocks that can be rapidly added to the application as necessary for further
    design iterations (I have experience working in both Unity Engine and Unreal Engine, so this is where the idea of having modular building
    blocks comes from).
+   IMPORTANT - although the lighting effects look wrong on the Lantern object, the bottom of the Lantern handle should be lit up, since the middle
+               of the glass case is the origin of a light source.  Seeing as I have not implemented shadows in this project, this means that the light
+               from inside the Lantern is passing through the top of the lantern to illuminate the bottom of the handle.  When I iterate on this project
+               in the future (for my portfolio), implementing a shadowing algorithm like the ones discussed in last Thursday's lecture is at the top of 
+               my to-do list.
    
 
 The things to pay attention to/things I am proud of:
@@ -95,4 +133,4 @@ The things to pay attention to/things I am proud of:
    * The optimization work that I have done       - I took advantage of various optimization techniques that I remembered from Computer Systems to try and 
                                                     get a large number of trees and objects, as well as have a large scale environment without a massive hit 
                                                     to performance.  Even though I still had to cut the number of Trees from the original plan, I am proud of
-                                                    my work optimizing some of the drawing algorithms we learned in this course to increase performance.
+                                                    the aggressive optimization that I did for this project.
