@@ -79,18 +79,18 @@ void Shovel::Render()
    for (int i = 0; i <= 12; i++)
    {
       int theta = i * 30;
-      float y = RADIUS * Sin(theta) + HANDLE_HEIGHT;
-      float z = RADIUS * Cos(theta);
+      float sine = Sin(theta);
+      float cosine = Cos(theta);
 
-      glNormal3f(HANDLE_LEN, y, z);
+      glNormal3f(HANDLE_LEN, sine, cosine);
       glTexCoord2f(0, i * 0.25);
-      glVertex3f(HANDLE_LEN, y, z);
+      glVertex3f(HANDLE_LEN, RADIUS * sine + HANDLE_HEIGHT, RADIUS * cosine);
       glTexCoord2f(1, i * 0.25);
-      glVertex3f(-HANDLE_LEN, y, z);
+      glVertex3f(-HANDLE_LEN, RADIUS * sine + HANDLE_HEIGHT, RADIUS * cosine);
    }
    glEnd();
 
-   glNormal3f(HANDLE_LEN, HANDLE_HEIGHT, 0.0);
+   glNormal3f(HANDLE_LEN, 0.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(HANDLE_LEN, HANDLE_HEIGHT, 0.0);
@@ -100,13 +100,12 @@ void Shovel::Render()
       float sine = Sin(i);
       float cosine = Cos(i);
 
-      glNormal3f(HANDLE_LEN, sine + HANDLE_HEIGHT, cosine);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(HANDLE_LEN, RADIUS * sine + HANDLE_HEIGHT, RADIUS * cosine);
    }
    glEnd();
 
-   glNormal3f(-HANDLE_LEN, HANDLE_HEIGHT, 0.0);
+   glNormal3f(-HANDLE_LEN, 0.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(-HANDLE_LEN, HANDLE_HEIGHT, 0.0);
@@ -116,48 +115,48 @@ void Shovel::Render()
       float sine = Sin(i);
       float cosine = Cos(i);
 
-      glNormal3f(-HANDLE_LEN, sine + HANDLE_HEIGHT, cosine);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(-HANDLE_LEN, RADIUS * sine + HANDLE_HEIGHT, RADIUS * cosine);
    }
    glEnd();
 
    // Connect the handle to the shaft.
+   float handleBaseY = -HANDLE_HEIGHT / 2.0 + RADIUS;
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
-   glNormal3f(HANDLE_LEN, HANDLE_HEIGHT - RADIUS, 0.0);
+   glNormal3f(1.0, 0.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
-   glVertex3f(HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, RADIUS);
+   glVertex3f(HANDLE_LEN, handleBaseY, RADIUS);
    glTexCoord2f(0.0, 1.0);
-   glVertex3f(HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, -RADIUS);
+   glVertex3f(HANDLE_LEN, handleBaseY, -RADIUS);
    glTexCoord2f(1.0, 0.0);
    glVertex3f(HANDLE_LEN, HANDLE_HEIGHT, -RADIUS);
    glTexCoord2f(1.0, 1.0);
    glVertex3f(HANDLE_LEN, HANDLE_HEIGHT, RADIUS);
    glEnd();
 
-   glNormal3f(HANDLE_LEN, HANDLE_HEIGHT - RADIUS, 0.0);
+   glNormal3f(1.0, 0.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
-   glVertex3f(-HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, RADIUS);
+   glVertex3f(-HANDLE_LEN, handleBaseY, RADIUS);
    glTexCoord2f(0.0, 1.0);
-   glVertex3f(-HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, -RADIUS);
+   glVertex3f(-HANDLE_LEN, handleBaseY, -RADIUS);
    glTexCoord2f(1.0, 0.0);
    glVertex3f(-HANDLE_LEN, HANDLE_HEIGHT, -RADIUS);
    glTexCoord2f(1.0, 1.0);
    glVertex3f(-HANDLE_LEN, HANDLE_HEIGHT, RADIUS);
    glEnd();
 
-   glNormal3f(0.0, -HANDLE_HEIGHT / 2 + RADIUS, 0.0);
+   glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
-   glVertex3f(-HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, RADIUS);
+   glVertex3f(-HANDLE_LEN, handleBaseY, RADIUS);
    glTexCoord2f(0.0, 1.0);
-   glVertex3f(-HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, -RADIUS);
+   glVertex3f(-HANDLE_LEN, handleBaseY, -RADIUS);
    glTexCoord2f(1.0, 0.0);
-   glVertex3f(HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, -RADIUS);
+   glVertex3f(HANDLE_LEN, handleBaseY, -RADIUS);
    glTexCoord2f(1.0, 1.0);
-   glVertex3f(HANDLE_LEN, -HANDLE_HEIGHT / 2 + RADIUS, RADIUS);
+   glVertex3f(HANDLE_LEN, handleBaseY, RADIUS);
    glEnd();
 
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
@@ -169,30 +168,14 @@ void Shovel::Render()
    for (int i = 0; i <= 12; i++)
    {
       int theta = i * 30;
-      float x = RADIUS * Cos(theta);
-      float z = RADIUS * Sin(theta);
+      float cosine = Cos(theta);
+      float sine = Sin(theta);
 
-      glNormal3f(Cos(theta), -RADIUS, Sin(theta));
+      glNormal3f(cosine, 0.0, sine);
       glTexCoord2f(0.0, i * 1.0/12.0);
-      glVertex3f(x, -RADIUS - SHAFT_LEN, z);
-      glTexCoord2f(12.0, i * 1.0/12.0);
-      glVertex3f(x, -RADIUS, z);
-   }
-   glEnd();
-   
-   glNormal3f(0.0, -RADIUS - SHAFT_LEN, 0.0);
-   glBegin(GL_TRIANGLE_FAN);
-   glTexCoord2f(0.5, 0.5);
-   glVertex3f(0.0, -RADIUS - SHAFT_LEN, 0.0);
-   
-   for (int i = 30; i <= 360; i += 30)
-   {
-      float cosine = Cos(i);
-      float sine = Sin(i);
-
-      glNormal3f(cosine, -RADIUS - SHAFT_LEN, sine);
-      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(RADIUS * cosine, -RADIUS - SHAFT_LEN, RADIUS * sine);
+      glTexCoord2f(12.0, i * 1.0/12.0);
+      glVertex3f(RADIUS * cosine, -RADIUS, RADIUS * sine);
    }
    glEnd();
 
@@ -200,7 +183,7 @@ void Shovel::Render()
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
    glBindTexture(GL_TEXTURE_2D, metal);
 
-   glNormal3f(0.0, -SHAFT_LEN - HEAD_LEN - RADIUS, -RADIUS);
+   glNormal3f(0.0, 0.0, 1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(0.0, -SHAFT_LEN - HEAD_LEN - RADIUS, -RADIUS);
@@ -210,16 +193,14 @@ void Shovel::Render()
       float cosine = Cos(i);
       float sine = Sin(i);
 
-      glNormal3f(cosine + cosine, -SHAFT_LEN - RADIUS, sine);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(RADIUS * cosine + HEAD_WIDTH * cosine, -SHAFT_LEN - RADIUS, RADIUS * sine);
    }
    glEnd();
-
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
 
+   // Draw connector to connect shovel head to shaft.
    glBegin(GL_QUAD_STRIP);
-
    float newRadius = RADIUS + 0.01;
 
    for (int i = 0; i <= 12; i++)
@@ -228,7 +209,7 @@ void Shovel::Render()
       float cosine = Cos(theta);
       float sine = Sin(theta);
 
-      glNormal3f(cosine, -RADIUS, sine);
+      glNormal3f(cosine, 0.0, sine);
       glTexCoord2f(0.0, i % 2);
       glVertex3f(newRadius * cosine, -SHAFT_LEN, newRadius * sine);
       glTexCoord2f(1.0, i % 2);
@@ -236,7 +217,7 @@ void Shovel::Render()
    }
    glEnd();
 
-   glNormal3f(0.0, -RADIUS - SHAFT_LEN - 0.2, -RADIUS/2);
+   glNormal3f(0.0, 0.0, -1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(0.0, -RADIUS - SHAFT_LEN - 0.2, -RADIUS/2);
@@ -246,7 +227,6 @@ void Shovel::Render()
       float cosine = Cos(i);
       float sine = Sin(i);
 
-      glNormal3f(cosine, -RADIUS - SHAFT_LEN, sine);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(newRadius * cosine, -RADIUS - SHAFT_LEN, newRadius * sine);
    }
@@ -260,10 +240,12 @@ void Shovel::Render()
 bool Shovel::detectCollision(Camera* camera)
 {
    // Compute relative position and convert to object coordinates.
+   float cosine = Cos(this->rotY);
+   float sine = Sin(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
-   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+   camX = (camX * cosine) - (camZ * sine);
+   camZ = (camZ * cosine) + (camX * sine);
 
    // Compute minimum and maximum x, z  values based ont the rotations, scaling and dimensions of the object.
    float minX = (-HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX - ((SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);

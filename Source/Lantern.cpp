@@ -79,139 +79,167 @@ void Lantern::Render()
    glRotatef(this->rotZ, 0, 0, 1);
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
 
-   // Draw lantern base.
+   // Optimization - this ratio is used in all texture coordinates for all cyllinders.  No need to repeat the floating-point
+   // division dozens of times.
+   float textureRatio = 1.0 / 12.0;
+
+   // Draw lantern base cyllinder.
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
+      // Optimization - reduce number of floating-point computations per loop iteration.
       int theta = i * 30;
-      float x = Cos(theta);
-      float z = Sin(theta);
+      float cosine = Cos(theta);
+      float sine = Sin(theta);
 
-      glNormal3f(x, 0.0, z);
-      glTexCoord2f(0.0, i * 1.0/12.0);
-      glVertex3f(LANTERN_RAD * x, -1.0, LANTERN_RAD * z);
-      glTexCoord2f(12.0, i * 1.0/12.0);
-      glVertex3f(LANTERN_RAD * x, -0.6, LANTERN_RAD * z);
+      glNormal3f(cosine, 0.0, sine);
+      glTexCoord2f(0.0, i * textureRatio);
+      glVertex3f(LANTERN_RAD * cosine, -1.0, LANTERN_RAD * sine);
+      glTexCoord2f(12.0, i * textureRatio);
+      glVertex3f(LANTERN_RAD * cosine, -0.6, LANTERN_RAD * sine);
    }
    glEnd();
 
+   // Draw Lantern Base top/bottom discs.
    glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(0.0, -1.0, 0.0);
    for (int i = 0; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i), -1.0, Sin(i));
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(LANTERN_RAD * Cos(i), -1.0, LANTERN_RAD * Sin(i));
-   }
-   glEnd();
+      // Optimization - reduce number of floating-point computations per loop iteration.
+      float cosine = Cos(i);
+      float sine = Sin(i);
 
-   glNormal3f(0.0, -0.6, 0.0);
-   glBegin(GL_TRIANGLE_FAN);
-   glTexCoord2f(0.5, 0.5);
-   glVertex3f(0.0, -0.6, 0.0);
-   for (int i = 0; i <= 360; i += 30)
-   {
-      glNormal3f(Cos(i), -0.6, Sin(i));
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(LANTERN_RAD * Cos(i), -0.6, LANTERN_RAD * Sin(i));
-   }
-   glEnd();
-
-   // Draw lantern top.
-   glBegin(GL_QUAD_STRIP);
-   for (int i = 0; i <= 12; i++)
-   {
-      int theta = i * 30;
-      float x = Cos(theta);
-      float z = Sin(theta);
-
-      glNormal3f(x, 0.6, z);
-      glTexCoord2f(0.0, i * 1.0/12.0);
-      glVertex3f(LANTERN_RAD * x, 0.6, LANTERN_RAD * z);
-      glTexCoord2f(12.0, i * 1.0/12.0);
-      glVertex3f(LANTERN_RAD * x, 1.0, LANTERN_RAD * z);
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(LANTERN_RAD * cosine, -1.0, LANTERN_RAD * sine);
    }
    glEnd();
 
    glNormal3f(0.0, 1.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
-   glVertex3f(0.0, 1.0, 0.0);
+   glVertex3f(0.0, -0.6, 0.0);
    for (int i = 0; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i), 1.0, Sin(i));
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(LANTERN_RAD * Cos(i), 1.0, LANTERN_RAD * Sin(i));
+      // Optimization - reduce number of floating-point computations per loop iteration.
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(LANTERN_RAD * cosine, -0.6, LANTERN_RAD * sine);
    }
    glEnd();
 
-   glNormal3f(0.0, 0.6, 0.0);
+   // Draw lantern top cyllinder.
+   glBegin(GL_QUAD_STRIP);
+   for (int i = 0; i <= 12; i++)
+   {
+      // Optimization - reduce number of floating-point comuptations per loop iteration.
+      int theta = i * 30;
+      float cosine = Cos(theta);
+      float sine = Sin(theta);
+
+      glNormal3f(cosine, 0.6, sine);
+      glTexCoord2f(0.0, i * textureRatio);
+      glVertex3f(LANTERN_RAD * cosine, 0.6, LANTERN_RAD * sine);
+      glTexCoord2f(12.0, i * textureRatio);
+      glVertex3f(LANTERN_RAD * cosine, 1.0, LANTERN_RAD * sine);
+   }
+   glEnd();
+
+   // Draw Lantern top discs.
+   glNormal3f(0.0, 1.0, 0.0);
+   glBegin(GL_TRIANGLE_FAN);
+   glTexCoord2f(0.5, 0.5);
+   glVertex3f(0.0, 1.0, 0.0);
+   for (int i = 0; i <= 360; i += 30)
+   {
+      // Optimization - reduce number of floating-point computations per loop iteration.
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(LANTERN_RAD * cosine, 1.0, LANTERN_RAD * sine);
+   }
+   glEnd();
+
+   glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(0.0, 0.6, 0.0);
    for (int i = 0; i <= 360; i += 30)
    {
-      glNormal3f(Cos(i), 0.6, Sin(i));
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(LANTERN_RAD * Cos(i), 0.6, LANTERN_RAD * Sin(i));
+      // Optimization - reduce number of floating-point computations per loop iteration.
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(LANTERN_RAD * cosine, 0.6, LANTERN_RAD * sine);
    }
    glEnd();
 
-   // Draw lantern handle.
+   // Draw lantern handle cyllinder.
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
+      // Optimization - reduce number of floating-point computations per loop iteration.
       int theta = i * 30;
-      float z = Cos(theta);
-      float y = Sin(theta);
+      float cosine = Cos(theta);
+      float sine = Sin(theta);
 
-      glNormal3f(-0.4, HANDLE_RAD * y + 1.6, HANDLE_RAD * z);
-      glTexCoord2f(0.0, i * 1.0/12.0);
-      glVertex3f(-0.4, HANDLE_RAD * y + 1.6, HANDLE_RAD * z);
-      glTexCoord2f(12.0, i * 1.0/12.0);
-      glVertex3f(0.4, HANDLE_RAD * y + 1.6, HANDLE_RAD * z);
+      glNormal3f(0.0, sine, cosine);
+      glTexCoord2f(0.0, i * textureRatio);
+      glVertex3f(-0.4, HANDLE_RAD * sine + 1.6, HANDLE_RAD * cosine);
+      glTexCoord2f(12.0, i * textureRatio);
+      glVertex3f(0.4, HANDLE_RAD * sine + 1.6, HANDLE_RAD * cosine);
    }
    glEnd();
 
-   glNormal3f(-0.4, 1.6, 0.0);
+   // Draw lantern handle end discs.
+   glNormal3f(-1.0, 0.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(-0.4, 1.6, 0.0);
    for (int i = 0; i <= 360; i += 30)
    {
-      glNormal3f(-0.4, Sin(i), Cos(i));
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(-0.4, HANDLE_RAD * Sin(i) + 1.6, HANDLE_RAD * Cos(i));
+      // Optimization - reduce number of floating-point computations per loop iteration.
+     float cosine = Cos(i);
+     float sine = Sin(i);
+
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(-0.4, HANDLE_RAD * sine + 1.6, HANDLE_RAD * cosine);
    }
    glEnd();
 
-   glNormal3f(0.4, 1.6, 0.0);
+   glNormal3f(1.0, 0.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(0.4, 1.6, 0.0);
    for (int i = 0; i <= 360; i += 30)
    {
-      glNormal3f(0.4, Sin(i), Cos(i));
-      glTexCoord2f(0.5 * Cos(i) + 0.5, 0.5 * Sin(i) + 0.5);
-      glVertex3f(0.4, HANDLE_RAD * Sin(i) + 1.6, HANDLE_RAD * Cos(i));
+      // Optimization - reduce number of floating-point computations per loop iteration.
+      float cosine = Cos(i);
+      float sine = Sin(i);
+
+      glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
+      glVertex3f(0.4, HANDLE_RAD * sine + 1.6, HANDLE_RAD * cosine);
    }
    glEnd();
 
-   // Draw lantern handle connectors.
+   // Draw lantern handle connecting cyllinders.
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
       int theta = i * 30;
-      float x = Cos(theta);
-      float z = Sin(theta);
+      float cosine = Cos(theta);
+      float sine = Sin(theta);
 
-      glNormal3f(x, 1.3, z);
-      glTexCoord2f(0.0, i * 1.0/12.0);
-      glVertex3f(0.01 * x + 0.4, 1.6, 0.01 * z);
-      glTexCoord2f(12.0, i * 1.0/12.0);
-      glVertex3f(0.01 * x + 0.4, 1.0, 0.01 * z);
+      glNormal3f(cosine, 0.0, sine);
+      glTexCoord2f(0.0, i * textureRatio);
+      glVertex3f(0.01 * cosine + 0.4, 1.6, 0.01 * sine);
+      glTexCoord2f(12.0, i * textureRatio);
+      glVertex3f(0.01 * cosine + 0.4, 1.0, 0.01 * sine);
    }
    glEnd();
 
@@ -219,14 +247,14 @@ void Lantern::Render()
    for (int i = 0; i <= 12; i++)
    {
       int theta = i * 30;
-      float x = Cos(theta);
-      float z = Sin(theta);
+      float cosine = Cos(theta);
+      float sine = Sin(theta);
 
-      glNormal3f(-x, 1.3, z);
-      glTexCoord2f(0.0, i * 1.0/12.0);
-      glVertex3f(-0.01 * x - 0.4, 1.6, 0.01 * z);
-      glTexCoord2f(12.0, i * 1.0/12.0);
-      glVertex3f(-0.01 * x - 0.4, 1.0, 0.01 * z);
+      glNormal3f(-cosine, 0.0, sine);
+      glTexCoord2f(0.0, i * textureRatio);
+      glVertex3f(-0.01 * cosine - 0.4, 1.6, 0.01 * sine);
+      glTexCoord2f(12.0, i * textureRatio);
+      glVertex3f(-0.01 * cosine - 0.4, 1.0, 0.01 * sine);
    }
    glEnd();
 
@@ -244,14 +272,14 @@ void Lantern::Render()
    for (int i = 0; i <= 12; i++)
    {
       int theta = i * 30;
-      float x = Cos(theta);
-      float z = Sin(theta);
+      float cosine = Cos(theta);
+      float sine = Sin(theta);
 
-      glNormal3f(x, 0.0, z);
-      glTexCoord2f(0.0, i * 1.0/12.0);
-      glVertex3f(LANTERN_RAD * x, -0.6, LANTERN_RAD * z);
-      glTexCoord2f(12.0, i * 1.0/12.0);
-      glVertex3f(LANTERN_RAD * x, 0.6, LANTERN_RAD * z);
+      glNormal3f(cosine, 0.0, sine);
+      glTexCoord2f(0.0, i * textureRatio);
+      glVertex3f(LANTERN_RAD * cosine, -0.6, LANTERN_RAD * sine);
+      glTexCoord2f(12.0, i * textureRatio);
+      glVertex3f(LANTERN_RAD * cosine, 0.6, LANTERN_RAD * sine);
    }
    glEnd();
 
