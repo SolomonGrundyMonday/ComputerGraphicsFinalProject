@@ -4,7 +4,7 @@ Shovel   -   Complete
 Axe      -   Complete
 Cabin    -   Complete.
 Tree     -   Complete.
-Tent     -   Needs a little work on surface normals.
+Tent     -   Complete.
 Lantern  -   Complete
 Skybox   -   N/A
 Camera   -   N/A
@@ -16,7 +16,7 @@ Axe      -   Complete
 Cabin    -   Complete 
 Tree     -   Complete
 Tent     -   Complete
-Lantern  -   Still has placeholder textures.
+Lantern  -   Complete.
 Skybox   -   Complete
 Camera   -   N/A
 
