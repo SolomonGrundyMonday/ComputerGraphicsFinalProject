@@ -670,7 +670,6 @@ void Tent::resolveCollision(Camera* camera)
    else if (collision == FRONT_LEFT)
    {
       float newX, newZ;
-      Print("Front left");
 
       // If player collides with wall exterior.
       if (objZ > this->scaleZ)
@@ -701,7 +700,6 @@ void Tent::resolveCollision(Camera* camera)
    else if (collision == LEFT)
    {
       float newX, newZ;
-      Print("Left");
       
       // If player collides with wall exterior.
       if(objX < -this->scaleX)
@@ -743,7 +741,6 @@ void Tent::resolveCollision(Camera* camera)
    else if (collision == RIGHT)
    {
       float newX = 0, newZ = 0;
-      Print("Right");
 
       // If player collides with wall exterior.
       if (objX > this->scaleX)
