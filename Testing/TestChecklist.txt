@@ -33,7 +33,7 @@ Camera   -   N/A (Camera is the instigator)
 
 Integration Tests:
 Compile on Linux           -   Complete
-Performance on VM          -   Minor framerate issues, testing further optimization techniques
+Performance on VM          -   Complete
 Final object positioning   -   Complete
 Final keybindings/controls -   Complete
 Soak test                  -   Complete
