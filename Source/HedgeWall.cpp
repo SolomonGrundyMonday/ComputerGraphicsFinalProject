@@ -71,6 +71,8 @@ void HedgeWall::Render()
 
    // Wall long side.  (Tesselated to improve lighing effects on large polygons)
    // Idea borrowed from contents of https://www.glprogramming.com/red/chapter05.html.
+   // Using a while loop/floating-point counter is intentional here.  This allows me to still
+   // tesselate the surface of the polygon even if the scaling is by a non-integer factor.
    float i = -this->scaleX;
    while (i < this->scaleX)
    {
@@ -83,7 +85,7 @@ void HedgeWall::Render()
          float maxY = (j + 1 > this->scaleY) ? 1.0 : (j + 1) / this->scaleY;
 
          // Interior wall.
-         glNormal3f((maxX - minX) / 2.0, (maxY - minY) / 2.0, 1.0);
+         glNormal3f(0.0, 0.0, 1.0);
          glBegin(GL_QUADS);
          glTexCoord2f(0.0, 0.0);
          glVertex3f(maxX, minY, -1.0);
@@ -96,7 +98,7 @@ void HedgeWall::Render()
          glEnd();
 
          // Exterior wall.
-         glNormal3f((maxX - minX) / 2.0, (maxY - minY) / 2.0, -1.2);
+         glNormal3f(0.0, 0.0, -1.0);
          glBegin(GL_QUADS);
          glTexCoord2f(0.0, 0.0);
          glVertex3f(maxX, minY, -1.2);
@@ -115,6 +117,8 @@ void HedgeWall::Render()
 
    // Wall end caps. (Tesselated to improve lighing effects on large polygons)
    // Idea borrowed from contents of https://www.glprogramming.com/red/chapter05.html.
+   // Using a while loop with a floating-point counter is intentional here, this allows me to still
+   // tesselate the surface of the polygon even if the scaling is not a whole number.
    i = -this->scaleY;
    while (i < this->scaleY)
    {
@@ -122,7 +126,7 @@ void HedgeWall::Render()
       float maxY = (i + 1 > this->scaleY) ? 1.0 : (i + 1) / this->scaleY;
 
       // Back side.
-      glNormal3f(-1.0, (maxY - minY) / 2.0, -1.1);
+      glNormal3f(-1.0, 0.0, 0.0);
       glBegin(GL_QUADS);
       glTexCoord2f(0.0, 0.0);
       glVertex3f(-1.0, maxY, -1.0);
@@ -135,7 +139,7 @@ void HedgeWall::Render()
       glEnd();
 
       // Front side.
-      glNormal3f(1.0, (maxY - minY) / 2.0, -1.1);
+      glNormal3f(1.0, 0.0, 0.0);
       glBegin(GL_QUADS);
       glTexCoord2f(0.0, 0.0);
       glVertex3f(1.0, minY, -1.0);
@@ -150,7 +154,9 @@ void HedgeWall::Render()
    }
 
    // Wall top caps.  (Tesselated to improve lighing effects on large polygons)
-   // Idea borrowed from contents of https://www.glprogramming.com/red/chapter05.html.
+   // Idea borrowed from contents of https://www.glprogramming.com/red/chapter05.html. 
+   // Using a while loop with a floating-point counter is intentional here, this allows me to still
+   // tesselate the surface of the polygon even if the scaling is not a whole number.
    i = -this->scaleX;
    while (i < this->scaleX)
    {
@@ -158,7 +164,7 @@ void HedgeWall::Render()
       float maxX = (i + 1 > this->scaleX) ? 1.0 : (i + 1) / this->scaleX;
 
       // Top side.
-      glNormal3f((maxX - minX) / 2.0, 1.0, -1.1);
+      glNormal3f(0.0, 1.0, 0.0);
       glBegin(GL_QUADS);
       glTexCoord2f(0.0, 0.0);
       glVertex3f(minX, 1.0, -1.0);
@@ -171,7 +177,7 @@ void HedgeWall::Render()
       glEnd();
 
       // Bottom side.
-      glNormal3f((maxX - minX) / 2.0, -1.0, -1.1);
+      glNormal3f(0.0, -1.0, 0.0);
       glBegin(GL_QUADS);
       glTexCoord2f(0.0, 0.0);
       glVertex3f(maxX, -1.0, -1.0);
@@ -201,10 +207,10 @@ wall HedgeWall::getSide(Camera* camera)
    float objX = (camX * cosine) - (camZ * sine);
    float objZ = (camZ * cosine) + (camX * sine);
 
-   float diffXMin = objX - (-this->scaleX - 0.55);
-   float diffXMax = (this->scaleX + 0.55) - objX;
-   float diffZMin = objZ - (-this->scaleZ - 0.75);
-   float diffZMax = (-this->scaleZ + 0.55) - objZ;
+   float diffXMin = objX - (-this->scaleX - 0.6);
+   float diffXMax = (this->scaleX + 0.6) - objX;
+   float diffZMin = objZ - (-this->scaleZ - 0.8);
+   float diffZMax = (-this->scaleZ + 0.6) - objZ;
 
    // Determine the wall of the hitbox that is experiencing the collision.
    bool left = diffXMin < diffXMax && diffXMin < diffZMin && diffXMin < diffZMax;
@@ -243,8 +249,8 @@ bool HedgeWall::detectCollision(Camera* camera)
    float maxZ = -this->scaleZ;
 
    // Determine if Camera is colliding with the object along the x, z axes.
-   bool xCollide = objX > minX - 0.55 && objX < maxX + 0.55;
-   bool zCollide = objZ > minZ - 0.55 && objZ < maxZ + 0.55;
+   bool xCollide = objX > minX - 0.6 && objX < maxX + 0.6;
+   bool zCollide = objZ > minZ - 0.6 && objZ < maxZ + 0.6;
 
    return xCollide && zCollide;
 }
@@ -272,7 +278,7 @@ void HedgeWall::resolveCollision(Camera* camera)
       float newX, newZ;
 
       newX = objX;
-      newZ = minZ - 0.55;
+      newZ = minZ - 0.6;
 
       // Undo transformation and convert back to world coordinates (transform matrix inverse courtesy of Symbolab.)
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
@@ -288,7 +294,7 @@ void HedgeWall::resolveCollision(Camera* camera)
       float newX, newZ;
 
       newX = objX;
-      newZ = maxZ + 0.55;
+      newZ = maxZ + 0.6;
 
       // Undo transformation and convert back to world coordinates (transform matrix inverse courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
@@ -303,7 +309,7 @@ void HedgeWall::resolveCollision(Camera* camera)
    {
       float newX, newZ;
 
-      newX = minX - 0.55;
+      newX = minX - 0.6;
       newZ = objZ;
 
       // Undo transformation and convert back to world coordinates (transform matrix inverse courtesy of Symbolab).
@@ -319,7 +325,7 @@ void HedgeWall::resolveCollision(Camera* camera)
    {
       float newX, newZ;
 
-      newX = maxX + 0.55;
+      newX = maxX + 0.6;
       newZ = objZ;
 
       // Undo transformation and convert back to world coordinates (transform matrix inverse courtesy of Symbolab).

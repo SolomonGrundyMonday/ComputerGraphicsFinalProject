@@ -58,13 +58,13 @@ Sources (Textures):
    Hedge maze wall texture: https://pixabay.com/photos/bank-park-to-sit-park-bench-4237809/.
 
 Estimated Time:
-   So far I have spent around 76 hours on this project.  The breakdown is as follows:
+   So far I have spent around 80 hours on this project.  The breakdown is as follows:
    Time spent sourcing and editing texture images: around 2.5 hours.
    Time spent implementing the object geometry (render functions):  About 13 hours.
    Time spent implementing surface normals and testing lighting: about 22 hours.
    Time spent implementing and testing object collisions:  about 24 hours.
    Time spent placing objects and designing the environment:  about 10.5 hours. 
-   Time spent testing the performance on my VM (to get a floor for performance) and making optimization passes: 4 hours.
+   Time spent testing the performance on my VM (to get a floor for performance) and making optimization passes: 8 hours.
 
 Changelog since project review:
    * I fixed the issue with lighting on the ground changing on first input in the comments from the review.  I had been calling 
@@ -102,9 +102,7 @@ Changelog since project review:
    * Fixed major lighting bug with the Lantern object where the inner base and top discs were not correctly illuminated by the light source (in the
      middle of the Lantern's glass casing).
    * Moved the axe object to make the campsite area a little less crowded.
-
-Things still to be done:
-   Once collisions and surface normals are up to speed, I will remove various inefficiencies present in this test build.
+   * Added new texture to Cabin object for door/window frames.
 
 Additional notes:
    The hedge maze area was originally intended to be a cave area for the user to explore, however I had severe difficulty getting 

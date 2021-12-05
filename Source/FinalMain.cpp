@@ -34,6 +34,7 @@ HedgeWall* front;
 std::vector<HedgeWall *> innerWalls;
 std::vector<TreeStump *> stump;
 std::vector<Tent *> tent;
+bool overheadView = false;
 
 const int treeCount = 38;
 const int tentCount = 4;
@@ -68,8 +69,8 @@ void initialize_objects()
 
    // Coordinates for inner walls of hedge maze area.
    float wallCoord[wallCount][4] = { {18.0, -3.5, 2.0, 0.0}, {21.8, -17.0, 2.0, 90.0}, {18.4, -1.0, 2.0, 90.0},
-                                     {21.2, -3.2, 1.5, 90.0}, {20.0, -6.5, 2.2, 0.0}, {19.0, -11.1, 3.5, 90.0},
-                                     {17.3, -16.2, 1.5, 0.0}, {21.0, -12.1, 1.0, 0.0}, {21.0, -11.8, 1.5, 90.0} };
+                                     {21.2, -3.2, 1.5, 90.0}, {19.9, -6.5, 2.2, 0.0}, {18.9, -11.2, 3.5, 90.0},
+                                     {17.4, -16.2, 1.5, 0.0}, {21.0, -12.1, 1.0, 0.0}, {21.0, -11.8, 1.5, 90.0} };
 
    // Instantiate Trees.
    for (int i = 0; i < treeCount; i++)
@@ -88,7 +89,7 @@ void initialize_objects()
    // Instantiate TreeStumps.
    for (int i = 0; i < stumpCount; i++)
    {
-      stump.push_back(new TreeStump(stumpCoord[i][0], 1.0, stumpCoord[i][1], 0.1, 0.2, 0.1, 0.0, 0.0, 0.0));
+      stump.push_back(new TreeStump(stumpCoord[i][0], 1.1, stumpCoord[i][1], 0.2, 0.1, 0.2, 0.0, 0.0, 0.0));
       stump.at(i)->Initialize("Assets/Bark.bmp");
    }
 
@@ -109,7 +110,7 @@ void initialize_objects()
    shovel = new Shovel(18.5, 1.25, 14.85, 0.25, 0.25, 0.25, 55.0, 0.0, 0.0);
    shovel->Initialize("Assets/Wood.bmp");
 
-   axe = new Axe(9.4, 1.45, 14.0, 0.4, 0.4, 0.4, 0.0, 0.0, 120.0);
+   axe = new Axe(1.4, 1.45, 17.0, 0.4, 0.4, 0.4, 0.0, 0.0, 120.0);
    axe->Initialize("Assets/Wood.bmp");
 
    // Instantiate Cabin.
@@ -121,22 +122,22 @@ void initialize_objects()
    lantern->Initialize("Assets/RustyMetal.bmp");
 
    // Instatiate Exterior walls of hedge maze.
-   back = new HedgeWall(18.3, 2.0, -17.8, 2.5, 2.0, 1.0, 0.0, 0.0, 0.0);
+   back = new HedgeWall(18.3, 2.0, -18.0, 2.5, 1.0, 1.0, 0.0, 0.0, 0.0);
    back->Initialize("Assets/Hedge.bmp");
 
-   left = new HedgeWall(17.0, 2.0, -9.0, 10.0, 2.0, 1.0, 0.0, 90.0, 0.0);
+   left = new HedgeWall(17.0, 2.0, -9.0, 10.0, 1.0, 1.0, 0.0, 90.0, 0.0);
    left->Initialize("Assets/Hedge.bmp");
 
-   right = new HedgeWall(21.0, 2.0, -9.0, 10.0, 2.0, 1.0, 0.0, -90.0, 0.0);
+   right = new HedgeWall(21.0, 2.0, -9.0, 10.0, 1.0, 1.0, 0.0, -90.0, 0.0);
    right->Initialize("Assets/Hedge.bmp");
 
-   front = new HedgeWall(19.7, 2.0, 0.0, 2.5, 2.0, 1.0, 0.0, 180.0, 0.0);
+   front = new HedgeWall(19.7, 2.0, 0.0, 2.5, 1.0, 1.0, 0.0, 180.0, 0.0);
    front->Initialize("Assets/Hedge.bmp");
 
    // Instantiate inner walls of hedge maze.
    for (int i = 0; i < wallCount; i++)
    {
-      innerWalls.push_back(new HedgeWall(wallCoord[i][0], 2.0, wallCoord[i][1], wallCoord[i][2], 2.0, 1.0, 0.0, wallCoord[i][3], 0.0));
+      innerWalls.push_back(new HedgeWall(wallCoord[i][0], 2.0, wallCoord[i][1], wallCoord[i][2], 1.0, 1.0, 0.0, wallCoord[i][3], 0.0));
       innerWalls.at(i)->Initialize("Assets/Hedge.bmp");
    }
 }
@@ -165,70 +166,91 @@ void display()
 
    // Clear transformations and apply camera movement.
    glLoadIdentity();
-   player->Turn();
 
-   // Resolve Horizon collisions (handles collisions for skybox).
-   if (horizon->detectCollision(player))
-      horizon->resolveCollision(player);
-
-   // Resolve collisions for Cabin.
-   if (cabin->detectCollision(player))
-      cabin->resolveCollision(player);
-
-   // Resolve collisions for Axe.
-   if (axe->detectCollision(player))
-      axe->resolveCollision(player);
-
-   // Resolve collisions for Shovel.
-   if (shovel->detectCollision(player))
-      shovel->resolveCollision(player);
-
-   // Resolve collisions for TreeStumps.
-   for (int i = 0; i < stumpCount; i++)
+   // Added overhead view for user (graders) to get their bearings.
+   if (overheadView)
    {
-      if (stump.at(i)->detectCollision(player))
-         stump.at(i)->resolveCollision(player);
-   }
+      // If the flashlight is on, toggle it off for debug/overhead mode.
+      if (player->getFlashlight())
+      {
+         player->toggleLight();
+         player->shineLight();
+      }
 
-   // Resolve collisions for Trees.
-   for (int i = 0; i < treeCount; i++)
+      gluLookAt(-20 * Cos(player->getTheta()), 10, -20 * Sin(player->getTheta()), 0, 0, 0, 0, 1, 0);
+   }
+   // No need to waste computation time computing collisions if the user is in overhead mode.
+   else
    {
-      if (tree.at(i)->detectCollision(player))
-         tree.at(i)->resolveCollision(player);
+      player->Turn();
+
+      // Resolve Horizon collisions (handles collisions for skybox).
+      if (horizon->detectCollision(player))
+         horizon->resolveCollision(player);
+
+      // Resolve collisions for Cabin.
+      if (cabin->detectCollision(player))
+         cabin->resolveCollision(player);
+
+      // Resolve collisions for Axe.
+      if (axe->detectCollision(player))
+         axe->resolveCollision(player);
+
+      // Resolve collisions for Shovel.
+      if (shovel->detectCollision(player))
+         shovel->resolveCollision(player);
+
+      // Resolve collisions for TreeStumps.
+      for (int i = 0; i < stumpCount; i++)
+      {
+         if (stump.at(i)->detectCollision(player))
+            stump.at(i)->resolveCollision(player);
+      }
+
+      // Resolve collisions for Trees.
+      for (int i = 0; i < treeCount; i++)
+      {
+         // If the player collides with a Tree, we need to resolve the collision and there is no need to check the rest.
+         if (tree.at(i)->detectCollision(player))
+         {
+            tree.at(i)->resolveCollision(player);
+            break;
+         }
+      }
+
+      // Resolve collisions for Tents.
+      for (int i = 0; i < tentCount; i++)
+      {
+         if (tent.at(i)->detectCollision(player))
+            tent.at(i)->resolveCollision(player);
+      }
+
+      // Resolve collisions for exterior hedge maze walls.
+      if (back->detectCollision(player))
+         back->resolveCollision(player);
+      if (left->detectCollision(player))
+         left->resolveCollision(player);
+      if (right->detectCollision(player))
+         right->resolveCollision(player);
+      if (front->detectCollision(player))
+         front->resolveCollision(player);
+
+      // Resolve collisions for interior hedge maze walls.
+      for (int i = 0; i < wallCount; i++)
+      {
+         if (innerWalls.at(i)->detectCollision(player))
+            innerWalls.at(i)->resolveCollision(player);
+      }
+
+      // Update Camera center vector based on player movement.
+      player->setCenterPos(Eye[0] + player->getCenterX(), player->getCenterY(), Eye[2] + player->getCenterZ());
+      Center[0] = player->getCenterX();
+      Center[1] = player->getCenterY();
+      Center[2] = player->getCenterZ();
+      gluLookAt(Eye[0], Eye[1], Eye[2], Center[0], Center[1], Center[2], player->getUpX(), player->getUpY(), player->getUpZ());
+
+      player->shineLight();
    }
-
-   // Resolve collisions for Tents.
-   for (int i = 0; i < tentCount; i++)
-   {
-      if (tent.at(i)->detectCollision(player))
-         tent.at(i)->resolveCollision(player);
-   }
-
-   // Resolve collisions for exterior hedge maze walls.
-   if (back->detectCollision(player))
-      back->resolveCollision(player);
-   if (left->detectCollision(player))
-      left->resolveCollision(player);
-   if (right->detectCollision(player))
-      right->resolveCollision(player);
-   if (front->detectCollision(player))
-      front->resolveCollision(player);
-
-   // Resolve collisions for interior hedge maze walls.
-   for (int i = 0; i < wallCount; i++)
-   {
-      if (innerWalls.at(i)->detectCollision(player))
-         innerWalls.at(i)->resolveCollision(player);
-   }
-
-   // Update Camera center vector based on player movement.
-   player->setCenterPos(Eye[0] + player->getCenterX(), player->getCenterY(), Eye[2] + player->getCenterZ());
-   Center[0] = player->getCenterX();
-   Center[1] = player->getCenterY();
-   Center[2] = player->getCenterZ();
-   gluLookAt(Eye[0], Eye[1], Eye[2], Center[0], Center[1], Center[2], player->getUpX(), player->getUpY(), player->getUpZ());
-
-   player->shineLight();
 
    // Render Tree objects.
    for (int i = 0; i < treeCount; i++)
@@ -251,6 +273,7 @@ void display()
    // Render Shovel object.
    shovel->Render();
 
+   // Render Lantern object.
    lantern->Render();
 
    // Render Axe object.
@@ -272,9 +295,6 @@ void display()
    // Render inner hedge maze walls.
    for (int i = 0; i < wallCount; i++)
       innerWalls.at(i)->Render();
-
-   glWindowPos2i(5, 5);
-   Print("Current position: (%.1lf, %.1lf, %.1lf)", player->getEyeX(), player->getEyeY(), player->getEyeZ());
 
    // Check for errors in GLUT, flush and swap buffers.
    ErrCheck("display");
@@ -314,29 +334,34 @@ void key(unsigned char key, int x, int y)
       exit(0);
    }
    // If the player presses the 'F' key, toggle the Camera flashlight component.
-   else if (key == 'f' || key == 'F')
+   else if ((key == 'f' || key == 'F') && !overheadView)
    {
       player->toggleLight();
    }
    // If the player presses the 'W' key, move the Camera forward.
-   else if (key == 'w' || key == 'W')
+   else if ((key == 'w' || key == 'W') && !overheadView)
    {
       player->MoveForward();
    }
    // If the player presses the 'S' key, move the Camera backward.
-   else if (key == 's' || key == 'S')
+   else if ((key == 's' || key == 'S') && !overheadView)
    {
       player->MoveBackward();
    }
    // If the player presses the 'A' key, strafe the Camera to the left.
-   else if (key == 'a' || key == 'A')
+   else if ((key == 'a' || key == 'A') && !overheadView)
    {
       player->StrafeLeft();
    }
    // If the player presses the 'D' key, strafe the Camera to the right.
-   else if (key == 'd' || key == 'D')
+   else if ((key == 'd' || key == 'D') && !overheadView)
    {
       player->StrafeRight();
+   }
+   // If the player presses the '~' key, switch to debug mode.
+   else if (key == '`' || key == '~')
+   {
+      overheadView = (overheadView) ? false : true;
    }
 
    glutPostRedisplay();

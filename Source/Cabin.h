@@ -29,6 +29,7 @@ class Cabin : public GameObject
       unsigned char shingles;
       unsigned char wood;
       unsigned char shutters;
+      unsigned char siding;
       unsigned char metal;
       float posX;
       float posY;

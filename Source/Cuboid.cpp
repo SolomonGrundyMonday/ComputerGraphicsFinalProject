@@ -150,7 +150,7 @@ void Cuboid::Render()
          float maxZ1 = (j + 2) / this->scaleZ;
 
          // Optimization - draw two quads per iteration (loop unrolling).
-         glNormal3f( (maxX - minX) / 2.0, 1.0, (maxZ - minZ) / 2.0);
+         glNormal3f( 0.0, 1.0, 0.0);
          glBegin(GL_QUADS);
          glTexCoord2f(0.0, 0.0); 
          glVertex3f(maxX, 1.0, maxZ);
@@ -162,7 +162,7 @@ void Cuboid::Render()
          glVertex3f(minX, 1.0, maxZ);
          glEnd();
 
-         glNormal3f( (maxX - minX) / 2.0, 1.0, (maxZ1 - maxZ) / 2.0);
+         glNormal3f( 0.0, 1.0, 0.0);
          glBegin(GL_QUADS);
          glTexCoord2f(0.0, 0.0);
          glVertex3f(maxX, 1.0, maxZ1);

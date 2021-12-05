@@ -81,26 +81,30 @@ void TreeStump::Render()
    {
       // Optimization - reduce number of floating-point computations per loop iteration.
       int theta = i * 30;
-      int theta2 = (i + 1) * 30;
       float x1 = Cos(theta);
       float z1 = Sin(theta);
-      float x2 = Cos(theta2);
-      float z2 = Sin(theta2);
       float texRatio = i * 0.5;
-      float texRatio2 = (i + 1) * 0.5; 
-
-      // Optimization - draw four vertices per loop iteration and reduce number of iterations (loop unrolling).
+     
       glNormal3f(x1, 0.0, z1);
       glTexCoord2f(0.0, texRatio);
-      glVertex3f(2.0 * x1, -1.0, 2.0 * z1);
+      glVertex3f(x1, -1.0, z1);
       glTexCoord2f(2.0, texRatio);
-      glVertex3f(2.0 * x1, 1.0, 2.0 * z1);
+      glVertex3f(x1, 1.0, z1);
 
-      glNormal3f(x2, 0.0, z2);
-      glTexCoord2f(0.0, texRatio2);
-      glVertex3f(2.0 * x2, -1.0, 2.0 * z2);
-      glTexCoord2f(2.0, texRatio2);
-      glVertex3f(2.0 * x2, 1.0, 2.0 * z2);
+      // Optimization - draw four vertices per loop iteration and reduce number of iterations (loop unrolling).
+      if (i != 12)
+      {
+         int theta2 = (i + 1) * 30;
+         float x2 = Cos(theta2);
+         float z2 = Sin(theta2);
+         float texRatio2 = (i + 1) * 0.5;
+
+         glNormal3f(x2, 0.0, z2);
+         glTexCoord2f(0.0, texRatio2);
+         glVertex3f(x2, -1.0, z2);
+         glTexCoord2f(2.0, texRatio2);
+         glVertex3f(x2, 1.0, z2);
+      }
    }
    glEnd();
 
@@ -119,13 +123,11 @@ void TreeStump::Render()
       float z2 = Sin(i + 30);
 
       // Optimization - draw two vertices per iteration and reduce number of iterations (loop unrolling).
-      glNormal3f(x, 1.0, z);
       glTexCoord2f(0.5 * x + 0.5, 0.5 * z + 0.5);
-      glVertex3f(2.0 * x, 1.0, 2.0 * z);
+      glVertex3f(x, 1.0, z);
 
-      glNormal3f(x2, 1.0, z2);
       glTexCoord2f(0.5 * x2 + 0.5, 0.5 * z2 + 0.5);
-      glVertex3f(2.0 * x2, 1.0, 2.0 * z2);
+      glVertex3f(x2, 1.0, z2);
    }
    glEnd();
 

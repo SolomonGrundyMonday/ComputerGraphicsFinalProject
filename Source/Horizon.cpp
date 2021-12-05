@@ -132,10 +132,10 @@ wall Horizon::getSide(Camera* camera)
    float camZ = camera->getEyeZ();
 
    // Determine if collision occured on the front, back, left or right wall.
-   bool front = camZ > this->scaleZ - 0.5;
-   bool back = camZ < -this->scaleZ + 0.5;
-   bool left = camX < -this->scaleX + 0.5;
-   bool right = camX > this->scaleX - 0.5;
+   bool front = camZ > this->scaleZ - 0.6;
+   bool back = camZ < -this->scaleZ + 0.6;
+   bool left = camX < -this->scaleX + 0.6;
+   bool right = camX > this->scaleX - 0.6;
 
    // Return the appropriate wall (if applicable).
    if (front)
@@ -158,8 +158,8 @@ bool Horizon::detectCollision(Camera* camera)
    float camZ = camera->getEyeZ();
 
    // Determine if collision occured with the x or z axis (since the Camera should be "inside" the horizon line).
-   bool xCollide = camX < -this->scaleX + 0.5 || camX > this->scaleX - 0.5;
-   bool zCollide = camZ < -this->scaleZ + 0.5 || camZ > this->scaleZ - 0.5;
+   bool xCollide = camX < -this->scaleX + 0.6 || camX > this->scaleX - 0.6;
+   bool zCollide = camZ < -this->scaleZ + 0.6 || camZ > this->scaleZ - 0.6;
 
    // Return true if Camera collided with either axis.
    return xCollide || zCollide; 
@@ -177,42 +177,42 @@ void Horizon::resolveCollision(Camera* camera)
    // If Camera collided with the front wall.
    if (collision == FRONT)
    {
-      if (camX > this->scaleX - 0.5)
-         camX = this->scaleX - 0.5;
-      else if (camX < -this->scaleX + 0.5)
-         camX = -this->scaleX + 0.5;
+      if (camX > this->scaleX - 0.6)
+         camX = this->scaleX - 0.6;
+      else if (camX < -this->scaleX + 0.6)
+         camX = -this->scaleX + 0.6;
 
-      camZ = this->scaleZ - 0.5;
+      camZ = this->scaleZ - 0.6;
    }
    // If Camera collided with the back wall.
    else if (collision == BACK)
    {
-      if (camX > this->scaleX - 0.5)
-         camX = this->scaleX - 0.5;
-      else if (camX < -this->scaleX + 0.5)
-         camX = -this->scaleX + 0.5;
+      if (camX > this->scaleX - 0.6)
+         camX = this->scaleX - 0.6;
+      else if (camX < -this->scaleX + 0.6)
+         camX = -this->scaleX + 0.6;
 
-      camZ = -this->scaleZ + 0.5;
+      camZ = -this->scaleZ + 0.6;
    }
    // If Camera collided with the left wall.
    else if (collision == LEFT)
    {
-      camX = -this->scaleX + 0.5;
+      camX = -this->scaleX + 0.6;
 
-      if (camZ > this->scaleZ - 0.5)
-         camZ = this->scaleZ - 0.5;
-      else if (camZ < -this->scaleZ + 0.5)
-         camZ = -this->scaleZ + 0.5;
+      if (camZ > this->scaleZ - 0.6)
+         camZ = this->scaleZ - 0.6;
+      else if (camZ < -this->scaleZ + 0.6)
+         camZ = -this->scaleZ + 0.6;
    }
    // If Camera collided with the right wall.
    else if (collision == RIGHT)
    {
-      camX = this->scaleX - 0.5;
+      camX = this->scaleX - 0.6;
 
-      if (camZ > this->scaleZ - 0.5)
-         camZ = this->scaleZ - 0.5;
-      else if (camZ < -this->scaleZ + 0.5)
-         camZ = -this->scaleZ + 0.5;
+      if (camZ > this->scaleZ - 0.6)
+         camZ = this->scaleZ - 0.6;
+      else if (camZ < -this->scaleZ + 0.6)
+         camZ = -this->scaleZ + 0.6;
    }
 
    // Update Camera position.

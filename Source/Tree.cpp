@@ -117,28 +117,34 @@ int Tree::branch(float l, float r)
    // Code for branch generation borrowed from lecture, made a slight change by unrolling loop for optimization purposes.
    for (int i = 0; i <= 360; i += 60)
    {
-      // Reduce number of floating-point calculations per loop iteration.
-      int next = i + 30;
+      // Optimization - reduce number of floating-point calculations per loop iteration.
       float x = Cos(i);
       float z = Sin(i);
       float texX = i / 120.0;
-      float x1 = Cos(next);
-      float z1 = Sin(next);
       float texY = l/r;
-      float texX1 = (next) / 120.0;
-
-      // Draw four vertices per iteration (loop unrolling).
-      glNormal3f(x, 1 - SHRINK_FACTOR, z);
+      
+      glNormal3f(x, 0.0, z);
       glTexCoord2d(texX, 0.0);
       glVertex3f(x, 0, z);
       glTexCoord2d(texX, texY);
       glVertex3f(SHRINK_FACTOR * x, 1, SHRINK_FACTOR * z);
 
-      glNormal3f(x1, 1 - SHRINK_FACTOR, z1);
-      glTexCoord2d(texX1, 0.0);
-      glVertex3f(x1, 0, z1);
-      glTexCoord2d(texX1, texY);
-      glVertex3f(SHRINK_FACTOR * x1, 1, SHRINK_FACTOR * z1);
+      // Draw four vertices per iteration (loop unrolling).
+      if (i != 360)
+      {
+         int next = i + 30;
+
+         // Optimization - reduce number of floating-point compuatations per loop iteration.
+         float x1 = Cos(next);
+         float z1 = Sin(next);
+         float texX1 = (next) / 120.0;
+
+         glNormal3f(x1, 0.0, z1);
+         glTexCoord2d(texX1, 0.0);
+         glVertex3f(x1, 0, z1);
+         glTexCoord2d(texX1, texY);
+         glVertex3f(SHRINK_FACTOR * x1, 1, SHRINK_FACTOR * z1);
+      }
    }
 
    // Dicable textures, face culling.
