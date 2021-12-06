@@ -42,4 +42,4 @@ Debug mode                 -   Complete (sort of, just an overhead perspective p
 Flashlight implementation  -   Complete
 Final collision test       -   
 Final lighting test        -   Complete
-Final framerate test       -
+Final framerate test       -   Complete
