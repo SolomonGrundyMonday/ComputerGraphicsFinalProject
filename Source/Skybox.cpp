@@ -47,6 +47,7 @@ Skybox::Skybox(float x, float y, float z, float dx, float dy, float dz, float rx
 // Skybox class Initialize function implementation definition.
 int Skybox::Initialize(const char* filename)
 {
+   // Load object texture from Assets subdirectory.
    this->texture = LoadTexBMP(filename);
 
    return 0;
@@ -55,14 +56,17 @@ int Skybox::Initialize(const char* filename)
 // Skybox class Render function implementation definition.
 void Skybox::Render()
 {
+   // Optimization - compute texture coordinates once per Render call.
    float texX = this->scaleX / 10.0;
    float texY = this->scaleY / 10.0;
    float texZ = this->scaleZ / 10.0;
 
-   // Enable textures.
+   // Enable textures, front face culling (since we are inside the skybox).
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_CULL_FACE);
    glCullFace(GL_FRONT);
+
+   // For the skybox, I specifically want GL_REPLACE, since it is the skybox, I don't want its color affected by either the color state machine or lighting.
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
    glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -77,10 +81,12 @@ void Skybox::Render()
    glRotatef(this->rotZ, 0, 0, 1);
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
 
+   // Set material properties, ambient white black specular.
    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0);
    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, white);
    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, black);
 
+   // No normals because the skybox should not be affected by the local lighting.
    for (int i = 0; i < 20; i += 4)
    {
       int vert2 = i + 1;
@@ -136,6 +142,7 @@ void Skybox::Render()
 // Skybox class resolveCollision function definition.
 void Skybox::resolveCollision(Camera* camera)
 {
+   // This collision implementation is deprecated, now handled by Horizon object.
    // Reduce function calls within display function.
    float camX = camera->getEyeX();
    float camZ = camera->getEyeZ();

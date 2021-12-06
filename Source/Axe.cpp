@@ -47,6 +47,7 @@ Axe::Axe(float x, float y, float z, float dx, float dy, float dz, float rx, floa
 // Function definition for Axe class Initialize function implementation.
 int Axe::Initialize(const char* filename)
 {
+   // Load textures from Assets subdirectory.
    this->texture = LoadTexBMP(filename);
    this->metal = LoadTexBMP("Assets/ToolHead.bmp");
 
@@ -56,9 +57,7 @@ int Axe::Initialize(const char* filename)
 // Function definition for Axe class Render function implementation.
 void Axe::Render()
 {
-   float headTop = LENGTH + 0.001;
-   float headBottom = headTop - HEAD_HEIGHT;
-   float axeBlade = -RAD - HEAD_LENGTH;
+   // Optimization - reduce the number of floating-point computations per call to Render.
    float textureRatio = 1.0/12.0;
 
    // Enable textures.
@@ -81,6 +80,7 @@ void Axe::Render()
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
+      // Optimization - reduce number of floating-point computations per loop iteration.
       int theta = i * 30;
       float cosine = Cos(theta);
       float sine = Sin(theta);
@@ -93,7 +93,7 @@ void Axe::Render()
    }
    glEnd();
 
-   // Draw the end of the handle (only draw one end because the other is covered by the axe head).
+   // Draw the handle bottom disc.
    glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -101,6 +101,7 @@ void Axe::Render()
 
    for (int i = 0; i <= 360; i += 30)
    {
+      // Optimization - reduce number of floating-point computations per loop iteration.
       float cosine = Cos(i);
       float sine = Sin(i);
 
@@ -113,7 +114,12 @@ void Axe::Render()
    glBindTexture(GL_TEXTURE_2D, metal);
    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0);
 
-   // Top.
+   // Optimization - reduce number of floating-point computations per call to Render.
+   float headTop = LENGTH + 0.001;
+   float headBottom = headTop - HEAD_HEIGHT;
+   float axeBlade = -RAD - HEAD_LENGTH;
+
+   // Axe head connector Top.
    glNormal3f(0.0, 1.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -126,7 +132,7 @@ void Axe::Render()
    glVertex3f(RAD, headTop, -RAD);
    glEnd();
 
-   // Bottom.
+   // Axe head connector Bottom.
    glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -139,7 +145,7 @@ void Axe::Render()
    glVertex3f(RAD, headBottom, -RAD);
    glEnd();
 
-   // Front side.
+   // Axe head connector Front side.
    glNormal3f(0.0, 0.0, 1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -152,7 +158,7 @@ void Axe::Render()
    glVertex3f(RAD, headTop, RAD);
    glEnd();
 
-   // Left side.
+   // Axe head connector Left side.
    glNormal3f(1.0, 0.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -165,7 +171,7 @@ void Axe::Render()
    glVertex3f(RAD, headTop, RAD);
    glEnd();
 
-   // Back side.
+   // Axe head connector Back side.
    glNormal3f(0.0, 0.0, -1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -204,7 +210,7 @@ void Axe::Render()
    glVertex3f(axeBlade, headTop, 0.0);
    glEnd();
 
-   // Axe head top.
+   // Axe blade top.
    glNormal3f(0.0, 1.0, 0.0);
    glBegin(GL_TRIANGLES);
    glTexCoord2f(0.0, 0.0);
@@ -215,7 +221,7 @@ void Axe::Render()
    glVertex3f(axeBlade, headTop, 0.0);
    glEnd();
 
-   // Axe head bottom.
+   // Axe blade bottom.
    glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_TRIANGLES);
    glTexCoord2f(0.0, 0.0);
@@ -238,16 +244,16 @@ bool Axe::detectCollision(Camera* camera)
    float sine = Sin(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = (camX * cosine) - (camZ * sine);
-   camZ = (camZ * cosine) + (camX * sine);
+   float objX = (camX * cosine) - (camZ * sine);
+   float objZ = (camZ * cosine) + (camX * sine);
 
-   float minX = -RAD * Cos(this->rotZ) * this->scaleX - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float maxX = RAD * Cos(this->rotZ) * this->scaleX + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float minZ = ((-RAD - HEAD_LENGTH) * Cos(this->rotX) * this->scaleZ) - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float maxZ = (RAD * Cos(this->rotX) * this->scaleZ) + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float minX = (-RAD * Cos(this->rotX) * this->scaleX) + (Cos(this->rotZ) * LENGTH * this->scaleY);
+   float maxX = (RAD * Cos(this->rotX) * this->scaleX) + (LENGTH * Cos(this->rotZ) * this->scaleY);
+   float minZ = ((-RAD - HEAD_LENGTH) * Cos(this->rotX) * this->scaleZ) + (LENGTH * Sin(this->rotX) * this->scaleY);
+   float maxZ = (RAD * Cos(this->rotX) * this->scaleZ) + (LENGTH * Sin(this->rotX) * this->scaleY);
 
-   bool xCollide = camX > minX - 0.5 && camX < maxX + 0.5;
-   bool zCollide = camZ > minZ - 0.5 && camZ < maxZ + 0.5;
+   bool xCollide = objX >= minX - 0.7 && objX <= maxX + 0.7;
+   bool zCollide = objZ >= minZ - 0.7 && objZ <= maxZ + 0.7;
 
    return xCollide && zCollide;
 }
@@ -260,28 +266,28 @@ void Axe::resolveCollision(Camera* camera)
    float sine = Sin(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = (camX * cosine) - (camZ * sine);
-   camZ = (camZ * cosine) + (camX * sine);
+   float objX = (camX * cosine) - (camZ * sine);
+   float objZ = (camZ * cosine) + (camX * sine);
 
    // Compute the minimum and maximum x and z values for the hitbox based on the rotations about the x, y, z axes.
-   float minX = -RAD * Cos(this->rotZ) * this->scaleX - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float maxX = RAD * Cos(this->rotZ) * this->scaleX + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float minZ = ((-RAD - HEAD_LENGTH) * Cos(this->rotX) * this->scaleZ) - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float maxZ = (RAD * Cos(this->rotX) * this->scaleZ) + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float minX = (-RAD * Cos(this->rotX) * this->scaleX) + (Cos(this->rotZ) * LENGTH * this->scaleY);
+   float maxX = (RAD * Cos(this->rotX) * this->scaleX) + (LENGTH * Cos(this->rotZ) * this->scaleY);
+   float minZ = ((-RAD - HEAD_LENGTH) * Cos(this->rotX) * this->scaleZ) + (LENGTH * Sin(this->rotX) * this->scaleY);
+   float maxZ = (RAD * Cos(this->rotX) * this->scaleZ) + (LENGTH * Sin(this->rotX) * this->scaleY);
 
    wall collision = getSide(camera);
    
    // If Camera collided with the front side.
-   if (collision == FRONT)
+   if (collision == RIGHT)
    {
       float newX, newZ;
 
-      newZ = minZ - 0.5;
-      newX = camX;
+      newZ = maxZ + 0.7;
+      newX = objX;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
-      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -289,16 +295,16 @@ void Axe::resolveCollision(Camera* camera)
       camera->setEyePos(newX, camera->getEyeY(), newZ);
    }
    // If Camera collided with the back side.
-   else if  (collision == BACK)
+   else if  (collision == LEFT)
    {
       float newX, newZ;
 
-      newZ = maxZ + 0.5;
-      newX = camX;
+      newZ = minZ - 0.7;
+      newX = objX;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
-      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -306,16 +312,16 @@ void Axe::resolveCollision(Camera* camera)
       camera->setEyePos(newX, camera->getEyeY(), newZ);
    }
    // If Camera collided with the left side.
-   else if (collision == LEFT)
+   else if (collision == FRONT)
    {
       float newX, newZ;
 
-      newZ = camZ;
-      newX = minX - 0.5;
+      newZ = objZ;
+      newX = minX - 0.7;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
-      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
       newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (objZ * sine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -323,16 +329,16 @@ void Axe::resolveCollision(Camera* camera)
       camera->setEyePos(newX, camera->getEyeY(), newZ);
    }
    // If Camera collided with the right side.
-   else if (collision == RIGHT)
+   else if (collision == BACK)
    {
       float newX, newZ;
 
-      newZ = camZ;
-      newX = maxX + 0.5;
+      newZ = objZ;
+      newX = maxX + 0.7;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
-      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
       newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (objZ * sine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -349,20 +355,24 @@ wall Axe::getSide(Camera* camera)
    float sine = Sin(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = (camX * cosine) - (camZ * sine);
-   camZ = (camZ * cosine) + (camX * sine);
+   float objX = (camX * cosine) - (camZ * sine);
+   float objZ = (camZ * cosine) + (camX * sine);
 
    // Compute minimum and maximum x, z values based on the rotations and scaling ont the x, y, z axes.
-   float minX = -RAD * Cos(this->rotZ) * this->scaleX - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float maxX = RAD * Cos(this->rotZ) * this->scaleX + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float minZ = ((-RAD - HEAD_LENGTH) * Cos(this->rotX) * this->scaleZ) - (Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float maxZ = (RAD * Cos(this->rotX) * this->scaleZ) + (LENGTH * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float minX = (-RAD * Cos(this->rotX) * this->scaleX) + (Cos(this->rotZ) * LENGTH * this->scaleY);
+   float maxX = (RAD * Cos(this->rotX) * this->scaleX) + (LENGTH * Cos(this->rotZ) * this->scaleY);
+   float minZ = ((-RAD - HEAD_LENGTH) * Cos(this->rotX) * this->scaleZ) + (LENGTH * Sin(this->rotX) * this->scaleY);
+   float maxZ = (RAD * Cos(this->rotX) * this->scaleZ) + (LENGTH * Sin(this->rotX) * this->scaleY);
+   float diffXMin = objX - (minX - 0.7);
+   float diffXMax = (maxX + 0.7) - objX;
+   float diffZMin = objZ - (minZ - 0.7);
+   float diffZMax = (maxZ + 0.7) - objZ;
 
    // Determine if the Camera has collided with the front, back, left, or right side of the Axe hitbox.
-   bool front = camX > minX && camX < maxX && camZ < 0.0;
-   bool back = camX > minX && camX < maxX && camZ > 0.0;
-   bool left = camZ > minZ && camZ < maxZ && camX < 0.0;
-   bool right = camZ > minZ && camZ < maxZ && camX > 0.0;
+   bool front = diffXMin < diffXMax && diffXMin < diffZMin && diffXMin < diffZMax;
+   bool back = diffXMax < diffXMin && diffXMax < diffZMin && diffXMax < diffZMax;
+   bool left = diffZMin < diffZMax && diffZMin < diffXMin && diffZMin < diffXMax;
+   bool right = diffZMax < diffZMin && diffZMax < diffXMin && diffZMax < diffXMax;
 
    // Return the appropriate side.
    if (front)

@@ -29,6 +29,7 @@ Camera::Camera()
 // Function definition for MoveForward method of Camera class.
 void Camera::MoveForward()
 {
+   // Compute new x, z coordinates for forward movement. 
    float x = this->EyePos[0] + (Sin(this->theta) * MOVE_DISTANCE);
    float z = this->EyePos[2] + (-Cos(this->theta) * MOVE_DISTANCE);
 
@@ -38,6 +39,7 @@ void Camera::MoveForward()
 // Function definition for MoveBackward method of Camera class.
 void Camera::MoveBackward()
 {
+   // Compute new x, z coordinates for backward movement.
    float x = this->EyePos[0] - (Sin(this->theta) * MOVE_DISTANCE);
    float z = this->EyePos[2] - (-Cos(this->theta) * MOVE_DISTANCE);
 
@@ -47,6 +49,7 @@ void Camera::MoveBackward()
 // Function definition for StrafeLeft method of Camera class.
 void Camera::StrafeLeft()
 {
+   // Compute new x, z coordinates for left strafing.
    float x = this->EyePos[0] - (Cos(this->theta) * MOVE_DISTANCE);
    float z = this->EyePos[2] - (Sin(this->theta) * MOVE_DISTANCE);
 
@@ -56,6 +59,7 @@ void Camera::StrafeLeft()
 // Function definition for StrafeRight method of Camera class.
 void Camera::StrafeRight()
 {
+   // Compute new x, z coordinates for right strafing.
    float x = this->EyePos[0] + (Cos(this->theta) * MOVE_DISTANCE);
    float z = this->EyePos[2] + (Sin(this->theta) * MOVE_DISTANCE);
 
@@ -84,9 +88,6 @@ void Camera::shineLight()
       float spotPosition[] = {this->EyePos[0], this->EyePos[1], this->EyePos[2], 1.0 };
       float exponent[] = { 128.0 };
       float cutoff[] = { 45.0 };
-      float cAttenuation[] = { 1.0 };
-      float lAttenuation[] = { 0.0 };
-      float qAttenuation[] = { 0.0 };
 
       // Enable a spotlight located at the Camera eye position.
       glEnable(GL_LIGHT1);
@@ -96,9 +97,6 @@ void Camera::shineLight()
       glLightfv(GL_LIGHT1, GL_POSITION, spotPosition);
       glLightfv(GL_LIGHT1, GL_SPOT_EXPONENT, exponent);
       glLightfv(GL_LIGHT1, GL_SPOT_CUTOFF, cutoff);
-      glLightfv(GL_LIGHT1, GL_CONSTANT_ATTENUATION, cAttenuation);
-      glLightfv(GL_LIGHT1, GL_LINEAR_ATTENUATION, lAttenuation);
-      glLightfv(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, qAttenuation);
    }
    // If light is not active.
    else

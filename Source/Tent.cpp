@@ -41,7 +41,7 @@ Tent::Tent(float x, float y, float z, float dx, float dy, float dz, float rx, fl
 // Function definition for Tent object Initialize function implementation.
 int Tent::Initialize(const char* filename)
 {
-   // Load the object textures.
+   // Load the object textures from Assets subdirectory.
    this->texture = LoadTexBMP(filename);
    this->spike = LoadTexBMP("Assets/RustyMetal.bmp");
    this->canvasWrap = LoadTexBMP("Assets/CanvasRoll.bmp");
@@ -52,8 +52,6 @@ int Tent::Initialize(const char* filename)
 // Function definition for Tent object Render function implementation.
 void Tent::Render()
 {
-   float textureRatio = 1.0/12.0;
-
    // Enable textures.
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -69,7 +67,7 @@ void Tent::Render()
    glRotatef(this->rotZ, 0, 0, 1);
    glScalef(this->scaleX, this->scaleY, this->scaleZ);
 
-   // Draw Tent front wall.
+   // Draw Tent front left wall.
    glNormal3f(-0.8, 0.0, 1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -82,6 +80,7 @@ void Tent::Render()
    glVertex3f(-1.0, 1.0, 1.0);
    glEnd();
 
+   // Draw Tent front right wall.
    glNormal3f(0.8, 0.0, 1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -94,6 +93,7 @@ void Tent::Render()
    glVertex3f(0.6, 1.0, 1.0);
    glEnd();
 
+   // Draw Tent front door.
    glNormal3f(0.0, 0.6, 1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -158,7 +158,7 @@ void Tent::Render()
    glVertex3f(1.0, -0.999, -1.0);
    glEnd();
 
-   // Draw Tent roof.
+   // Draw Tent roof front triangle.
    glNormal3f(0.0, 1.25, 1.0);
    glBegin(GL_TRIANGLES);
    glTexCoord2f(0.0, 0.0);
@@ -169,6 +169,7 @@ void Tent::Render()
    glVertex3f(0.0, 1.5, 1.0);
    glEnd();
 
+   // Draw Tent roof back triangle.
    glNormal3f(0.0, 1.25, -1.0);
    glBegin(GL_TRIANGLES);
    glTexCoord2f(0.0, 0.0);
@@ -179,6 +180,7 @@ void Tent::Render()
    glVertex3f(0.0, 1.5, -1.0);
    glEnd();
 
+   // Draw Tent roof left quad.
    glNormal3f(-0.5, 1.25, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -191,6 +193,7 @@ void Tent::Render()
    glVertex3f(0.0, 1.5, -1.0);
    glEnd();
 
+   // Draw Tent roof right quad.
    glNormal3f(0.5, 1.25, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -205,7 +208,10 @@ void Tent::Render()
 
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
 
-   // Draw right Tent flaps.
+   // Optimization - this value is used in several loops, no need to keep recomputing it every iteration of every loop.
+   float textureRatio = 1.0 / 12.0;
+
+   // Draw rolled right Tent flaps cyllender. 
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
@@ -232,7 +238,7 @@ void Tent::Render()
    }
    glEnd();
 
-   // Draw left Tent flaps.
+   // Draw rolled left Tent flaps cyllender.
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i += 2)
    {
@@ -292,8 +298,10 @@ void Tent::Render()
    glVertex3f(1.0, 1.0, -1.0);
    glEnd();
 
-   // Draw right rolled tent flap top and bottom.
+   // Bind rolled canvas texture.
    glBindTexture(GL_TEXTURE_2D, canvasWrap);
+
+   // Draw right rolled tent flap top disc.
    glNormal3f(0.6, 0.2, 1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -317,6 +325,7 @@ void Tent::Render()
    }
    glEnd();
 
+   // Draw right rolled tent flap bottom disc.
    glNormal3f(0.6, -1.0, 1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -340,7 +349,7 @@ void Tent::Render()
    }
    glEnd();
 
-   // Draw left rolled tent flap top and bottom.
+   // Draw left rolled tent flap top disc.
    glNormal3f(-0.6, 0.2, 1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -364,6 +373,7 @@ void Tent::Render()
    }
    glEnd();
 
+   // Draw left rolled tent flap bottom disc.
    glNormal3f(-0.6, -1.0, 1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -403,7 +413,7 @@ void Tent::DrawSpike(float px, float pz)
 {
    float textureRatio = 1.0/12.0;
 
-   // Draw tent spike shaft component.
+   // Draw tent spike shaft component cyllinder.
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i += 2)
    {
@@ -430,7 +440,7 @@ void Tent::DrawSpike(float px, float pz)
    }
    glEnd();
 
-   // Draw tent spike head component.
+   // Draw tent spike head component cyllinder.
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i += 2)
    {
@@ -457,7 +467,7 @@ void Tent::DrawSpike(float px, float pz)
    }
    glEnd();
 
-   // Draw tent spike head component bottom.
+   // Draw tent spike head component bottom disc.
    glNormal3f(px, -0.9, pz);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -481,7 +491,7 @@ void Tent::DrawSpike(float px, float pz)
    }
    glEnd();
 
-   // Draw tent spike head component top.
+   // Draw tent spike head component top disc.
    glNormal3f(px, -0.89, pz);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -583,6 +593,7 @@ void Tent::resolveCollision(Camera* camera)
    float objX = (camX * cosine) - (camZ * sine);
    float objZ = (camZ * cosine) + (camX * sine);
 
+   // Compute x, z maximum and minimum values.
    float minX = -this->scaleX - 0.6;
    float maxX = this->scaleX + 0.6;
    float minZ = -this->scaleZ - 0.6;

@@ -71,7 +71,7 @@ class Tent : public GameObject
        *    Precondition:   An instance of a Tent object has been instantiated, and a valid bmp filename has been passed
        *                    into the function.
        *    Postcondition:  The texture for the object has been loaded from a bmp file and applied to the texture field.
-       *    Parameters:     The filename for a valid bmp file in 3 X 8 bit RGB format, with maximum size of 512 X 512 pixels. 
+       *    Parameters:     The filename for a valid bmp file in 3 X 8 bit RGB format, with maximum size of 256 X 256 pixels. 
        */
       int Initialize(const char* filename);
 

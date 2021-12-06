@@ -167,7 +167,8 @@ void display()
    // Clear transformations and apply camera movement.
    glLoadIdentity();
 
-   // Added overhead view for user (graders) to get their bearings.
+ 
+   // Added overhead view for user (graders) to get their bearings in the environment.
    if (overheadView)
    {
       // If the flashlight is on, toggle it off for debug/overhead mode.
@@ -192,7 +193,7 @@ void display()
       if (cabin->detectCollision(player))
          cabin->resolveCollision(player);
 
-      // Resolve collisions for Axe.
+      // Resolve collisions for Axe. 
       if (axe->detectCollision(player))
          axe->resolveCollision(player);
 
@@ -363,7 +364,7 @@ void key(unsigned char key, int x, int y)
    {
       overheadView = (overheadView) ? false : true;
    }
-
+   
    glutPostRedisplay();
 }
 

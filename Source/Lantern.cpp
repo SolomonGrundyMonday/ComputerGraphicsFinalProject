@@ -55,6 +55,7 @@ Lantern::Lantern(float x, float y, float z, float dx, float dy, float dz, float 
 // Function definition for Lantern class Initialize function implementation.
 int Lantern::Initialize(const char* filename)
 {
+   // Load textures from Assets subdirectory.
    this->texture = LoadTexBMP(filename);
    this->glass = LoadTexBMP("Assets/Metal.bmp");
 
@@ -100,7 +101,7 @@ void Lantern::Render()
    }
    glEnd();
 
-   // Draw Lantern Base top/bottom discs.
+   // Draw Lantern Base bottom disc.
    glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -116,6 +117,7 @@ void Lantern::Render()
    }
    glEnd();
 
+   // Draw Lanter base top disc.
    glNormal3f(0.0, 1.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -148,7 +150,7 @@ void Lantern::Render()
    }
    glEnd();
 
-   // Draw Lantern top discs.
+   // Draw Lantern top upper disc.
    glNormal3f(0.0, 1.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -164,6 +166,7 @@ void Lantern::Render()
    }
    glEnd();
 
+   // Draw Lantern top lower disc.
    glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -196,7 +199,7 @@ void Lantern::Render()
    }
    glEnd();
 
-   // Draw lantern handle end discs.
+   // Draw Lantern handle left disc.
    glNormal3f(-1.0, 0.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -212,6 +215,7 @@ void Lantern::Render()
    }
    glEnd();
 
+   // Draw Lantern handle right disc.
    glNormal3f(1.0, 0.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -227,10 +231,11 @@ void Lantern::Render()
    }
    glEnd();
 
-   // Draw lantern handle connecting cyllinders.
+   // Draw Lantern handle right connecting cyllinder.
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
+      // Optimization - reduce number of floating-point computations per loop iteration.
       int theta = i * 30;
       float cosine = Cos(theta);
       float sine = Sin(theta);
@@ -243,9 +248,11 @@ void Lantern::Render()
    }
    glEnd();
 
+   // Draw Lantern handle left connecting cyllinder.
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
+      // Optimization - reduce number of floating-point computations per loop iteration.
       int theta = i * 30;
       float cosine = Cos(theta);
       float sine = Sin(theta);
@@ -258,7 +265,7 @@ void Lantern::Render()
    }
    glEnd();
 
-   // Draw lantern glass casing.
+   // Draw Lantern glass casing.
    // GL_BLEND info citation from this stack overflow thread:
    // https://stackoverflow.com/questions/24399431/opengl-texture-with-transparency-alpha
    glBindTexture(GL_TEXTURE_2D, glass);
@@ -271,6 +278,7 @@ void Lantern::Render()
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
+      // Optimization - reduce number of floating-point computations per loop iteration.
       int theta = i * 30;
       float cosine = Cos(theta);
       float sine = Sin(theta);
@@ -296,8 +304,8 @@ bool Lantern::detectCollision(Camera* camera)
    // Compute relative Camera x, z coordinates and convert to object coordinates.
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
-   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+   float objX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   float objZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
 
    // Compute x, z minimum and maximum values for object hitbox.
    float minX = -LANTERN_RAD * this->scaleX;
@@ -306,8 +314,8 @@ bool Lantern::detectCollision(Camera* camera)
    float maxZ = LANTERN_RAD * this->scaleZ;
 
    // Determine if Camera is colliding with the object along both x and z axes, respectively.
-   bool xCollide = camX > minX - 0.7 && camX < maxX + 0.7;
-   bool zCollide = camZ > minZ - 0.7 && camZ < maxZ + 0.7;
+   bool xCollide = objX > minX - 0.7 && objX < maxX + 0.7;
+   bool zCollide = objZ > minZ - 0.7 && objZ < maxZ + 0.7;
 
    return xCollide && zCollide;
 }
@@ -318,8 +326,8 @@ void Lantern::resolveCollision(Camera* camera)
    // Compute relative Camera x, z coordinates and convert to object coordinates.
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
-   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+   float objX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   float objZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
 
    // Compute x, z minimmum and maximum values for object hitbox.
    float minX = -LANTERN_RAD * this->scaleX;
@@ -333,16 +341,17 @@ void Lantern::resolveCollision(Camera* camera)
 
    wall collision = getSide(camera);
 
+   // Update Camera position based on which wall of the hitbox is experiencing the collision.
    if (collision == FRONT)
    {
       float newX, newZ;
 
       newZ = minZ - 0.7;
-      newX = camX;
+      newX = objX;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
-      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -354,11 +363,11 @@ void Lantern::resolveCollision(Camera* camera)
       float newX, newZ;
 
       newZ = maxZ + 0.7;
-      newX = camX;
+      newX = objX;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
-      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -369,12 +378,12 @@ void Lantern::resolveCollision(Camera* camera)
    {
       float newX, newZ;
 
-      newZ = camZ;
+      newZ = objZ;
       newX = minX - 0.7;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
-      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
       newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (objZ * sine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -385,12 +394,12 @@ void Lantern::resolveCollision(Camera* camera)
    {
       float newX, newZ;
 
-      newZ = camZ;
+      newZ = objZ;
       newX = maxX + 0.7;
 
       // Undo transformation and convert back to world coordinates (transformatino matrix inverse courtesy of Symbolab).
-      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
       newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (objZ * sine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -405,18 +414,18 @@ wall Lantern::getSide(Camera* camera)
    // Compute relative position and convert to object coordinates.
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
-   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+   float objX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   float objZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
 
    // Compute x, z maximum and minimum values for object hitbox.
    float minX = (-LANTERN_RAD * this->scaleX) - 0.7;
    float maxX = (LANTERN_RAD * this->scaleX) + 0.7;
    float minZ = (-LANTERN_RAD * this->scaleZ) - 0.7;
    float maxZ = (LANTERN_RAD * this->scaleZ) + 0.7;
-   float diffXMin = camX - minX;
-   float diffXMax = maxX - camX;
-   float diffZMin = camZ - minZ;
-   float diffZMax = maxZ - camZ;
+   float diffXMin = objX - minX;
+   float diffXMax = maxX - objX;
+   float diffZMin = objZ - minZ;
+   float diffZMax = maxZ - objZ;
 
    // Determine which wall the Camera has collided with.
    bool left = diffXMin < diffXMax && diffXMin < diffZMin && diffXMin < diffZMax;
@@ -444,6 +453,8 @@ void Lantern::lightSource()
    float spotE[] = { 0.0 };
    float spotC[] = { 180.0 };
    float spotPosition[] = { this->posX, this->posY, this->posZ, 1.0 };
+
+   // Values for constant, linear and quadratic attenuation retrieved from chart found at: https://learnopengl.com/Lighting/Light-casters
    float cAttenuation[] = { 1.0 };
    float lAttenuation[] = { 0.09 };
    float qAttenuation[] = { 0.032 };

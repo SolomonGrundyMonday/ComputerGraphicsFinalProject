@@ -47,6 +47,7 @@ HedgeWall::HedgeWall(float x, float y, float z, float dx, float dy, float dz, fl
 // Function definition for CaveWall Initialize function implementation.
 int HedgeWall::Initialize(const char* filename)
 {
+   // Load object texture from the Assets subdirectory.
    texture = LoadTexBMP(filename);
 
    return 0;
@@ -72,13 +73,14 @@ void HedgeWall::Render()
    // Wall long side.  (Tesselated to improve lighing effects on large polygons)
    // Idea borrowed from contents of https://www.glprogramming.com/red/chapter05.html.
    // Using a while loop/floating-point counter is intentional here.  This allows me to still
-   // tesselate the surface of the polygon even if the scaling is by a non-integer factor.
+   // tesselate the surface of the polygon even if the object scaling is not a whole number.
    float i = -this->scaleX;
    while (i < this->scaleX)
    {
       float j = -this->scaleY;
       while (j < this->scaleY)
       {
+         // Ternary operator ensures that the final texture quad will not extend beyond the boundary of the object geometry.
          float minX = i / this->scaleX;
          float maxX = (i + 1 > this->scaleX) ? 1.0 : (i + 1) / this->scaleX;
          float minY = j / this->scaleY;
@@ -122,6 +124,7 @@ void HedgeWall::Render()
    i = -this->scaleY;
    while (i < this->scaleY)
    {
+      // Ternary operator ensures that the final texture quad will not extend beyond the boundary of the object geometry.
       float minY = i / this->scaleY;
       float maxY = (i + 1 > this->scaleY) ? 1.0 : (i + 1) / this->scaleY;
 
@@ -160,6 +163,7 @@ void HedgeWall::Render()
    i = -this->scaleX;
    while (i < this->scaleX)
    {
+      // Ternary operator ensures that the final texture quad will not extend beyond the object boundary.
       float minX = i / this->scaleX;
       float maxX = (i + 1 > this->scaleX) ? 1.0 : (i + 1) / this->scaleX;
 
@@ -267,12 +271,14 @@ void HedgeWall::resolveCollision(Camera* camera)
    float objZ = (camZ * cosine) + (camX * sine);
 
    // Determine the wall to resolve collision with, and compute minimum and maximum x, z coordinates of the hitbox.
-   wall collision = getSide(camera);
    float minX = -this->scaleX;
    float maxX = this->scaleX;
    float minZ = -this->scaleZ - 0.2;
    float maxZ = -this->scaleZ;
 
+   wall collision = getSide(camera);
+
+   // Update the Camera eye position based on the wall of the hitbox that is experiencing the collision.
    if (collision == FRONT)
    {
       float newX, newZ;

@@ -47,6 +47,7 @@ TreeStump::TreeStump(float x, float y, float z, float dx, float dy, float dz, fl
 // Function definition for TreeStump class Initialize function implementation.
 int TreeStump::Initialize(const char* filename)
 {
+   // Load textures from Assets subdirectory.
    texture = LoadTexBMP(filename);
    surface = LoadTexBMP("Assets/TreeRings.bmp");
 
@@ -56,13 +57,17 @@ int TreeStump::Initialize(const char* filename)
 // Function definition for TreeStump class Render function implementation.
 void TreeStump::Render()
 {
-   // Enable textures.
+   // Color vectors for color and specular properties.
    float brown[] = { 0.3, 0.165, 0.165, 0.2 };
    float white[] = { 1.0, 1.0, 1.0, 1.0 };
+
+   // Enable textures, bing bark texture.
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    glBindTexture(GL_TEXTURE_2D, texture);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+   // Set color and material properties.
    glColor4fv(brown);
    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, brown);
 
@@ -94,6 +99,7 @@ void TreeStump::Render()
       // Optimization - draw four vertices per loop iteration and reduce number of iterations (loop unrolling).
       if (i != 12)
       {
+         // Optimization - reduce number of floating-point computations per iteration.
          int theta2 = (i + 1) * 30;
          float x2 = Cos(theta2);
          float z2 = Sin(theta2);
@@ -108,8 +114,10 @@ void TreeStump::Render()
    }
    glEnd();
 
-   // Draw the surfce (tree rings).
+   // Bind tree ring texture.
    glBindTexture(GL_TEXTURE_2D, surface);
+
+   // Draw surface disc.
    glBegin(GL_TRIANGLE_FAN);
    glNormal3f(0.0, 1.0, 0.0);
    glTexCoord2f(0.5, 0.5);
@@ -131,6 +139,7 @@ void TreeStump::Render()
    }
    glEnd();
 
+   // Reset color state machine to white.
    glColor4fv(white);
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
@@ -144,18 +153,18 @@ bool TreeStump::detectCollision(Camera* camera)
    float cosine = Cos(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * cosine - camZ * sine;
-   camZ = camZ * cosine + camX * sine;
+   float objX = camX * cosine - camZ * sine;
+   float objZ = camZ * cosine + camX * sine;
 
    // Compute x, z minimum and maximum coordinates for object hitbox.
-   float minX = -2.0 * this->scaleX;
-   float maxX = 2.0 * this->scaleX;
-   float minZ = -2.0 * this->scaleZ;
-   float maxZ = 2.0 * this->scaleZ;
+   float minX = -this->scaleX;
+   float maxX = this->scaleX;
+   float minZ = -this->scaleZ;
+   float maxZ = this->scaleZ;
 
    // Determine if Camera is colliding with the object along the x and z axes, respectively.
-   bool xCollide = camX > minX - 0.7 && camX < maxX + 0.7;
-   bool zCollide = camZ > minZ - 0.7 && camZ < maxZ + 0.7;
+   bool xCollide = objX > minX - 0.55 && objX < maxX + 0.55;
+   bool zCollide = objZ > minZ - 0.55 && objZ < maxZ + 0.55;
 
    return xCollide && zCollide; 
 }
@@ -163,32 +172,33 @@ bool TreeStump::detectCollision(Camera* camera)
 // Function definition for TreeStump resolveCollision function implementation.
 void TreeStump::resolveCollision(Camera* camera)
 {
-   // Compute relativve Camera x, z coordinates and convert to object coordinates.
+   // Compute relative Camera x, z coordinates and convert to object coordinates.
    float sine = Sin(this->rotY);
    float cosine = Cos(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * cosine - camZ * sine;
-   camZ = camZ * cosine + camX * sine;
+   float objX = (camX * cosine) - (camZ * sine);
+   float objZ = (camZ * cosine) + (camX * sine);
 
    // Compute x, z minimum and maximum values for object hitbox.
-   float minX = -2.0 * this->scaleX;
-   float maxX = 2.0 * this->scaleX;
-   float minZ = -2.0 * this->scaleZ;
-   float maxZ = 2.0 * this->scaleZ;
+   float minX = -this->scaleX;
+   float maxX = this->scaleX;
+   float minZ = -this->scaleZ;
+   float maxZ = this->scaleZ;
 
    wall collision = getSide(camera);
 
+   // Update Camera position based on the wall experiencing the collision.
    if (collision == FRONT)
    {
       float newX, newZ;
 
-      newZ = minZ - 0.7;
-      newX = camX;
+      newZ = minZ - 0.55;
+      newX = objX;
 
       // Undo transformation and convert back to world coordinates (translation matrix invers courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
-      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -199,12 +209,12 @@ void TreeStump::resolveCollision(Camera* camera)
    {
       float newX, newZ;
 
-      newZ = maxZ + 0.7;
-      newX = camX;
+      newZ = maxZ + 0.55;
+      newX = objX;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy to Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
-      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -215,12 +225,12 @@ void TreeStump::resolveCollision(Camera* camera)
    {
       float newX, newZ;
 
-      newZ = camZ;
-      newX = minX - 0.7;
+      newZ = objZ;
+      newX = minX - 0.55;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
-      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -231,12 +241,12 @@ void TreeStump::resolveCollision(Camera* camera)
    {
       float newX, newZ;
 
-      newZ = camZ;
-      newX = maxX + 0.7;
+      newZ = objZ;
+      newX = maxX + 0.55;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
-      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -253,18 +263,18 @@ wall TreeStump::getSide(Camera* camera)
    float cosine = Cos(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * cosine - camZ * sine;
-   camZ = camZ * cosine + camX * sine;
+   float objX = (camX * cosine) - (camZ * sine);
+   float objZ = (camZ * cosine) + (camX * sine);
 
    // Compute x, z maximum and minimum values for object hitbox.
-   float minX = -2.0 * this->scaleX - 0.7;
-   float maxX = 2.0 * this->scaleX + 0.7;
-   float minZ = -2.0 * this->scaleZ - 0.7;
-   float maxZ = 2.0 * this->scaleZ + 0.7;
-   float diffXMin = camX - minX;
-   float diffXMax = maxX - camX;
-   float diffZMin = camZ - minZ;
-   float diffZMax = maxZ - camZ;
+   float minX = -this->scaleX - 0.55;
+   float maxX = this->scaleX + 0.55;
+   float minZ = -this->scaleZ - 0.55;
+   float maxZ = this->scaleZ + 0.55;
+   float diffXMin = objX - minX;
+   float diffXMax = maxX - objX;
+   float diffZMin = objZ - minZ;
+   float diffZMax = maxZ - objZ;
 
    // Determine which wall the Camera is colliding with.
    bool left = diffXMin < diffXMax && diffXMin < diffZMin && diffXMin < diffZMax;

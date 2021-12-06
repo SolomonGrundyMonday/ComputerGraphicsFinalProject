@@ -68,7 +68,7 @@ class Lantern : public GameObject
        *   Precondition:   An instance of a Lantern object has been instantiated and a valid bmp filename has been
        *                   passed to the function.
        *   Postcondition:  A texture has been loaded from a bmp file and applied to the texture field.
-       *   Parameters:     The filename for a .bmp file in RGB 3 X 8 bit format with maximum dimensions of 512 X 512
+       *   Parameters:     The filename for a .bmp file in RGB 3 X 8 bit format with maximum dimensions of 256 X 256
        *                   pixels.  
        */
       int Initialize(const char* filename);

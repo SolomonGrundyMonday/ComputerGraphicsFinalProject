@@ -50,6 +50,7 @@ Cuboid::Cuboid(float x, float y, float z, float scaleX, float scaleY, float scal
 // Function definition Initialize function for Cuboid : GameObject class.
 int Cuboid::Initialize(const char* filename)
 {
+   // Load texture from Assets subdirectory.
    texture = LoadTexBMP(filename);
 
    return 0;
@@ -60,12 +61,9 @@ void Cuboid::Render()
 {
    // Vectors and scalars for lighting, texture coordinates and materials.
    float white[] = {1.0, 1.0, 1.0, 1.0};
-   float Emission[] = {0.0, 0.0, 0.0, 1.0};
 
    // Set object material parameters.
-   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.0);
    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
-   glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, Emission);
 
    glPushMatrix();
    glColor3f(1.0, 1.0, 1.0);
@@ -82,6 +80,7 @@ void Cuboid::Render()
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    glBindTexture(GL_TEXTURE_2D, texture);
 
+   // Mirrored repeat to make the ground look slightly better.
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 
    // Right face texture coordinates/vertices.
@@ -196,7 +195,7 @@ void Cuboid::Render()
 // Function definition for Cuboid class resolveCollision function implementation.
 void Cuboid::resolveCollision(Camera* camera)
 {
-   // For now, there is no need to implement collisions for Cuboid as it is currently only used as the floor.
+   // There is no need to implement collisions for Cuboid as it is currently only used as the floor.
 }
 
 // Function definition for getPosX getter function of Cuboid : GameObject class.

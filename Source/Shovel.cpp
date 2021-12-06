@@ -47,6 +47,7 @@ Shovel::Shovel(float x, float y, float z, float dx, float dy, float dz, float rx
 // Definition of Shovel class Initialize function implementation.
 int Shovel::Initialize(const char* filename)
 {
+   // Load textures from Assets subdirectory.
    texture = LoadTexBMP(filename);
    metal = LoadTexBMP("Assets/ToolHead.bmp");
    plastic = LoadTexBMP("Assets/Plastic.bmp");
@@ -75,9 +76,10 @@ void Shovel::Render()
 
    glBegin(GL_QUAD_STRIP);
 
-   // Draw the handle.
+   // Draw the handle cyllinder.
    for (int i = 0; i <= 12; i++)
    {
+      // Optimization - reduce the number of floating-point computations per iteration.
       int theta = i * 30;
       float sine = Sin(theta);
       float cosine = Cos(theta);
@@ -90,6 +92,7 @@ void Shovel::Render()
    }
    glEnd();
 
+   // Draw handle right disc.
    glNormal3f(HANDLE_LEN, 0.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -97,6 +100,7 @@ void Shovel::Render()
 
    for (int i = 0; i <= 360; i += 30)
    {
+      // Optimization - reduce the number of floating-point computations per iteration.
       float sine = Sin(i);
       float cosine = Cos(i);
 
@@ -105,6 +109,7 @@ void Shovel::Render()
    }
    glEnd();
 
+   // Draw handle left disc.
    glNormal3f(-HANDLE_LEN, 0.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -112,6 +117,7 @@ void Shovel::Render()
 
    for (int i = 0; i <= 360; i += 30)
    {
+      // Optimization - reduce the number of floating-point computations per iteration.
       float sine = Sin(i);
       float cosine = Cos(i);
 
@@ -120,7 +126,7 @@ void Shovel::Render()
    }
    glEnd();
 
-   // Connect the handle to the shaft.
+   // Draw handle right shaft connector.
    float handleBaseY = -HANDLE_HEIGHT / 2.0 + RADIUS;
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
    glNormal3f(1.0, 0.0, 0.0);
@@ -135,6 +141,7 @@ void Shovel::Render()
    glVertex3f(HANDLE_LEN, HANDLE_HEIGHT, RADIUS);
    glEnd();
 
+   // Draw handle left shaft connector.
    glNormal3f(1.0, 0.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -147,6 +154,7 @@ void Shovel::Render()
    glVertex3f(-HANDLE_LEN, HANDLE_HEIGHT, RADIUS);
    glEnd();
 
+   // Draw handle bottom shaft connector.
    glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -167,6 +175,7 @@ void Shovel::Render()
    
    for (int i = 0; i <= 12; i++)
    {
+      // Optimization - reduce the number of floating-point computations per loop iteration.
       int theta = i * 30;
       float cosine = Cos(theta);
       float sine = Sin(theta);
@@ -183,28 +192,31 @@ void Shovel::Render()
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
    glBindTexture(GL_TEXTURE_2D, metal);
 
-   glNormal3f(0.0, 0.0, 1.0);
+   glNormal3f(0.0, -1.0, 0.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(0.0, -SHAFT_LEN - HEAD_LEN - RADIUS, -RADIUS);
 
    for (int i = 0; i <= 180; i += 30)
    {
+      // Optimization reduce the number of floating-point computations per iteration.
       float cosine = Cos(i);
       float sine = Sin(i);
 
+      glNormal3f(cosine, 0.0, sine);
       glTexCoord2f(0.5 * cosine + 0.5, 0.5 * sine + 0.5);
       glVertex3f(RADIUS * cosine + HEAD_WIDTH * cosine, -SHAFT_LEN - RADIUS, RADIUS * sine);
    }
    glEnd();
    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
 
-   // Draw connector to connect shovel head to shaft.
+   // Draw shovel head connector cyllender.
    glBegin(GL_QUAD_STRIP);
    float newRadius = RADIUS + 0.01;
 
    for (int i = 0; i <= 12; i++)
    {
+      // Optimization - reduce the number of floating-point computations per iteration.
       int theta = i * 30;
       float cosine = Cos(theta);
       float sine = Sin(theta);
@@ -217,6 +229,7 @@ void Shovel::Render()
    }
    glEnd();
 
+   // Draw shovel head connector cone.
    glNormal3f(0.0, 0.0, -1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -224,6 +237,7 @@ void Shovel::Render()
 
    for (int i = 0; i <= 360; i += 30)
    {
+      // Optimization - reduce the number of floating-point computations per iteration.
       float cosine = Cos(i);
       float sine = Sin(i);
 
@@ -244,18 +258,18 @@ bool Shovel::detectCollision(Camera* camera)
    float sine = Sin(this->rotY);
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = (camX * cosine) - (camZ * sine);
-   camZ = (camZ * cosine) + (camX * sine);
+   float objX = (camX * cosine) - (camZ * sine);
+   float objZ = (camZ * cosine) + (camX * sine);
 
    // Compute minimum and maximum x, z  values based ont the rotations, scaling and dimensions of the object.
-   float minX = (-HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX - ((SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float maxX = (HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX + (HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float minZ = -RADIUS * Cos(this->rotX) * this->scaleZ - ((SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float maxZ = RADIUS * Cos(this->rotX) * this->scaleZ + (HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float minX = (-HEAD_WIDTH / 2.0) * Cos(this->rotX) * this->scaleX - ((SHAFT_LEN + HEAD_LEN + RADIUS) * Sin(this->rotZ) * this->scaleY);
+   float maxX = (HEAD_WIDTH / 2.0) * Cos(this->rotX) * this->scaleX + (HANDLE_HEIGHT * Sin(this->rotZ) * this->scaleY);
+   float minZ = -RADIUS * Cos(this->rotX) * this->scaleZ - ((SHAFT_LEN + HEAD_LEN + RADIUS) * Sin(this->rotX) * this->scaleY);
+   float maxZ = RADIUS * Cos(this->rotX) * this->scaleZ + (HANDLE_HEIGHT * Sin(this->rotX) * this->scaleY);
 
    // Determine if the Camera is colliding with the object's hitbox along the x and z axes, respectively.
-   bool xCollide = camX > minX - 0.5 && camX < maxX + 0.5;
-   bool zCollide = camZ > minZ - 0.5 && camZ < maxZ + 0.5;
+   bool xCollide = objX >= minX - 0.7 && objX <= maxX + 0.7;
+   bool zCollide = objZ >= minZ - 0.7 && objZ <= maxZ + 0.7;
 
    return xCollide && zCollide;
 }
@@ -266,18 +280,18 @@ wall Shovel::getSide(Camera* camera)
    // Compute relative position and convert to object coordinates.
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
-   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+   float objX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   float objZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
 
    // Compute the minimum and maximum x, z values based on the rotation, scaling and dimensions of the object.
-   float minX = (-HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX - (SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
-   float maxX = (HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX + HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
-   float minZ = -RADIUS * Cos(this->rotZ) * this->scaleZ - (SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
-   float maxZ = RADIUS * Cos(this->rotZ) * this->scaleZ + (HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
-   float diffXMin = camX - minX;
-   float diffXMax = maxX - camX;
-   float diffZMin = camZ - minZ;
-   float diffZMax = maxZ - camZ; 
+   float minX = (-HEAD_WIDTH / 2.0) * Cos(this->rotX) * this->scaleX - ((SHAFT_LEN + HEAD_LEN + RADIUS) * Sin(this->rotZ) * this->scaleY);
+   float maxX = (HEAD_WIDTH / 2.0) * Cos(this->rotX) * this->scaleX + (HANDLE_HEIGHT * Sin(this->rotZ) * this->scaleY);
+   float minZ = -RADIUS * Cos(this->rotX) * this->scaleZ - (SHAFT_LEN + HEAD_LEN + RADIUS) * Sin(this->rotX) * this->scaleY;
+   float maxZ = RADIUS * Cos(this->rotX) * this->scaleZ + (HANDLE_HEIGHT * Sin(this->rotX) * this->scaleY);
+   float diffXMin = objX - (minX - 0.7);
+   float diffXMax = (maxX + 0.7) - objX;
+   float diffZMin = objZ - (minZ - 0.7);
+   float diffZMax = (maxZ + 0.7) - objZ; 
 
    // Determine if the camera has collided with the front, back, left or right side of the Shovel hitbox.
    bool front = diffZMin < diffZMax && diffZMin < diffXMin && diffZMin < diffXMax;
@@ -304,14 +318,14 @@ void Shovel::resolveCollision(Camera* camera)
    // Compute Camera's relative position then convert to object coordinates.
    float camX = camera->getEyeX() - this->posX;
    float camZ = camera->getEyeZ() - this->posZ;
-   camX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
-   camZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
+   float objX = camX * Cos(this->rotY) - camZ * Sin(this->rotY);
+   float objZ = camZ * Cos(this->rotY) + camX * Sin(this->rotY);
 
    // Compute the minimmum and maximum x and z values for the hitbox based on the rotations, scaling and dimensions of the object.
-   float minX = (-HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX - (SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
-   float maxX = (HEAD_WIDTH / 2.0) * Cos(this->rotZ) * this->scaleX + HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
-   float minZ = -RADIUS * Cos(this->rotZ) * this->scaleZ - (SHAFT_LEN + HEAD_LEN + RADIUS) * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY;
-   float maxZ = RADIUS * Cos(this->rotZ) * this->scaleZ + (HANDLE_HEIGHT * Cos(this->rotZ) * Cos(this->rotX) * this->scaleY);
+   float minX = (-HEAD_WIDTH / 2.0) * Cos(this->rotX) * this->scaleX - ((SHAFT_LEN + HEAD_LEN + RADIUS) * Sin(this->rotZ) * this->scaleY);
+   float maxX = (HEAD_WIDTH / 2.0) * Cos(this->rotX) * this->scaleX + (HANDLE_HEIGHT * Sin(this->rotZ) * this->scaleY);
+   float minZ = -RADIUS * Cos(this->rotX) * this->scaleZ - (SHAFT_LEN + HEAD_LEN + RADIUS) * Sin(this->rotX) * this->scaleY;
+   float maxZ = RADIUS * Cos(this->rotX) * this->scaleZ + (HANDLE_HEIGHT * Sin(this->rotX) * this->scaleY);
 
    // Optimization - reduce function calls to sine, cosine functions.
    float cosine = Cos(this->rotY);
@@ -324,12 +338,12 @@ void Shovel::resolveCollision(Camera* camera)
    {
       float newX, newZ;
 
-      newZ = minZ - 0.5;
-      newX = camX;
+      newZ = minZ - 0.7;
+      newX = objX;
 
       // Undo transformatino and convert back to world coordinates (transform matrix inverse courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
-      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -341,12 +355,12 @@ void Shovel::resolveCollision(Camera* camera)
    {
       float newX, newZ;
 
-      newZ = maxZ + 0.5;
-      newX = camX;
+      newZ = maxZ + 0.7;
+      newX = objX;
 
       // Undo transformation and convert back to world coordinates (transform matrix inverse courtesy of Symbolab).
       newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
-      newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newZ = (objX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -357,13 +371,15 @@ void Shovel::resolveCollision(Camera* camera)
    else if (collision == LEFT)
    {
       float newX, newZ;
+      glWindowPos2i(5, 45);
+      Print("Here");
 
-      newZ = camZ;
-      newX = minX - 0.5;
+      newZ = objZ;
+      newX = minX - 0.7;
 
       // Undo transformation and convert back to world coordinates (transform matrix inverse courtesy of Symbolab).
-      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
       newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (objZ * sine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 
@@ -374,13 +390,15 @@ void Shovel::resolveCollision(Camera* camera)
    else if (collision == RIGHT)
    {
       float newX, newZ;
+      glWindowPos2i(5, 45);
+      Print("Here");
 
-      newZ = camZ;
-      newX = maxX + 0.5;
+      newZ = objZ;
+      newX = maxX + 0.7;
 
       // Undo transformation and convert back to world coordinates (transformation matrix inverse courtesy of Symbolab).
-      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (newZ * sine / (-sine * sine - cosine * cosine));
       newZ = (newX * sine / (-sine * sine - cosine * cosine)) - (newZ * cosine / (-sine * sine - cosine * cosine));
+      newX = -(newX * cosine / (-sine * sine - cosine * cosine)) - (objZ * sine / (-sine * sine - cosine * cosine));
       newX += this->posX;
       newZ += this->posZ;
 

@@ -57,7 +57,7 @@ class TreeStump : public GameObject
        *   Function prototype for TreeStump class Initialize function implementation.
        *   Precondition:  A TreeStump object has been instantiated and a valid bmp filename has been passed into this function.
        *   Postcondition: A texure has been loaded from a bmp file and applied to the texture field.
-       *   Paramter:      The filename for a .bmp file in RGB 3 X 8 bit format with maximum dimensions of 512 X 512 pixels.  
+       *   Paramter:      The filename for a .bmp file in RGB 3 X 8 bit format with maximum dimensions of 256 X 256 pixels.  
        */
       int Initialize(const char* filename);
 

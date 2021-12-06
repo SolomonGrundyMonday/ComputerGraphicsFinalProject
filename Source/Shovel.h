@@ -56,7 +56,7 @@ class Shovel : public GameObject
        *   Function prototype for Shovel object constructor.
        *   Precondition:  None.
        *   Postcondition: A Shovel object has been instantiated with the specified translation,
-       *   scaling and rotation.
+       *                  scaling and rotation.
        *   Parameters:    (x, y, z) coordinates for the object's translation, (x, y, z) values for the object's
        *                  scaling, and (x, y, z) values for the object's rotation about the corresponding axes.
        */
@@ -66,7 +66,7 @@ class Shovel : public GameObject
        *    Function prototype for the Shovel objects Initialize function implementation.
        *    Precondition:  A Shovel object has been instantiated and a valid RGB bitmap filename has been provided.
        *    Postcondition: A texture has been loaded from a .bmp file and applied to the texture field of the object.
-       *    Parameters:    The filename for a .bmp in RGB 3 X 8 bit format with maximum dimensions of 512 X 512 pixels.
+       *    Parameters:    The filename for a .bmp in RGB 3 X 8 bit format with maximum dimensions of 256 X 256 pixels.
        */
       int Initialize(const char* filename);
 

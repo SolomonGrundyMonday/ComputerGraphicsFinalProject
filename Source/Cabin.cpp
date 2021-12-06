@@ -47,6 +47,7 @@ Cabin::Cabin(float x, float y, float z, float dx, float dy, float dz, float rx, 
 // Function definition for Cabin class Initialize function implementation.
 int Cabin::Initialize(const char* filename)
 {
+   // Initialize object and load textures from the Assets subdirectory.
    this->texture = LoadTexBMP(filename);
    this->shingles = LoadTexBMP("Assets/Shingles.bmp");
    this->wood = LoadTexBMP("Assets/Door.bmp");
@@ -64,11 +65,12 @@ void Cabin::Render()
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    glBindTexture(GL_TEXTURE_2D, texture);
+
+   // Set material properties.
    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.0);
    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 
    glPushMatrix();
 
@@ -85,11 +87,13 @@ void Cabin::Render()
    {
       for (int j = -this->scaleY; j < this->scaleY; j++)
       {
+         // Optimization - reduce number of floating-point computations per loop iteration.
          float minX = i / this->scaleX;
          float maxX = (i + 1) / this->scaleX;
          float minY = j / this->scaleY;
          float maxY = (j + 1) / this->scaleY;
 
+         // Optimization - tesselate the front and back walls in the same loop.
          // Front wall segment
          glNormal3f(0.0, 0.0, 1.0);
          glBegin(GL_QUADS);
@@ -124,11 +128,13 @@ void Cabin::Render()
    {
       for (int j = -this->scaleY; j < this->scaleY; j++)
       {
+         // Optimization - reduce the number of floating-point computations per loop iteration.
          float minZ = i / this->scaleZ;
          float maxZ = (i + 1) / this->scaleZ;
          float minY = j / this->scaleY;
          float maxY = (j + 1) / this->scaleY;
 
+         // Optimization - tesselate the left and right walls in the same loop.
          // Left Wall segment.
          glNormal3f(-1.0, 0.0, 0.0);
          glBegin(GL_QUADS);
@@ -179,6 +185,7 @@ void Cabin::Render()
    glVertex3f(0.0, 1.0 + STEEPLE_HEIGHT, -1.0);
    glEnd();
 
+   // Bind shingle texture for the roof segments.
    glBindTexture(GL_TEXTURE_2D, shingles);
 
    // Roof right segment.
@@ -207,8 +214,10 @@ void Cabin::Render()
    glVertex3f(0.0, 1.0 + STEEPLE_HEIGHT, 1.0 + OVERHANG);
    glEnd();
 
-   // Door front face.
+   // Bind wood texture for the door face.
    glBindTexture(GL_TEXTURE_2D, wood);
+
+   // Door front face.
    glNormal3f(0.0, 0.0, 1.0);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);
@@ -221,9 +230,11 @@ void Cabin::Render()
    glVertex3f(-0.1, -0.2, 1.01);
    glEnd();
 
-   // Attic window shutter.
+   // Bind shutter texture for the Attic window front face.
    glBindTexture(GL_TEXTURE_2D, shutters);
-   glNormal3f(0.0, (1.0 + STEEPLE_HEIGHT)/2.0, 1.01);
+
+   // Attic window shutter.
+   glNormal3f(0.0, 0.0, 1.0);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
    glVertex3f(0.0, (1.0 + STEEPLE_HEIGHT)/2.0, 1.01);
@@ -238,6 +249,7 @@ void Cabin::Render()
    }
    glEnd();
 
+   // Draw four windows at the specified object coordinates.
    drawWindow(-1.0, -0.4, -0.55);
    drawWindow(-1.0, -0.4, 0.55);
    drawWindow(1.0, -0.4, -0.55);
@@ -305,11 +317,12 @@ void Cabin::Render()
    glVertex3f(0.1, -0.2, 1.01);
    glEnd();
 
-   // Door top hinge.
+   // Bind metal texture for hinges and door handle, set material properties.
    glBindTexture(GL_TEXTURE_2D, metal);
    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.5);
    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, gold);
 
+   // Dooor top hinge cyllender.
    glBegin(GL_QUAD_STRIP);
    for (int i = 0; i <= 12; i++)
    {
@@ -328,6 +341,7 @@ void Cabin::Render()
    }
    glEnd();
 
+   // Door top hinge, top disc.
    glNormal3f(-0.1, -0.2 - HINGE_HEIGHT, 1.005);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -344,6 +358,7 @@ void Cabin::Render()
    }
    glEnd();
 
+   // Door top hinge, bottom disc.
    glNormal3f(-0.1, -0.2 - (2.0 * HINGE_HEIGHT), 1.005);
    glBegin(GL_TRIANGLE_FAN);
    glTexCoord2f(0.5, 0.5);
@@ -510,6 +525,8 @@ void Cabin::Render()
    glVertex3f(0.07, -0.65 - 3.0 * KNOB_RADIUS, 1.011 + KNOB_PROTRUSION);
    glEnd();
 
+   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
+
    glPopMatrix();
    glDisable(GL_TEXTURE_2D);
 }
@@ -517,13 +534,14 @@ void Cabin::Render()
 // Function definition for drawWindow helper function.
 void Cabin::drawWindow(float x, float y, float z)
 {
-
+   // Translate, rotate and scale the windows.
    glPushMatrix();
    glTranslatef(x, y, z);
    if (x < 0.0)
       glRotatef(180.0, 0.0, 1.0, 0.0);
    glScalef(0.2, 0.4, 0.05);
 
+   // Bind shutter texture for front face.
    glBindTexture(GL_TEXTURE_2D, shutters);
 
    // Window shutters.
@@ -539,6 +557,7 @@ void Cabin::drawWindow(float x, float y, float z)
    glVertex3f(0.1, 1.0, -1.0);
    glEnd();
 
+   // Bind wood siding texture for window frames.
    glBindTexture(GL_TEXTURE_2D, siding);
 
    // Window bottom frame.
@@ -607,6 +626,7 @@ wall Cabin::getSide(Camera* camera)
    float objX = (camX * cosine) - (camZ * sine);
    float objZ = (camZ * cosine) + (camX * sine);
 
+   // Compute minimum, maximum x and z values for collision detection.
    float diffXMin = objX - (-this->scaleX - 0.75);
    float diffXMax = (this->scaleX + 0.75) - objX;
    float diffZMin = objZ - (-this->scaleZ - 0.75);
@@ -674,6 +694,7 @@ void Cabin::resolveCollision(Camera* camera)
 
    wall collision = getSide(camera);
 
+   // Update the Camera eye position based on which wall is experiencing the collision.
    if (collision == FRONT)
    {
       float newX, newZ;

@@ -86,7 +86,7 @@ class Tree : public GameObject
        *   Precondition:  An instance of a Tree object has been instantiated and a valid RGB bitmap filename has been
        *                  provided.
        *   Postcondition: A texture has been loaded from a .bmp file and applied to the texture field of the object.
-       *   Parameters:    The filename for a valid RGB 3 X 8 bit bitmap file of maximum size 512 X 512 pixels.
+       *   Parameters:    The filename for a valid RGB 3 X 8 bit bitmap file of maximum size 256 X 256 pixels.
        */
       int Initialize(const char* filename);
 

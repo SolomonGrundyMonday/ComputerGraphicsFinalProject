@@ -64,12 +64,11 @@ int Tree::branchFractal(float l0, float r0)
    if (l < LEAF_SIZE)
    {
       glRotatef(angle, 0, 1, 0);
-
   
       glRotatef(360/BRANCH_NUM, 0, 1, 0);
       ntri += this->leaf();
    }
-   // Recursive case.
+   // Recursive step.
    else
    {
       // Shrink radius by branching factor, and length by branching factor.
@@ -114,6 +113,9 @@ int Tree::branch(float l, float r)
    glCullFace(GL_BACK);
    glBegin(GL_QUAD_STRIP);
 
+   // Optimization - since the texture coordinate y-value is the same for every iteration, no need to calculate it every iteration of the loop.
+   float texY = l / r;
+
    // Code for branch generation borrowed from lecture, made a slight change by unrolling loop for optimization purposes.
    for (int i = 0; i <= 360; i += 60)
    {
@@ -121,7 +123,6 @@ int Tree::branch(float l, float r)
       float x = Cos(i);
       float z = Sin(i);
       float texX = i / 120.0;
-      float texY = l/r;
       
       glNormal3f(x, 0.0, z);
       glTexCoord2d(texX, 0.0);
@@ -188,7 +189,7 @@ int Tree::leaf()
 // Function definition for Tree class Initialize function implementation.
 int Tree::Initialize(const char* filename)
 {
-   // Import texture here, need good bark picture to use.
+   // Import object textures from the Assets subdirectory.
    texture = LoadTexBMP(filename);
    leafTex = LoadTexBMP("Assets/Leaf.bmp");
 
@@ -208,7 +209,7 @@ void Tree::Render()
    glScaled(this->scaleX, this->scaleY, this->scaleZ);
 
    // Place recursive call to branchFractal with length 2.0 and radius 0.2.
-   this->branchFractal(1.8, 0.2);
+   this->branchFractal(1.7, 0.2);
    glPopMatrix();
 }
 
@@ -289,7 +290,9 @@ void Tree::resolveCollision(Camera* camera)
    float maxZ = (this->scaleZ * 0.2) + 0.55;
 
    wall collision = getSide(camera);
+   glWindowPos2i(5, 25);
 
+   // Update Camera eye position based on which wall of the hitbox is experiencing the collision.
    if (collision == FRONT)
    {
       float newX, newZ;

@@ -41,6 +41,7 @@ Horizon::Horizon(float x, float y, float z, float dx, float dy, float dz, float 
 // Function definition for Horizon class Initialize function implementation.
 int Horizon::Initialize(const char* filename)
 {
+   // Load texture from the Assets subdirectory.
    this->texture = LoadTexBMP(filename);
 
    return 0;
@@ -53,7 +54,8 @@ void Horizon::Render()
    float texX = this->scaleX / 10.0;
    float texZ = this->scaleZ / 10.0;
 
-   // Enable textures.
+   // Enable textures, I specifically want the Horizon to use GL_REPLACE because I don't want the horizon's color to be affected by
+   // either the color state machine or the lighting.
    glEnable(GL_TEXTURE_2D);
    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
    glBindTexture(GL_TEXTURE_2D, texture);
@@ -72,6 +74,7 @@ void Horizon::Render()
    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.0);
    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, black);
 
+   // No normals because the horizon should not be affected by the local lighting.
    // Draw left wall.
    glBegin(GL_QUADS);
    glTexCoord2f(0.0, 0.0);

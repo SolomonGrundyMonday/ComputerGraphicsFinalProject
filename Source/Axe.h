@@ -66,7 +66,7 @@ class Axe : public GameObject
        *                   passed to the function.
        *    Postcondition: A texture has been loaded from the .bmp file and applied to the texture field.
        *    Parameters:    The filename for a valid bitmap file in 3 X 8 bit format with maximum dimensions of
-       *                   512 X 512 pixels. 
+       *                   256 X 256 pixels. 
        */
       int Initialize(const char* filename);
 

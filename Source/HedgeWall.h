@@ -55,7 +55,7 @@ class HedgeWall : public GameObject
        *   Function prototype for CaveWall class Initialize function implementation.
        *   Precondition:   A CaveWall object has been instantiated and a valid bmp filename has been passed into this function.
        *   Postcondition:  A texture has been loaded from a bmp file and applied to the texture field.
-       *   Parameters:     The filename for a .bmp file in RGB 3 X 8 bit format with maximum size of 512 X 512 pixels.   
+       *   Parameters:     The filename for a .bmp file in RGB 3 X 8 bit format with maximum size of 256 X 256 pixels.   
        */
       int Initialize(const char* filename);
 

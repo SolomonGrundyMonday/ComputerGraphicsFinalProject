@@ -13,7 +13,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-// Enum for the walls that have hit boxes associated with them.
+// Enum for the walls of a GameObject's hit boxe.
 enum wall {
    FRONT,
    FRONT_RIGHT,
