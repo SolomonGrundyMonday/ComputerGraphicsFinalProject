@@ -41,5 +41,5 @@ Edge cases                 -   Complete
 Debug mode                 -   Complete (sort of, just an overhead perspective projection)
 Flashlight implementation  -   Complete
 Final collision test       -   
-Final lighting test        -
+Final lighting test        -   Complete
 Final framerate test       -
