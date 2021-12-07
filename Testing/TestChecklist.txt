@@ -38,8 +38,8 @@ Final object positioning   -   Complete
 Final keybindings/controls -   Complete
 Soak test                  -   Complete
 Edge cases                 -   Complete
-Debug mode                 -   Complete (sort of, just an overhead perspective projection)
+Debug mode                 -   Complete
 Flashlight implementation  -   Complete
-Final collision test       -   
+Final collision test       -   Complete
 Final lighting test        -   Complete
 Final framerate test       -   Complete
