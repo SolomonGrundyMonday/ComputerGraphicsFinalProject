@@ -9,62 +9,15 @@ User Controls:
    'A' key          -   Strafe left.
    'D' key          -   Strafe right.
    '~' key          -   Overhead perspective view (disables flashlight)
+   'F1' key         -   Shortcut to place the user directly in front of the Cabin.
+   'F2' key         -   Shortcut to place the user directly in front of the hedge maze.
     RIGHT ARROW key -   Turn the first-person camera to the right by 5 degrees.
-    LEFT ARROW key  -   Turn the first-person cmaera to the left by five degrees.
+    LEFT ARROW key  -   Turn the first-person camera to the left by 5 degrees.
     ESC key         -   Quit the application.
 
 Instructions:
    To run the application, unzip the directory into whatever directory you desire.  Open the terminal in this directory
    and type "make".  The user controls within the application are listed in the above section of this README.
-
-Sources (Code):
-
-   The transformation matrices that I used in converting Camera eye coordinates from the world
-   coordinate system to local object coordinate systems (used in the collision functions)
-   were retrieved from my old coursework in my Intro to Robotics class from last semester.  The 
-   inverse matrix that I used to convert back to world coordinates after the collision was resolved
-   was computed by the Symbolab online calculator.  Additionally, I found some resources on
-   StackExchange to help me understand texture blending (specifically to make the translucent
-   glass texture on my lantern object).  I borrowed two lines of code from this thread
-   Thread address: https://stackoverflow.com/questions/24399431/opengl-texture-with-transparency-alpha
-   I also got the idea to tessalate the larger polygons in my objects to get the spotlight effect to
-   look better from the following source: https://www.glprogramming.com/red/chapter05.html.
-   Additionally, the CSCIx229 library is borrowed, and the format of the makefile is based on the 
-   makefiles from previous assignments and in-class examples.
-   For the Lantern light source, I used the chart found at the following address to determine appropriate
-   values for the constant, linear and quadriatic attenuation factors: https://learnopengl.com/Lighting/Light-casters.
-   Lastly, the code for generating trees was borrowed from the in-class notes about creating trees
-   using fractals.  I made a few minor modifications for optimization so that I could have a larger
-   quantity of trees rendering at one time, particularly reducing the number of leaves on each tree and reducing the
-   branch length.  
-     
-Sources (Textures):
-
-   All textures used in this project were sourced by me, using my phone camera except for the following textures.  
-   The skybox texture was retrieved from: 
-   https://pixabay.com/illustrations/stars-night-dark-sky-space-3750824/
-   and the horizon texture was sourced from:
-   https://pixabay.com/vectors/dark-darkness-meteor-night-2024127/
-   I intended to source the skybox and horizon textures myself, however I do not own any professional photography
-   equipment, and my phone was not able to get a decent quality picture of the night sky.
-   The metal texture used for the Cabin doorhandle and hinges and as the base texture for the glass on the Lantern
-   object was sourced from the following address:
-   https://pixabay.com/illustrations/metal-background-steel-brushed-1212115/
-   Similar to the night sky texture, I was unable to get a good picture of a "shiny" metal surface
-   without negatively affecting the lighting.
-   Additional texture sources.
-   Tree stump surface texture: https://pixabay.com/photos/wood-stump-tree-texture-wooden-6806631/.
-   Hedge maze wall texture: https://pixabay.com/photos/bank-park-to-sit-park-bench-4237809/.
-
-Estimated Time:
-   So far I have spent around 84 hours on this project.  The breakdown is as follows:
-   Time spent sourcing and editing texture images: around 2.5 hours.
-   Time spent implementing the object geometry (render functions):  About 13 hours.
-   Time spent implementing surface normals and testing lighting: about 22 hours.
-   Time spent implementing and testing object collisions:  about 26 hours.
-   Time spent placing objects and designing the environment:  about 10.5 hours. 
-   Time spent testing the performance on my VM and making optimization passes: 10 hours.
-   
 
 The things to pay attention to/things I am proud of:
    * The collisions for Tent objects              - It took a lot of time and effort to get the collisions to work such that the user can't pass through 
@@ -91,18 +44,54 @@ The things to pay attention to/things I am proud of:
                                                     demonstrates the collisions working regardless of object rotation.  I am proud of having a simple maze that is completely
                                                     navigateable, with no clipping or "invisible blockages".
 
+Sources (Code):
+
+   * The transformation matrices that I used in converting Camera eye coordinates from the world
+     coordinate system to local object coordinate systems (used in the collision functions)
+     were retrieved from my old coursework in my Intro to Robotics class from last semester.  
+   * The inverse matrix that I used to convert back to world coordinates after the collision was resolved
+     was computed by the Symbolab online calculator.  
+   * I found some resources on StackExchange to help me understand texture blending (specifically to make 
+     the translucent glass texture on my lantern object).  
+   * I borrowed two lines of code from this thread: https://stackoverflow.com/questions/24399431/opengl-texture-with-transparency-alpha
+   * I got the idea to tessalate the larger polygons in my objects to get the spotlight effect to look better from: 
+     https://www.glprogramming.com/red/chapter05.html.
+   * I used the CSCIx229 library, and the format of the makefile is based on the makefiles from previous assignments and in-class examples.
+   * For the Lantern light source, I used the chart found at the following address to determine appropriate
+     values for the constant, linear and quadriatic attenuation factors: https://learnopengl.com/Lighting/Light-casters.
+   * The code for generating trees was borrowed from the in-class notes about creating trees using fractals.  I made only a few minor 
+     modifications for optimization so that I could have a larger quantity of trees rendering at one time.  
+     
+Sources (Textures):
+
+   All textures used in this project were sourced by me, using my phone camera except for the following textures.  
+   The skybox texture was retrieved from: https://pixabay.com/illustrations/stars-night-dark-sky-space-3750824/
+   The horizon texture was sourced from: https://pixabay.com/vectors/dark-darkness-meteor-night-2024127/
+   The metal texture used for the Cabin doorhandle and hinges and as the base texture for the glass on the Lantern
+   object was from: https://pixabay.com/illustrations/metal-background-steel-brushed-1212115/
+   The tree stump surface texture: https://pixabay.com/photos/wood-stump-tree-texture-wooden-6806631/.
+   HedgeWall texture: https://pixabay.com/photos/bank-park-to-sit-park-bench-4237809/.
+
+Estimated Time:
+
+   I spent about 84 hours on this project.  The breakdown is as follows:
+   Time spent sourcing and editing texture images: around 2.5 hours.
+   Time spent implementing the object geometry (render functions):  About 13 hours.
+   Time spent implementing surface normals and testing lighting: about 22 hours.
+   Time spent implementing and testing object collisions:  about 26 hours.
+   Time spent placing objects and designing the environment:  about 10.5 hours. 
+   Time spent testing the performance on my VM and making optimization passes: 10 hours.
+
 Additional notes:
-   The hedge maze area was originally intended to be a cave area for the user to explore, however I had severe difficulty getting 
-   the area to look decent, so with the limited time that I had left for the project, I decided to pivot to making this part of the
+
+   The hedge maze area was originally intended to be a cave area for the user to explore, however I decided to pivot to making this part of the
    map a basic hedge maze.  This allows me to demonstrate the collisions that I had implemented for what were originally intended
-   to be cave walls.  The HedgeWall class also add modular building blocks that can be rapidly added to the application as necessary for further
-   design iterations (I have experience working in both Unity Engine and Unreal Engine, so this is where the idea of having modular building
+   to be cave walls.  The HedgeWall class also adds modular building blocks that can be rapidly added to the application as necessary for further
+   design iterations (I have experience working in both Unity Engine and Unreal Engine, so this is where the idea of modular building
    blocks comes from).
    IMPORTANT - although the lighting effects look wrong on the Lantern object, the bottom of the Lantern handle should be lit up, since the middle
-               of the glass case is the origin of a light source.  Seeing as I have not implemented shadows in this project, this means that the light
-               from inside the Lantern is passing through the top of the lantern to illuminate the bottom of the handle.  When I iterate on this project
-               in the future (for my portfolio), implementing a shadowing algorithm like the ones discussed in last Thursday's lecture is at the top of 
-               my to-do list.
+               of the glass case is the origin of a light source and I have not implemented shadows in this project.  When I iterate on this project
+               in the future, implementing a shadowing algorithm like the ones discussed in last Thursday's lecture is at the top of my to-do list.
 
 Changelog since project review:
    * I fixed the issue with lighting on the ground changing on first input in the comments from the review.  I had been calling 
