@@ -320,6 +320,18 @@ void special(int key, int x, int y)
       theta %= 360;
       player->setTheta(theta);
    }
+   // If the player presses F1 key, move them in front of the Cabin.
+   else if (key == GLUT_KEY_F1)
+   {
+      player->setEyePos(-23.0, player->getEyeY(), -13.0);
+      player->setTheta(0);
+   }
+   // If the player presses F2 key, move them in front of the Hedge maze.
+   else if (key == GLUT_KEY_F2)
+   {
+      player->setEyePos(18.5, player->getEyeY(), 5.0);
+      player->setTheta(0);
+   }
 
    // Set projection and update display.
    Project(45, player->getAsp(), player->getDim());

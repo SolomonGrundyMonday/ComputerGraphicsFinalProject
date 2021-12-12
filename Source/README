@@ -87,11 +87,10 @@ Additional notes:
    The hedge maze area was originally intended to be a cave area for the user to explore, however I decided to pivot to making this part of the
    map a basic hedge maze.  This allows me to demonstrate the collisions that I had implemented for what were originally intended
    to be cave walls.  The HedgeWall class also adds modular building blocks that can be rapidly added to the application as necessary for further
-   design iterations (I have experience working in both Unity Engine and Unreal Engine, so this is where the idea of modular building
-   blocks comes from).
-   IMPORTANT - although the lighting effects look wrong on the Lantern object, the bottom of the Lantern handle should be lit up, since the middle
-               of the glass case is the origin of a light source and I have not implemented shadows in this project.  When I iterate on this project
-               in the future, implementing a shadowing algorithm like the ones discussed in last Thursday's lecture is at the top of my to-do list.
+   design iterations.
+   Although the lighting effects look wrong on the Lantern object, the bottom of the Lantern handle should be lit up, since the middle
+   of the glass case is the origin of a light source and I have not implemented shadows in this project.  When I iterate on this project
+   in the future, implementing a shadowing algorithm like the ones discussed in last Thursday's lecture is at the top of my to-do list.
 
 Changelog since project review:
    * I fixed the issue with lighting on the ground changing on first input in the comments from the review.  I had been calling 
